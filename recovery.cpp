@@ -107,7 +107,7 @@ static const struct option OPTIONS[] = {
   { NULL, 0, NULL, 0 },
 };
 
-#define LAST_LOG_FILE "/sdcard/0/cotrecovery/last_log.ngl"
+#define LAST_LOG_FILE "/cache/recovery/last_log.poc"
 
 static const char *CACHE_LOG_DIR = "/cache/recovery";
 static const char *COMMAND_FILE = "/cache/recovery/command";
