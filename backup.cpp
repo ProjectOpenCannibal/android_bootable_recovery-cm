@@ -45,9 +45,7 @@ static int append_sod(const char* opt_hash)
         partspec* part = part_get(i);
         if (!part)
             break;
-logmsg("append_sod: part=%s\n", part->name);
         const char* fstype = part->vol->fs_type;
-logmsg("append_sod: fstype=%s\n", fstype);
         uint64_t size, used;
         if (!strcmp(fstype, "mtd") || !strcmp(fstype, "bml") || !strcmp(fstype, "emmc")) {
             int fd = open(part->vol->blk_device, O_RDONLY);
@@ -270,9 +268,7 @@ int do_backup(int argc, char **argv)
         return rc;
     }
 
-logmsg("backup: append_sod\n");
     append_sod(opt_hash);
-logmsg("backup: append_sod returned\n");
 
     hash_name = strdup(opt_hash);
 
@@ -281,7 +277,6 @@ logmsg("backup: append_sod returned\n");
         if (!curpart)
             break;
 
-logmsg("backup part %s\n", curpart->name);
         part_set(curpart);
         const char* fstype = curpart->vol->fs_type;
         if (!strcmp(fstype, "mtd") || !strcmp(fstype, "bml") || !strcmp(fstype, "emmc")) {
