@@ -144,9 +144,7 @@ void ScreenRecoveryUI::draw_background_locked(Icon icon)
 // Should only be called with updateMutex locked.
 void ScreenRecoveryUI::draw_progress_locked()
 {
-    if (currentIcon == ERROR) {
-        return;
-    }
+    if (currentIcon == ERROR) return;
 
     if (currentIcon == INSTALLING_UPDATE || currentIcon == ERASING) {
         gr_surface icon = installation[installingFrame];
@@ -277,13 +275,13 @@ void ScreenRecoveryUI::draw_dialog()
     y += char_height+2;
 
     if (dialog_show_log) {
-        int ch, cw;
+        int cx, cy;
         gr_set_font("log");
-        gr_font_size(&cw, &ch);
+        gr_font_size(&cx, &cy);
         int row;
         for (row = 0; row < log_text_rows; ++row) {
             gr_text(2, y, text[row], 0);
-            y += ch+2;
+            y += cy+2;
         }
         gr_set_font("menu");
     }
@@ -333,16 +331,16 @@ void ScreenRecoveryUI::draw_screen_locked()
             draw_background_locked(currentIcon);
 
             SetColor(LOG);
-            int ch, cw;
+            int cx, cy;
             gr_set_font("log");
-            gr_font_size(&ch, &cw);
+            gr_font_size(&cx, &cy);
             // display from the bottom up, until we hit the top of the
             // screen or we've displayed the entire text buffer.
             int ty;
             int row = (text_first_row+log_text_rows-1) % log_text_rows;
-            for (int ty = gr_fb_height() - ch, count = 0;
+            for (int ty = gr_fb_height() - cy, count = 0;
                  ty > y+2 && count < log_text_rows;
-                 ty -= (ch+2), ++count) {
+                 ty -= (cy+2), ++count) {
                 gr_text(4, ty, text[row], 0);
                 --row;
                 if (row < 0) row = log_text_rows-1;

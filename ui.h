@@ -21,8 +21,6 @@
 #include <pthread.h>
 #include <time.h>
 
-//#define DEBUG_EVENTS
-
 #include "messagesocket.h"
 
 #define MAX_NR_INPUT_DEVICES    8
