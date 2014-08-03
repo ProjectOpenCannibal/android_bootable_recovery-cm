@@ -203,7 +203,7 @@ int ORS::run_ors_script_file(void) {
 	} else {
 	  LOGE("No value given for cmd\n");
 	}
-      } else if (strcmp(command, "print") == 0 {
+      } else if (strcmp(command, "print") == 0) {
 	ui->Print(value);
       } else {
 	LOGE("Unrecognized script command: '%s'\n", command);
