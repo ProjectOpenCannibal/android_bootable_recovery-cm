@@ -80,6 +80,7 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libm \
     libc \
+    libcrecovery \
     libcot
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
@@ -106,6 +107,13 @@ LOCAL_C_INCLUDES += system/vold
 
 ifneq ($(BOARD_RECOVERY_BLDRMSG_OFFSET),)
     LOCAL_CFLAGS += -DBOARD_RECOVERY_BLDRMSG_OFFSET=$(BOARD_RECOVERY_BLDRMSG_OFFSET)
+endif
+
+# Handling for EV_REL is disabled by default because some accelerometers
+# send EV_REL events.  Actual EV_REL devices are rare on modern hardware
+# so it's cleaner just to disable it by default.
+ifneq ($(BOARD_RECOVERY_NEEDS_REL_INPUT),)
+    LOCAL_CFLAGS += -DBOARD_RECOVERY_NEEDS_REL_INPUT
 endif
 
 # This binary is in the recovery ramdisk, which is otherwise a copy of root.
@@ -266,7 +274,8 @@ LOCAL_STATIC_LIBRARIES := \
 include $(BUILD_EXECUTABLE)
 
 
-include $(LOCAL_PATH)/minui/Android.mk \
+include $(LOCAL_PATH)/libcrecovery/Android.mk \
+    $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/minelf/Android.mk \
     $(LOCAL_PATH)/minzip/Android.mk \
     $(LOCAL_PATH)/minadbd/Android.mk \

@@ -50,11 +50,9 @@
 #define ABS_MT_ANGLE 0x38
 #endif
 
-#define DEBUG_TOUCH_EVENTS
-
 static void show_event(int fd, struct input_event *ev)
 {
-#ifdef DEBUG_TOUCH_EVENTS
+#ifdef DEBUG_EVENTS
     char typebuf[40];
     char codebuf[40];
     const char *evtypestr = NULL;
@@ -186,8 +184,9 @@ static int string_split(char* s, char** fields, int maxfields)
 static int message_socket_client_event(int fd, short revents, void *data)
 {
     MessageSocket* client = (MessageSocket*)data;
-
+    
     printf("message_socket client event\n");
+
     if (!(revents & POLLIN)) {
         return 0;
     }
@@ -202,7 +201,7 @@ static int message_socket_client_event(int fd, short revents, void *data)
         delete client;
         return 0;
     }
-
+    
     printf("message_socket client message <%s>\n", buf);
 
     // Parse the message.  Right now we support:
@@ -233,28 +232,10 @@ static int message_socket_listen_event(int fd, short revents, void *data)
     MessageSocket* client = ms->Accept();
     printf("message_socket_listen_event: event on %d\n", fd);
     if (client) {
-        printf("message_socket client connected\n");
+		printf("message_socket client connected\n");
         ev_add_fd(client->fd(), message_socket_client_event, client);
     }
     return 0;
-}
-
-static char* read_vkey(char* p, vkey* k) {
-    int val[6];
-    int n;
-    for (n = 0; *p && n < 6; ++n) {
-        val[n] = strtol(p, NULL, 0);
-        char* q = strchr(p, ':');
-        p = (q ? q+1 : p+strlen(p));
-    }
-    if (n != 6 || val[0] != 0x01)
-        return NULL;
-    k->keycode = val[1];
-    k->min.x = val[2] - val[4]/2;
-    k->min.y = val[3] - val[5]/2;
-    k->max.x = val[2] + val[4]/2;
-    k->max.y = val[3] + val[5]/2;
-    return p;
 }
 
 RecoveryUI::RecoveryUI() :
@@ -420,7 +401,9 @@ void RecoveryUI::process_syn(input_device* dev, int code, int value) {
 
     if (code == SYN_MT_REPORT) {
         if (!dev->in_touch && (dev->saw_pos_x && dev->saw_pos_y)) {
-            printf("  type a press\n");
+#ifdef DEBUG_TOUCH
+			LOGI("process_syn: type a press\n");
+#endif
             handle_press(dev);
         }
         dev->saw_mt_report = true;
@@ -431,35 +414,44 @@ void RecoveryUI::process_syn(input_device* dev, int code, int value) {
             handle_gestures(dev);
         }
         else {
-            printf("  type b press\n");
-            handle_press(dev);
+			if (dev->saw_tracking_id) {
+#ifdef DEBUG_TOUCH
+            LOGI("process_syn: type b press\n");
+#endif
+				handle_press(dev);
+			}
         }
 
         /* Detect release */
         if (dev->saw_mt_report) {
-            if (!dev->saw_pos_x && !dev->saw_pos_y) {
+            if (dev->in_touch && !dev->saw_pos_x && !dev->saw_pos_y) {
                 /* type A release */
-                printf("  type a release\n");
+#ifdef DEBUG_TOUCH
+            LOGI("process_syn: type a release\n");
+#endif
                 handle_release(dev);
                 dev->slot_first = 0;
             }
         }
         else {
-            if (dev->slot_current == dev->slot_first && dev->tracking_id == -1) {
+            if (dev->in_touch && dev->saw_tracking_id && dev->tracking_id == -1 &&
+                    dev->slot_current == dev->slot_first) {
                 /* type B release */
-                printf("  type b release\n");
+#ifdef DEBUG_TOUCH
+            LOGI("process_syn: type b release\n");
+#endif
                 handle_release(dev);
                 dev->slot_first = 0;
             }
         }
 
-        dev->saw_pos_x = dev->saw_pos_y = dev->saw_mt_report = false;
+        dev->saw_pos_x = dev->saw_pos_y = false;
+        dev->saw_mt_report = dev->saw_tracking_id = false;
     }
 }
 
 void RecoveryUI::process_abs(input_device* dev, int code, int value) {
     if (code == ABS_MT_SLOT) {
-        printf("slot: first=%d, cur=%d, val=%d\n", dev->slot_first, dev->slot_current, value);
         dev->slot_current = value;
         if (dev->slot_first == -1) {
             dev->slot_first = value;
@@ -471,6 +463,7 @@ void RecoveryUI::process_abs(input_device* dev, int code, int value) {
          * Some devices send an initial ABS_MT_SLOT event before switching
          * to type B events, so discard any type A state related to slot.
          */
+        dev->saw_tracking_id = true;
         dev->slot_first = dev->slot_current = 0;
 
         if (value != dev->tracking_id) {
@@ -481,7 +474,6 @@ void RecoveryUI::process_abs(input_device* dev, int code, int value) {
             else {
                 dev->slot_nr_active++;
             }
-            printf("tracking id %d, active %d\n", dev->tracking_id, dev->slot_nr_active);
         }
         return;
     }
@@ -501,23 +493,21 @@ void RecoveryUI::process_abs(input_device* dev, int code, int value) {
     }
     else {
         if (dev->slot_current != dev->slot_first) {
-printf("ignoring event, curslot=%d, firstslot=%d\n", dev->slot_current, dev->slot_first);
             return;
         }
     }
     if (code == ABS_MT_POSITION_X) {
         dev->saw_pos_x = true;
         dev->touch_pos.x = value * fb_dimensions.x / (dev->touch_max.x - dev->touch_min.x);
-        printf("process_abs: pos_x: value=%d, dim.x=%d, max.x=%d, min.x=%d -> %d\n", value, fb_dimensions.x, dev->touch_max.x, dev->touch_min.x, dev->touch_pos.x);
     }
     else if (code == ABS_MT_POSITION_Y) {
         dev->saw_pos_y = true;
         dev->touch_pos.y = value * fb_dimensions.y / (dev->touch_max.y - dev->touch_min.y);
-        printf("process_abs: pos_y: value=%d, dim.y=%d, max.y=%d, min.y=%d -> %d\n", value, fb_dimensions.y, dev->touch_max.y, dev->touch_min.y, dev->touch_pos.y);
     }
 }
 
 void RecoveryUI::process_rel(input_device* dev, int code, int value) {
+#ifdef BOARD_RECOVERY_NEEDS_REL_INPUT
     if (code == REL_Y) {
         // accumulate the up or down motion reported by
         // the trackball.  When it exceeds a threshold
@@ -534,6 +524,7 @@ void RecoveryUI::process_rel(input_device* dev, int code, int value) {
             dev->rel_sum = 0;
         }
     }
+#endif
 }
 
 void* RecoveryUI::time_key_helper(void* cookie) {
@@ -571,19 +562,20 @@ void RecoveryUI::calibrate_touch(input_device* dev) {
         dev->touch_max.y = info.maximum;
         dev->touch_pos.y = info.value;
     }
-    printf("calibrate: fd=%d, touch_min=(%d,%d), touch_max=(%d,%d), touch_pos=(%d,%d)\n", dev->fd,
-            dev->touch_min.x, dev->touch_min.y,
-            dev->touch_max.x, dev->touch_max.y,
-            dev->touch_pos.x, dev->touch_pos.y);
+#ifdef DEBUG_TOUCH
+    LOGI("calibrate_touch: fd=%d, (%d,%d)-(%d,%d) pos (%d,%d)\n", dev->fd,
+		dev->touch_min.x, dev->touch_min.y,
+		dev->touch_max.x, dev->touch_max.y,
+		dev->touch_pos.x, dev->touch_pos.y);
+#endif
 }
 
 void RecoveryUI::setup_vkeys(input_device* dev) {
     int n;
     char name[256];
     char path[PATH_MAX];
-    char buf[1024];
+    char buf[64*MAX_NR_VKEYS];
 
-printf("setup_vkeys: enter: fd=%d\n", dev->fd);
     for (n = 0; n < MAX_NR_VKEYS; ++n) {
         dev->virtual_keys[n].keycode = -1;
     }
@@ -593,7 +585,6 @@ printf("setup_vkeys: enter: fd=%d\n", dev->fd);
         LOGI("setup_vkeys: no vkeys\n");
         return;
     }
-printf("setup_vkeys: name=%s\n", name);
     sprintf(path, "/sys/board_properties/virtualkeys.%s", name);
     int vkfd = open(path, O_RDONLY);
     if (vkfd < 0) {
@@ -606,17 +597,33 @@ printf("setup_vkeys: name=%s\n", name);
         LOGE("setup_vkeys: could not read %s\n", path);
         return;
     }
-printf("setup_vkeys: buflen=%d\n", len);
     buf[len] = '\0';
+    
     char* p = buf;
+    char* endp;
     for (n = 0; n < MAX_NR_VKEYS && p < buf+len && *p == '0'; ++n) {
-printf("setup_vkeys: read key %d\n", n);
-        p = read_vkey(p, &dev->virtual_keys[n]);
-        if (!p)
-            break;
-printf("setup_vkeys: key[%d]=[%d, (%d,%d)-(%d,%d)]\n", n, dev->virtual_keys[n].keycode,
+		int val[6];
+        int f;
+        for (f = 0; *p && f < 6; ++f) {
+            val[f] = strtol(p, &endp, 0);
+            if (p == endp)
+                break;
+            p = endp+1;
+        }
+        if (f != 6 || val[0] != 0x01)
+			break;
+		dev->virtual_keys[n].keycode = val[1];
+        dev->virtual_keys[n].min.x = val[2] - val[4]/2;
+        dev->virtual_keys[n].min.y = val[3] - val[5]/2;
+        dev->virtual_keys[n].max.x = val[2] + val[4]/2;
+        dev->virtual_keys[n].max.y = val[3] + val[5]/2;
+        
+#ifdef DEBUG_TOUCH
+		LOGI("vkey: fd=%d, [%d]=(%d,%d)-(%d,%d)\n", dev->fd,
+			dev->virtual_keys[n].keycode,
             dev->virtual_keys[n].min.x, dev->virtual_keys[n].min.y,
             dev->virtual_keys[n].max.x, dev->virtual_keys[n].max.y);
+#endif
     }
 }
 
@@ -628,12 +635,13 @@ void RecoveryUI::calibrate_swipe() {
     int screen_density = (intvalue >= 160 ? intvalue : 160);
     min_swipe_px.x = screen_density * 50 / 100; // Roughly 0.5in
     min_swipe_px.y = screen_density * 30 / 100; // Roughly 0.3in
-    printf("density=%d, min_swipe_x=%d, min_swipe_y=%d\n", screen_density, min_swipe_px.x, min_swipe_px.y);
+#ifdef DEBUG_TOUCH
+    LOGI("calibrate: density=%d, min_swipe=(%d,%d)\n",
+		screen_density, min_swipe_px.x, min_swipe_px.y);
+#endif
 }
 
 void RecoveryUI::handle_press(input_device* dev) {
-printf("handle_press: (%d,%d)\n",
-        dev->touch_pos.x, dev->touch_pos.y);
     dev->touch_start = dev->touch_track = dev->touch_pos;
     dev->in_touch = true;
     dev->in_swipe = false;
@@ -643,30 +651,24 @@ void RecoveryUI::handle_release(input_device* dev) {
     struct point diff = dev->touch_pos - dev->touch_start;
     bool in_touch = dev->in_touch;
     bool in_swipe = dev->in_swipe;
-printf("handle_release: (%d,%d) -> (%d,%d) d=(%d,%d)\n",
-        dev->touch_start.x, dev->touch_start.y,
-        dev->touch_pos.x, dev->touch_pos.y,
-        diff.x, diff.y);
 
     dev->in_touch = dev->in_swipe = false;
 
     if (!in_swipe) {
         int n;
-        printf("checking vkeys...\n");
         for (n = 0; dev->virtual_keys[n].keycode != -1 && n < MAX_NR_VKEYS; ++n) {
             vkey* vk = &dev->virtual_keys[n];
-            printf("checking vkey[%d]: (%d,%d)-(%d,%d)\n", n,
-                    vk->min.x, vk->min.y, vk->max.x, vk->max.y);
             if (dev->touch_start.x >= vk->min.x && dev->touch_start.x < vk->max.x &&
                     dev->touch_start.y >= vk->min.y && dev->touch_start.y < vk->max.y) {
-                printf("enqueueing vkey %d\n", vk->keycode);
+#ifdef DEBUG_TOUCH
+				LOGI("handle_release: vkey %d\n", vk->keycode);
+#endif
                 EnqueueKey(vk->keycode);
                 return;
             }
         }
     }
 
-    printf("handle_release: showing=%d\n", DialogShowing());
     if (DialogShowing()) {
         if (DialogDismissable() && !dev->in_swipe) {
             DialogDismiss();
@@ -689,7 +691,6 @@ printf("handle_release: (%d,%d) -> (%d,%d) d=(%d,%d)\n",
     else {
         int sel;
         sel = (dev->touch_pos.y - MenuItemStart())/MenuItemHeight();
-        printf("sel: y=%d mis=%d mih=%d => %d\n", dev->touch_pos.y, MenuItemStart(), MenuItemHeight(), sel);
         EnqueueKey(KEY_FLAG_ABS | sel);
     }
 }
@@ -697,22 +698,16 @@ printf("handle_release: (%d,%d) -> (%d,%d) d=(%d,%d)\n",
 void RecoveryUI::handle_gestures(input_device* dev) {
     struct point diff;
     diff = dev->touch_pos - dev->touch_start;
-printf("handle_gestures: (%d,%d) -> (%d,%d) d=(%d,%d)\n",
-        dev->touch_start.x, dev->touch_start.y,
-        dev->touch_pos.x, dev->touch_pos.y,
-        diff.x, diff.y);
 
     if (abs(diff.x) > abs(diff.y)) {
         if (abs(diff.x) > min_swipe_px.x) {
             /* Horizontal swipe, handle it on release */
-printf("handle_gestures: horizontal swipe\n");
             dev->in_swipe = true;
         }
     }
     else {
         diff.y = dev->touch_pos.y - dev->touch_track.y;
         if (abs(diff.y) > MenuItemHeight()) {
-printf("handle_gestures: vertical swipe\n");
             dev->in_swipe = true;
             if (!DialogShowing()) {
                 dev->touch_track = dev->touch_pos;

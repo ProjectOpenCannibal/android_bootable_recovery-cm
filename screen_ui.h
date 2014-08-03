@@ -138,6 +138,7 @@ class ScreenRecoveryUI : public RecoveryUI {
 
     int header_height;
     int header_width;
+    int text_first_row;
 
     void draw_install_overlay_locked(int frame);
     void draw_background_locked(Icon icon);

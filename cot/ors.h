@@ -1,5 +1,5 @@
 /* Copyright (C) 2014 Project Open Cannibal
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,9 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "extra.h"
-#include "../libcrecovery/common.h"
-#include "settings.h"
-#include "theme.h"
-#include "ors.h"
+
+class ORS {
+public:
+  static void delayed_reboot();
+  static int check_for_script_file(void);
+  static int run_ors_script_file(void);
+};
