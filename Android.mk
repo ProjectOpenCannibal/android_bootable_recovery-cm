@@ -273,7 +273,8 @@ LOCAL_STATIC_LIBRARIES := \
 include $(BUILD_EXECUTABLE)
 
 
-include $(LOCAL_PATH)/minui/Android.mk \
+include $(LOCAL_PATH)/libcrecovery/Android.mk \
+    $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/minelf/Android.mk \
     $(LOCAL_PATH)/minzip/Android.mk \
     $(LOCAL_PATH)/minadbd/Android.mk \
