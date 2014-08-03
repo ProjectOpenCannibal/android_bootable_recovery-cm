@@ -30,12 +30,42 @@
 #include "roots.h"
 #include "common.h"
 #include "make_ext4fs.h"
+#include "device.h"
+#include "cot/includes.h"
+#include "cot/external.h"
 
 #include "voldclient/voldclient.h"
 
 static struct fstab *fstab = NULL;
 
 extern struct selabel_handle *sehandle;
+
+void ensure_directory_exists(const char* dir) {
+    char tmp[PATH_MAX];
+    sprintf(tmp, "mkdir -p %s && chmod 777 %s", dir, dir);
+    __system(tmp);
+}
+
+int is_path_mounted(const char* path) {
+  fstab_rec* v = volume_for_path(path);
+  if (v == NULL) {
+    return 0;
+  }
+  if (strcmp(v->fs_type, "ramdisk") == 0) {
+    // the ramdisk is always mounted.
+    return 1;
+  }
+  
+  if (scan_mounted_volumes() < 0)
+    return 0;
+  
+  const MountedVolume* mv = find_mounted_volume_by_mount_point(v->mount_point);
+  if (mv) {
+    // volume is already mounted
+    return 1;
+  }
+  return 0;
+}
 
 static int mkdir_p(const char* path, mode_t mode)
 {

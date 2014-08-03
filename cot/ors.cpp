@@ -104,7 +104,7 @@ int ORS::run_ors_script_file(void) {
   if (fp != NULL) {
     for (i = 20; i > 0; i--) {
       ui->Print("Waiting for storage to mount (%ds)\n", i);
-      if (ensure_path_mounted(get_primary_storage_path()) ==0) {
+      if (ensure_path_mounted("/sdcard") ==0) {
 	ui->Print("Storage Mounted...\nContinuing...\n");
 	break;
       }
@@ -138,9 +138,9 @@ int ORS::run_ors_script_file(void) {
       }
       if (strcmp(command, "install") == 0) {
 	// Install zip -- ToDo : Need to clean this shit up, it's redundant and I know it can be written better
-	ensure_path_mounted(get_primary_storage_path());
+	ensure_path_mounted("/sdcard");
 	ui->Print("Installing zip file '%s'\n", value);
-	ret_val = install_zip(value);
+	//ret_val = install_zip(value);
 	if (ret_val != INSTALL_SUCCESS) {
 	  LOGE("Error installing zip file '%s'\n", value);
 	  ret_val = 1;
@@ -188,7 +188,7 @@ int ORS::run_ors_script_file(void) {
 	ui->Print("Unmounted '%s'\n", mount);
       } else if (strcmp(command, "mkdir") == 0) {
 	// Make directory (recursive)
-	ensure_directory(value); // Untested from ORS
+	ensure_directory_exists(value); // Untested from ORS
       } else if (strcmp(command, "reboot") == 0) {
 	// Reboot
 	ui->Print("Reboot command found...\n");
