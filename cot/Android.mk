@@ -18,6 +18,7 @@ LOCAL_MODULE := libcot
 LOCAL_MODULE_TAGS := eng
 
 LOCAL_SRC_FILES := \
+    extra.cpp \
     settings.cpp \
     theme.cpp \
     iniparser/iniparser.c \

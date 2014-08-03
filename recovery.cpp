@@ -824,13 +824,13 @@ update_directory(const char* path, int* wipe_cache, Device* device) {
             if (!check_avphys_mem(new_path)) {
                 char* copy = copy_sideloaded_package(new_path);
                 if (copy) {
-                    result = install_package(copy, wipe_cache, TEMPORARY_INSTALL_FILE);
+                    result = install_package(copy, wipe_cache, TEMPORARY_INSTALL_FILE, device);
                     free(copy);
                 } else {
                     result = INSTALL_ERROR;
                 }
             } else {
-                result = install_package(new_path, wipe_cache, TEMPORARY_INSTALL_FILE);
+                result = install_package(new_path, wipe_cache, TEMPORARY_INSTALL_FILE, device);
             }
             if (result != INSTALL_SUCCESS) {
                 ui->DialogShowErrorLog("Install failed");
@@ -937,7 +937,7 @@ static int enter_sideload_mode(int status, int* wipe_cache, Device* device) {
     static const char* list[] = { "Cancel sideload", NULL };
 
     get_menu_selection(headers, list, 0, 0, device);
-    int ret = apply_from_adb(wipe_cache, TEMPORARY_INSTALL_FILE);
+    int ret = apply_from_adb(wipe_cache, TEMPORARY_INSTALL_FILE, device);
 
     if (ret != INSTALL_NONE) {
         status = ret;
@@ -1417,7 +1417,7 @@ main(int argc, char **argv) {
     } else
 #endif
     if (update_package != NULL) {
-        status = install_package(update_package, &wipe_cache, TEMPORARY_INSTALL_FILE);
+        status = install_package(update_package, &wipe_cache, TEMPORARY_INSTALL_FILE, device);
         if (status == INSTALL_SUCCESS && wipe_cache) {
             if (erase_volume("/cache")) {
                 LOGE("Cache wipe (requested by package) failed.");

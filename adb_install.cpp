@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <fcntl.h>
 
+#include "device.h"
 #include "ui.h"
 #include "cutils/properties.h"
 #include "install.h"
@@ -112,7 +113,7 @@ start_sideload(RecoveryUI* ui_) {
 }
 
 int
-apply_from_adb(int* wipe_cache, const char* install_file) {
+apply_from_adb(int* wipe_cache, const char* install_file, Device* device) {
 
     set_perf_mode(true);
 
@@ -136,7 +137,7 @@ apply_from_adb(int* wipe_cache, const char* install_file) {
         return INSTALL_ERROR;
     }
 
-    int status = install_package(ADB_SIDELOAD_FILENAME, wipe_cache, install_file);
+    int status = install_package(ADB_SIDELOAD_FILENAME, wipe_cache, install_file, device);
 
     remove(ADB_SIDELOAD_FILENAME);
 

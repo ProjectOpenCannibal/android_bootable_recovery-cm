@@ -13,5 +13,6 @@
  * limitations under the License.
  */
  
+#include "extra.h"
 #include "settings.h"
 #include "theme.h"
