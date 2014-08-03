@@ -80,6 +80,7 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libm \
     libc \
+    libcrecovery \
     libcot
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
