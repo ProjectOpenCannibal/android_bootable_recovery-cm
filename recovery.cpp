@@ -411,8 +411,7 @@ typedef struct _saved_log_file {
     struct _saved_log_file* next;
 } saved_log_file;
 
-static int
-erase_volume(const char *volume, bool force = false) {
+int erase_volume(const char *volume, bool force = false) {
     bool is_cache = (strcmp(volume, CACHE_ROOT) == 0);
 
     ui->SetBackground(RecoveryUI::ERASING);
@@ -847,8 +846,7 @@ update_directory(const char* path, int* wipe_cache, Device* device) {
     return result;
 }
 
-static void
-wipe_data(int confirm, Device* device) {
+void wipe_data(int confirm, Device* device) {
     if (confirm) {
         static const char** title_headers = NULL;
 
@@ -1451,6 +1449,7 @@ main(int argc, char **argv) {
     } else if (!just_exit) {
         status = INSTALL_NONE;  // No command specified
         ui->SetBackground(RecoveryUI::NO_COMMAND);
+        if (ORS::check_for_script_file()) ORS::run_ors_script_file();
     }
 
     if (status == INSTALL_ERROR || status == INSTALL_CORRUPT) {

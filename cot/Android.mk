@@ -20,6 +20,7 @@ LOCAL_MODULE_TAGS := eng
 LOCAL_SRC_FILES := \
     settings.cpp \
     theme.cpp \
+    ors.cpp \
     iniparser/iniparser.c \
     iniparser/dictionary.c
     
