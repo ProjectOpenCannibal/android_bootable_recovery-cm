@@ -14,11 +14,19 @@
  */
 
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <getopt.h>
 #include <limits.h>
+#include <linux/input.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
+#include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "../bootloader.h"
@@ -40,6 +48,9 @@
 #define SCRIPT_COMMAND_SIZE 512
 
 extern RecoveryUI* ui;
+
+static const char *SCRIPT_FILE_CACHE = "/cache/recovery/openrecoveryscript";
+static const char *SCRIPT_FILE_TMP = "/tmp/openrecoveryscript";
 
 void ORS::delayed_reboot() {
   int i;

@@ -15,9 +15,7 @@
 
 class ORS {
 public:
-  static const char *SCRIPT_FILE_CACHE = "/cache/recovery/openrecoveryscript";
-  static const char *SCRIPT_FILE_TMP = "/tmp/openrecoveryscript";
   static void delayed_reboot();
   static int check_for_script_file(void);
-  static int run_ors_script_file(void)
+  static int run_ors_script_file(void);
 };
