@@ -30,6 +30,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "libcrecovery/common.h"
 #include "bootloader.h"
 #include "common.h"
 #include "cutils/properties.h"

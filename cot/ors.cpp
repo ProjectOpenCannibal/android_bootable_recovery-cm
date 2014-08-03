@@ -212,7 +212,7 @@ int ORS::run_ors_script_file(void) {
     }
     fclose(fp);
     ui->Print("Done processing script file\n");
-    if(ret_val != 1 && orsreboot == 1) {
+    if(ret_val != 1) {
       if(is_path_mounted("sdcard/"))
 	ensure_path_unmounted("sdcard/");
       delayed_reboot();
