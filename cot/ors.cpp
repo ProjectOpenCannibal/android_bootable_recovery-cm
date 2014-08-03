@@ -148,12 +148,12 @@ int ORS::run_ors_script_file(void) {
       } else if (strcmp(command, "wipe") == 0) {
 	// Wipe -- ToDo: Make this use the same wipe functionality as normal wipes
 	if (strcmp(value, "cache") == 0 || strcmp(value, "/cache") == 0) {
-	  erase_volume("cache");
+	  erase_volume_wrapper("cache");
 	} else if (strcmp(value, "dalvik") == 0 || strcmp(value, "dalvick") == 0 || strcmp(value, "dalvikcache") == 0 || strcmp(value, "dalvickcache") == 0) {
 	  ui->Print("Erasing dalvik-cache not available at this time!\n");
 	} else if (strcmp(value, "data") == 0 || strcmp(value, "/data") == 0 || strcmp(value, "factory") == 0 || strcmp(value, "factoryreset") == 0) {
 	  ui->Print("-- Wiping Data Partition...\n");
-	  erase_volume("/data");
+	  erase_volume_wrapper("/data");
 	  ui->Print("-- Data Partition Wipe Complete!\n");
 	} else {
 	  LOGE("Error with wipe command value: '%s'\n", value);

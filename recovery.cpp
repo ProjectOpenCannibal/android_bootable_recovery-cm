@@ -497,6 +497,12 @@ int erase_volume(const char *volume, bool force = false) {
     return result;
 }
 
+int erase_volume_wrapper(const char *volume) {
+  int ret;
+  ret = erase_volume(volume);
+  return ret;
+}
+
 static char*
 copy_sideloaded_package(const char* original_path) {
   ui->ClearLog();
