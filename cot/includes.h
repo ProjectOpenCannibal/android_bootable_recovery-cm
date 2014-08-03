@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-extern "C" {
 #include "../libcrecovery/common.h"
-}
 #include "settings.h"
 #include "theme.h"
 #include "ors.h"
