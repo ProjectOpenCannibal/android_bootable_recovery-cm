@@ -140,7 +140,11 @@ int ORS::run_ors_script_file(void) {
 	// Install zip -- ToDo : Need to clean this shit up, it's redundant and I know it can be written better
 	ensure_path_mounted("/sdcard");
 	ui->Print("Installing zip file '%s'\n", value);
-	//ret_val = install_zip(value);
+	/*
+	 * We need to implement this externally now, disabled until we do.
+	 * 
+	 * ret_val = install_zip(value);
+	 */
 	if (ret_val != INSTALL_SUCCESS) {
 	  LOGE("Error installing zip file '%s'\n", value);
 	  ret_val = 1;
