@@ -48,6 +48,7 @@ static const int VERIFICATION_PROGRESS_TIME = 60;
 static const float VERIFICATION_PROGRESS_FRACTION = 0.25;
 static const float DEFAULT_FILES_PROGRESS_FRACTION = 0.4;
 static const float DEFAULT_IMAGE_PROGRESS_FRACTION = 0.1;
+static int signature_verification_enable = 1;
 
 // If the package contains an update binary, extract it and run it.
 static int
@@ -233,22 +234,24 @@ really_install_package(const char *path, int* wipe_cache, Device* device)
     LOGI("%d key(s) loaded from %s\n", numKeys, PUBLIC_KEYS_FILE);
 
     set_perf_mode(true);
-
-    ui->Print("Verifying update package...\n");
-
-    int err;
-    err = verify_file(path, loadedKeys, numKeys);
-    free(loadedKeys);
-    LOGI("verify_file returned %d\n", err);
-    if (err != VERIFY_SUCCESS) {
-		ui->SetBackground(RecoveryUI::NONE);
-        int install_anyway = COTPackage::InstallUntrustedZip(device);
-        if (install_anyway != 0) {
-			LOGE("signature verification failed\n");
-			ret = INSTALL_CORRUPT;
-			goto out;
+	int err;
+	if (signature_verification_enable != 0) {
+		ui->Print("Verifying update package...\n");
+		err = verify_file(path, loadedKeys, numKeys);
+		free(loadedKeys);
+		LOGI("verify_file returned %d\n", err);
+		if (err != VERIFY_SUCCESS) {
+			ui->SetBackground(RecoveryUI::NONE);
+			int install_anyway = COTPackage::InstallUntrustedZip(device);
+			if (install_anyway != 0) {
+				LOGE("signature verification failed\n");
+				ret = INSTALL_CORRUPT;
+				goto out;
+			}
 		}
-    }
+	} else {
+		ui->Print("Skipping signature verification...\n");
+	}
 
     /* Try to open the package.
      */

@@ -40,6 +40,42 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
+extern static int signature_verification_enabled;
+
+int COTPackage::ShowSigVerifMenu(Device* device) {
+	static const char* headers[] = { "Signature Verification",
+		"",
+		NULL
+	};
+	
+	static const char* menuitems[] = {"Disable signature verification - resets on reboot",
+		NULL
+	};
+	
+	for (;;) {
+		int selected = get_menu_selection(headers, menuitems, 0, 0, device);
+		return selected;
+	}
+}
+
+void COTPackage::ShowZipOptionsMenu(Device* device) {
+	static const char* headers[] = { "ZIP Options",
+		"",
+		NULL
+	};
+	
+	static const char* menuitems[] = {"Signature Verification",
+		NULL
+	};
+	
+	for (;;) {
+		int selected = get_menu_selection(headers, menuitems, 0, 0, device);
+		if (selected == 0) {
+			COTPackage::ShowSigVerifMenu(device);
+		}
+		return;
+	}
+}
 
 int COTPackage::InstallUntrustedZip(Device* device) {
 	static const char* headers[] = { "Testing",
