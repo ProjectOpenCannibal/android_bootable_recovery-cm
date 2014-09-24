@@ -17,3 +17,4 @@
 #include "settings.h"
 #include "theme.h"
 #include "ors.h"
+#include "package.h"

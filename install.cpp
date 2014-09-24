@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include "common.h"
+#include "device.h"
 #include "install.h"
 #include "mincrypt/rsa.h"
 #include "minui/minui.h"
@@ -35,6 +36,7 @@
 #include "ui.h"
 
 #include "cutils/properties.h"
+#include "cot/includes.h"
 
 extern RecoveryUI* ui;
 
@@ -183,7 +185,7 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
 }
 
 static int
-really_install_package(const char *path, int* wipe_cache)
+really_install_package(const char *path, int* wipe_cache, Device* device)
 {
     int ret = 0;
 
@@ -265,7 +267,7 @@ out:
 }
 
 int
-install_package(const char* path, int* wipe_cache, const char* install_file)
+install_package(const char* path, int* wipe_cache, const char* install_file, Device* device)
 {
     FILE* install_log = fopen_path(install_file, "w");
     if (install_log) {
@@ -279,7 +281,7 @@ install_package(const char* path, int* wipe_cache, const char* install_file)
         LOGE("failed to set up expected mounts for install; aborting\n");
         result = INSTALL_ERROR;
     } else {
-        result = really_install_package(path, wipe_cache);
+        result = really_install_package(path, wipe_cache, device);
     }
     if (install_log) {
         fputc(result == INSTALL_SUCCESS ? '1' : '0', install_log);
