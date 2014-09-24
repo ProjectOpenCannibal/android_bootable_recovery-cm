@@ -15,5 +15,6 @@
 
 class COTPackage {
 	public:
+		static void COTPackage::ShowZipOptionsMenu(Device* device);
 		static int InstallUntrustedZip(Device* device);
 };

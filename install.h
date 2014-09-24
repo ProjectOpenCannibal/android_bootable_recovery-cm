@@ -33,6 +33,8 @@ int install_package(const char *root_path, int* wipe_cache,
 
 void set_perf_mode(bool enable);
 
+static int signature_verification_enable;
+
 #ifdef __cplusplus
 }
 #endif

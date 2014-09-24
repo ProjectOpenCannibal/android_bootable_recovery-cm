@@ -48,15 +48,17 @@ void COTSettings::ShowMainMenu(Device* device) {
         NULL
     };
 
-    static const char* SettingsMenuItems[] = { "Theme",
+    static const char* SettingsMenuItems[] = { "ZIP Options",
         NULL
     };
+    
+    #define ZIP_OPTIONS 0
 
     for (;;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
         switch (SettingsSelection) {
-            case 0:
-                COTTheme::ShowMainMenu(device);
+            case ZIP_OPTIONS:
+                COTPackage::ShowZipOptionsMenu(device);
                 break;
 
             case Device::kGoBack:
