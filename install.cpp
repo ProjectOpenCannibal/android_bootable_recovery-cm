@@ -241,6 +241,7 @@ really_install_package(const char *path, int* wipe_cache, Device* device)
     free(loadedKeys);
     LOGI("verify_file returned %d\n", err);
     if (err != VERIFY_SUCCESS) {
+		ui->SetBackground(RecoveryUI::NONE);
         int install_anyway = COTPackage::InstallUntrustedZip(device);
         if (install_anyway != 0) {
 			LOGE("signature verification failed\n");
