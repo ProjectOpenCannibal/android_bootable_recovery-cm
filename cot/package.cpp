@@ -47,8 +47,8 @@ int COTPackage::InstallUntrustedZip(Device* device) {
 		NULL
 	};
 	
-	static const char* menuitems[] = {"Yes",
-		"No",
+	static const char* menuitems[] = {"Yes - install untrusted ZIP",
+		"No - abort ZIP installation",
 		NULL
 	};
 	
