@@ -13,8 +13,7 @@
  * limitations under the License.
  */
 
-#include "../libcrecovery/common.h"
-#include "settings.h"
-#include "theme.h"
-#include "ors.h"
-#include "package.h"
+class COTPackage {
+	public:
+		static int InstallUntrustedZip(Device* device);
+};
