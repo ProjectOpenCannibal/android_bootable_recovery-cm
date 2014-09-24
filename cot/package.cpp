@@ -40,7 +40,7 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
-extern static int signature_verification_enabled;
+//extern static int signature_verification_enabled;
 
 int COTPackage::ShowSigVerifMenu(Device* device) {
 	static const char* headers[] = { "Signature Verification",
