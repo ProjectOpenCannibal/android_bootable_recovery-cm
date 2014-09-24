@@ -48,7 +48,7 @@ static const int VERIFICATION_PROGRESS_TIME = 60;
 static const float VERIFICATION_PROGRESS_FRACTION = 0.25;
 static const float DEFAULT_FILES_PROGRESS_FRACTION = 0.4;
 static const float DEFAULT_IMAGE_PROGRESS_FRACTION = 0.1;
-static int signature_verification_enable = 1;
+int signature_verification_enable = 1;
 
 // If the package contains an update binary, extract it and run it.
 static int
