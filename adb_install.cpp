@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <fcntl.h>
 
+#include "device.h"
 #include "ui.h"
 #include "cutils/properties.h"
 #include "install.h"
@@ -127,7 +128,7 @@ stop_sideload() {
 }
 
 int
-apply_from_adb(int* wipe_cache, const char* install_file) {
+apply_from_adb(int* wipe_cache, const char* install_file, Device* device) {
 
     struct stat st;
     if (stat(ADB_SIDELOAD_FILENAME, &st) != 0) {
@@ -139,7 +140,7 @@ apply_from_adb(int* wipe_cache, const char* install_file) {
         return INSTALL_ERROR;
     }
 
-    int ret = install_package(ADB_SIDELOAD_FILENAME, wipe_cache, install_file);
+    int ret = install_package(ADB_SIDELOAD_FILENAME, wipe_cache, install_file, device);
 
     remove(ADB_SIDELOAD_FILENAME);
 
