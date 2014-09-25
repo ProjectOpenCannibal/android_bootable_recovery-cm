@@ -66,6 +66,8 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 			case 1:
 				COTTheme::use_theme = true;
 				break;
+			case Device::kGoBack:
+                return;
 		}
 	}
 }
