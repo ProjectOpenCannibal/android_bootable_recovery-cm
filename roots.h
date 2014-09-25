@@ -34,6 +34,7 @@ fstab_rec* volume_for_path(const char* path);
 // success (volume is mounted).
 int ensure_volume_mounted(fstab_rec* v);
 int ensure_path_mounted(const char* path);
+int ensure_path_mounted_at_mount_point(const char* path);
 
 // Make sure that the volume 'path' is on is mounted.  Returns 0 on
 // success (volume is unmounted);
@@ -48,6 +49,12 @@ int format_volume(const char* volume, bool force = false);
 // Ensure that all and only the volumes that packages expect to find
 // mounted (/tmp and /cache) are mounted.  Returns 0 on success.
 int setup_install_mounts();
+
+// Legacy support for /sdcard
+void setup_legacy_storage_paths();
+int is_data_media_volume_path(const char* path);
+char* get_primary_storage_path();
+void setup_data_media();
 
 char* get_android_secure_path();
 int get_num_volumes();

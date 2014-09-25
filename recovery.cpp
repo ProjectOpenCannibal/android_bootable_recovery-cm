@@ -1314,6 +1314,10 @@ main(int argc, char **argv) {
     ensure_path_mounted(LAST_LOG_FILE);
     rotate_last_logs(10);
     get_args(&argc, &argv);
+    
+    if (is_data_media()) {
+		setup_data_media();
+	}
 
     const char *send_intent = NULL;
     const char *update_package = NULL;

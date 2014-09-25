@@ -113,6 +113,21 @@ int is_data_media()
     return is_datamedia;
 }
 
+void setup_data_media() {
+	int i;
+	char* mount_point = "/sdcard";
+	for (i = 0; i < get_num_volumes(); i++) {
+		fstab_rec* vol = get_device_volumes() + i;
+		if (strcmp(vol->fs_type, "datamedia") == 0) {
+			mount_point = vol->mount_point;
+			break;
+		}
+	}
+	rmdir(mount_point);
+	mkdir("/data/media", 0755);
+	symlink("/data/media", mount_point);
+}
+
 static int is_volume_primary_storage(fstab_rec* v)
 {
     // Static mount point /sdcard is primary storage, except when it's
@@ -251,6 +266,17 @@ fstab_rec* volume_for_path(const char* path) {
     return fs_mgr_get_entry_for_mount_point(fstab, path);
 }
 
+static char* primary_storage_path = NULL;
+char* get_primary_storage_path() {
+	if (primary_storage_path == NULL) {
+		if (volume_for_path("/sdcard/sdcard0"))
+			primary_storage_path = "/storage/sdcard0";
+		else
+			primary_storage_path = "/sdcard";
+	}
+	return primary_storage_path;
+}
+
 fstab_rec* volume_for_label(const char* label) {
     int i;
     for (i = 0; i < get_num_volumes(); i++) {
@@ -262,7 +288,33 @@ fstab_rec* volume_for_label(const char* label) {
     return NULL;
 }
 
+int is_data_media_volume_path(const char* path) {
+    fstab_rec* v = volume_for_path(path);
+    if (v != NULL)
+        return strcmp(v->fs_type, "datamedia") == 0;
+
+    if (!is_data_media()) {
+        return 0;
+    }
+
+    return strcmp(path, "/sdcard") == 0 || path == strstr(path, "/sdcard/");
+}
+
 int ensure_path_mounted(const char* path) {
+	return ensure_path_mounted_at_mount_point(path);
+}
+
+int ensure_path_mounted_at_mount_point(const char* path) {
+	// we can now mount /sdcard on non-sdcard devices!
+	if (is_data_media_volume_path(path)) {
+		LOGI("using /data/media for %s.\n", path);
+		int ret;
+		if (0 != (ret = ensure_path_mounted("/data")))
+			return ret;
+		setup_data_media();
+		return 0;
+	}
+	
     fstab_rec* v;
     if (memcmp(path, "/storage/", 9) == 0) {
         char label[PATH_MAX];
@@ -588,4 +640,12 @@ int setup_install_mounts() {
         }
     }
     return 0;
+}
+
+void setup_legacy_storage_paths() {
+	char* primary_path = get_primary_storage_path();
+	if (!is_data_media_volume_path(primary_path)) {
+		rmdir("/sdcard");
+		symlink(primary_path, "/sdcard");
+	}
 }
