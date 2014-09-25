@@ -83,11 +83,9 @@ void COTSettings::ShowMainMenu(Device* device) {
 				if (COTTheme::use_theme) {
 					ui->Print("Using sdcard theme...\n");
 					ui->ResetIcons(1);
-					ui->SetBackground(RecoveryUI::NONE);
 				} else {
 					ui->Print("Using built-in theme...\n");
 					ui->ResetIcons(0);
-					ui->SetBackground(RecoveryUI::NONE);
 				}
 				break;
             case Device::kGoBack:
