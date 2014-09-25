@@ -82,7 +82,10 @@ void COTSettings::ShowMainMenu(Device* device) {
 				LOGE("Saving settings...\n");
 				if (COTTheme::use_theme) {
 					LOGE("Using sdcard theme...\n");
-					//ScreenRecoveryUI::ResetIcons(1);
+					ensure_path_mounted("/data/media");
+					ensure_path_mounted("/sdcard");
+					ui->ResetIcons(1);
+					ui->Print("test1");
 				} else {
 					LOGE("Using built-in theme...\n");
 					ui->ResetIcons(0);
