@@ -28,6 +28,7 @@ class ScreenRecoveryUI : public RecoveryUI {
   public:
     ScreenRecoveryUI();
 
+	void InitIcons();
     void Init();
     void SetLocale(const char* locale);
 

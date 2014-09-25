@@ -469,29 +469,9 @@ void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* sur
     }
 }
 
-void ScreenRecoveryUI::Init()
+void ScreenRecoveryUI::InitIcons()
 {
-    gr_init();
-
-    gr_set_font("log");
-    gr_font_size(&log_char_width, &log_char_height);
-    gr_set_font("menu");
-    gr_font_size(&char_width, &char_height);
-
-    log_text_rows = gr_fb_height() / log_char_height;
-    log_text_cols = gr_fb_width() / log_char_width;
-
-    text_col = text_row = 0;
-    text_rows = gr_fb_height() / char_height;
-    if (max_menu_rows > kMaxMenuRows)
-        max_menu_rows = kMaxMenuRows;
-    if (text_rows > kMaxRows) text_rows = kMaxRows;
-    text_top = 1;
-
-    text_cols = gr_fb_width() / char_width;
-    if (text_cols > kMaxCols - 1) text_cols = kMaxCols - 1;
-
-    LoadBitmap("icon_header", &headerIcon);
+	LoadBitmap("icon_header", &headerIcon);
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
 
@@ -516,7 +496,32 @@ void ScreenRecoveryUI::Init()
     LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING]);
     LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND]);
     LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
+}
 
+void ScreenRecoveryUI::Init()
+{
+    gr_init();
+
+    gr_set_font("log");
+    gr_font_size(&log_char_width, &log_char_height);
+    gr_set_font("menu");
+    gr_font_size(&char_width, &char_height);
+
+    log_text_rows = gr_fb_height() / log_char_height;
+    log_text_cols = gr_fb_width() / log_char_width;
+
+    text_col = text_row = 0;
+    text_rows = gr_fb_height() / char_height;
+    if (max_menu_rows > kMaxMenuRows)
+        max_menu_rows = kMaxMenuRows;
+    if (text_rows > kMaxRows) text_rows = kMaxRows;
+    text_top = 1;
+
+    text_cols = gr_fb_width() / char_width;
+    if (text_cols > kMaxCols - 1) text_cols = kMaxCols - 1;
+    
+	ScreenRecoveryUI::InitIcons();
+	
     RecoveryUI::Init();
 }
 
