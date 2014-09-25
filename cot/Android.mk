@@ -21,6 +21,7 @@ LOCAL_SRC_FILES := \
     settings.cpp \
     ors.cpp \
     package.cpp \
+    theme.cpp \
     iniparser/iniparser.c \
     iniparser/dictionary.c
     

@@ -19,3 +19,4 @@
 #include "settings.h"
 #include "ors.h"
 #include "package.h"
+#include "theme.h"
