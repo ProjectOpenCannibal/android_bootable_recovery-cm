@@ -44,7 +44,7 @@ extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
 const char* COTTheme::theme_path = "custom";
-const bool COTTheme::use_theme = false;
+bool COTTheme::use_theme = false;
 
 void COTTheme::ChooseThemeMenu(Device* device) {
 	static const char* headers[] = { "Choose Theme",
