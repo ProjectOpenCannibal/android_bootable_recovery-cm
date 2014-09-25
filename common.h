@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "device.h"
 
 #ifdef __cplusplus
 extern "C" {

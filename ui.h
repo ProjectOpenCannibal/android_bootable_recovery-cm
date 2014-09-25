@@ -22,7 +22,6 @@
 #include <time.h>
 
 #include "messagesocket.h"
-#include "device.h"
 
 #define MAX_NR_INPUT_DEVICES    8
 #define MAX_NR_VKEYS            8
