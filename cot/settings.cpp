@@ -64,12 +64,10 @@ void COTSettings::ShowMainMenu(Device* device) {
     };
 
     static const char* SettingsMenuItems[] = { "Theme",
-		"Save Settings",
         NULL
     };
     
     #define THEME_OPTIONS 0
-    #define SAVE_SETTINGS 1
 
     for (;;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
@@ -78,20 +76,6 @@ void COTSettings::ShowMainMenu(Device* device) {
                 //COTPackage::ShowZipOptionsMenu(device);
                 COTTheme::ChooseThemeMenu(device);
                 break;
-			case SAVE_SETTINGS:
-				LOGE("Saving settings...\n");
-				if (COTTheme::use_theme) {
-					LOGE("Using sdcard theme...\n");
-					ensure_path_mounted("/data/media");
-					ensure_path_mounted("/sdcard");
-					ui->ResetIcons(1);
-					ui->Print("test1");
-				} else {
-					LOGE("Using built-in theme...\n");
-					ui->ResetIcons(0);
-					ui->Print("test");
-				}
-				break;
             case Device::kGoBack:
                 return;
         }

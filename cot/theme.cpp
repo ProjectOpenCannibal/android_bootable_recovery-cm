@@ -62,9 +62,13 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		switch (result) {
 			case 0:
 				COTTheme::use_theme = false;
+				ensure_path_mounted("/data/media");
+				ui->ResetIcons(0);
 				return;
 			case 1:
 				COTTheme::use_theme = true;
+				ensure_path_mounted("/data/media");
+				ui->ResetIcons(1);
 				return;
 			case Device::kGoBack:
                 return;
