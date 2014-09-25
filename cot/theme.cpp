@@ -62,9 +62,11 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		switch (result) {
 			case 0:
 				COTTheme::use_theme = false;
+				return;
 				break;
 			case 1:
 				COTTheme::use_theme = true;
+				return;
 				break;
 			case Device::kGoBack:
                 return;
