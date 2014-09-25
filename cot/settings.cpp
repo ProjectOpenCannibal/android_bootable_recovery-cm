@@ -44,10 +44,10 @@ extern RecoveryUI* ui;
 
 bool COTSettings::TestINI(Device* device) {
 	dictionary * ini;
-	char * ini_file = "/sdcard/test.ini"
+	char * ini_file = "/sdcard/test.ini";
 	
 	ini = iniparser_load(ini_file);
-	if (ini = NULL) {
+	if (ini == NULL) {
 		ui->Print("Can't load /sdcard/test.ini!\n");
 		return false;
 	}
