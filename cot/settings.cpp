@@ -41,7 +41,6 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
-extern ScreenRecoveryUI* screen;
 
 bool COTSettings::TestINI(Device* device) {
 	dictionary * ini;
