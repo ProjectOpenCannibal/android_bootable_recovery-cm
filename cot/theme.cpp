@@ -41,47 +41,31 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
+extern ScreenRecoveryUI* screen;
 
-bool COTSettings::TestINI(Device* device) {
-	dictionary * ini;
-	char * ini_file = "/sdcard/test.ini";
+const char* COTTheme::theme_path = "custom";
+const bool* COTTheme::use_theme = false;
+
+void COTTheme::ChooseThemeMenu(Device* device) {
+	static const char* headers[] = { "Choose Theme",
+		"",
+		NULL
+	};
 	
-	ini = iniparser_load(ini_file);
-	if (ini == NULL) {
-		ui->Print("Can't load /sdcard/test.ini!\n");
-		return false;
-	}
-	char * testentry = iniparser_getstring(ini, "test:string", NULL);
-	ui->Print(testentry);
-	return true;
-}
-
-void COTSettings::ShowMainMenu(Device* device) {
-    static const char* SettingsMenuHeaders[] = { "Settings",
-        "",
-        NULL
-    };
-
-    static const char* SettingsMenuItems[] = { "Theme",
-		"Save Settings",
-        NULL
-    };
-    
-    #define THEME_OPTIONS 0
-    #define SAVE_SETTINGS 1
-
-    for (;;) {
-        int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
-        switch (SettingsSelection) {
-            case THEME_OPTIONS:
-                //COTPackage::ShowZipOptionsMenu(device);
-                COTTheme::ChooseThemeMenu(device);
-                break;
-			case SAVE_SETTINGS:
-				ui->Print("Saving settings...\n");
+	static const char* menuitems[] = { "Use default theme",
+		"Use custom theme",
+		NULL
+	};
+	
+	for (;;) {
+		int result = get_menu_selection(headers, menuitems, 0, 0, device);
+		switch (result) {
+			case 0:
+				COTTheme::use_theme = false;
 				break;
-            case Device::kGoBack:
-                return;
-        }
-    }
+			case 1:
+				COTTheme::use_theme = true;
+				break;
+		}
+	}
 }
