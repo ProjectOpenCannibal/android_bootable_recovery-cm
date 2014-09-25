@@ -28,6 +28,8 @@ class ScreenRecoveryUI : public RecoveryUI {
   public:
     ScreenRecoveryUI();
 
+	void ResetIcons(int is_sdcard_theme);
+	void InitIcons(int is_sdcard_theme);
     void Init();
     void SetLocale(const char* locale);
 

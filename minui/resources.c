@@ -138,7 +138,7 @@ static int open_sdcard_png(const char* name, png_structp* png_ptr, png_infop* in
     unsigned char header[8];
     int result = 0;
 
-    snprintf(resPath, sizeof(resPath)-1, "/sdcard/themes/%s.png", name);
+    snprintf(resPath, sizeof(resPath)-1, "/data/media/themes/%s.png", name);
     resPath[sizeof(resPath)-1] = '\0';
     FILE* fp = fopen(resPath, "rb");
     if (fp == NULL) {

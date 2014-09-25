@@ -41,6 +41,7 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
+extern ScreenRecoveryUI* screen;
 
 bool COTSettings::TestINI(Device* device) {
 	dictionary * ini;
@@ -78,11 +79,13 @@ void COTSettings::ShowMainMenu(Device* device) {
                 COTTheme::ChooseThemeMenu(device);
                 break;
 			case SAVE_SETTINGS:
-				ui->Print("Saving settings...\n");
+				LOGE("Saving settings...\n");
 				if (COTTheme::use_theme) {
-					ui->Print("Using sdcard theme...\n");
+					LOGE("Using sdcard theme...\n");
+					//ScreenRecoveryUI::ResetIcons(1);
 				} else {
-					ui->Print("Using built-in theme...\n");
+					LOGE("Using built-in theme...\n");
+					ui->ResetIcons(0);
 				}
 				break;
             case Device::kGoBack:
