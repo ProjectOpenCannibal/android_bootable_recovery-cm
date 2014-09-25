@@ -253,6 +253,14 @@ RecoveryUI::RecoveryUI() :
     memset(key_pressed, 0, sizeof(key_pressed));
 }
 
+void RecoveryUI::ResetIcons(int is_sdcard_theme)
+{
+}
+
+void RecoveryUI::InitIcons(int is_sdcard_theme)
+{
+}
+
 void RecoveryUI::Init() {
     calibrate_swipe();
     ev_init(input_callback, NULL);

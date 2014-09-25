@@ -33,6 +33,7 @@
 #include "minui/minui.h"
 #include "screen_ui.h"
 #include "ui.h"
+#include "install.h"
 
 #include "cot/includes.h"
 
@@ -473,11 +474,12 @@ void ScreenRecoveryUI::ResetIcons(int is_sdcard_theme = 0)
 {
 	pthread_mutex_lock(&updateMutex);
 	ScreenRecoveryUI::InitIcons(is_sdcard_theme);
-	ScreenRecoveryUI::ShowText(true);
 	update_screen_locked();
 	pthread_mutex_unlock(&updateMutex);
-	ScreenRecoveryUI::SetBackground(RecoveryUI::NONE);
-    if (show_text) ScreenRecoveryUI::ShowText(true);
+	
+	ScreenRecoveryUI::ShowText(true);
+    ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
+    //if (show_text) ScreenRecoveryUI::ShowText(true);
 }
 
 void ScreenRecoveryUI::InitIcons(int is_sdcard_theme = 0)

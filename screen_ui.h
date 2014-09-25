@@ -21,6 +21,7 @@
 
 #include "ui.h"
 #include "minui/minui.h"
+#include "device.h"
 
 // Implementation of RecoveryUI appropriate for devices with a screen
 // (shows an icon + a progress bar, text logging, menu, etc.)

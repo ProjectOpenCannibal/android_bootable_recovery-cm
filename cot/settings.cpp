@@ -86,6 +86,7 @@ void COTSettings::ShowMainMenu(Device* device) {
 				} else {
 					LOGE("Using built-in theme...\n");
 					ui->ResetIcons(0);
+					ui->Print("test");
 				}
 				break;
             case Device::kGoBack:

@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include "device.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,6 +44,8 @@ extern "C" {
 FILE* fopen_path(const char *path, const char *mode);
 
 void ui_print(const char* format, ...);
+
+static void prompt_and_wait(Device* device, int status);
 
 #ifdef __cplusplus
 }

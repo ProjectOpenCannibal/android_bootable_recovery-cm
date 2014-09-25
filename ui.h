@@ -22,6 +22,7 @@
 #include <time.h>
 
 #include "messagesocket.h"
+#include "device.h"
 
 #define MAX_NR_INPUT_DEVICES    8
 #define MAX_NR_VKEYS            8
@@ -97,7 +98,7 @@ class RecoveryUI {
     virtual ~RecoveryUI() { }
 
 	// Init icons
-	virtual void ResetIcons(int is_sdcard_theme);
+	virtual void ResetIcons( int is_sdcard_theme);
 	virtual void InitIcons(int is_sdcard_theme);
 	
     // Initialize the object; called before anything else.
