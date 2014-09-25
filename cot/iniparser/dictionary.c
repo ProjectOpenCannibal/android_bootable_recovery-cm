@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C"{
+#endif
 /*-------------------------------------------------------------------------*/
 /**
    @file    dictionary.c
@@ -396,3 +399,6 @@ int main(int argc, char *argv[])
 }
 #endif
 /* vim: set ts=4 et sw=4 tw=75 */
+#ifdef __cplusplus
+}
+#endif

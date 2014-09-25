@@ -16,4 +16,5 @@
 class COTSettings {
 	public:
 		static void ShowMainMenu(Device* device);
+		static bool COTSettings::TestINI(Device* device);
 };

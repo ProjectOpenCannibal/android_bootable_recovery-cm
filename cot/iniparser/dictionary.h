@@ -1,4 +1,6 @@
-
+#ifdef __cplusplus
+extern "C"{
+#endif
 /*-------------------------------------------------------------------------*/
 /**
    @file    dictionary.h
@@ -162,4 +164,7 @@ void dictionary_unset(dictionary * d, const char * key);
 /*--------------------------------------------------------------------------*/
 void dictionary_dump(dictionary * d, FILE * out);
 
+#endif
+#ifdef __cplusplus
+}
 #endif

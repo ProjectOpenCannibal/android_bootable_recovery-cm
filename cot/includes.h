@@ -14,6 +14,8 @@
  */
 
 #include "../libcrecovery/common.h"
+#include "iniparser/iniparser.h"
+#include "iniparser/dictionary.h"
 #include "settings.h"
 #include "ors.h"
 #include "package.h"

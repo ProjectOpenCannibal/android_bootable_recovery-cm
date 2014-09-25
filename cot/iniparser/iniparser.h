@@ -1,4 +1,6 @@
-
+#ifdef __cplusplus
+extern "C"{
+#endif
 /*-------------------------------------------------------------------------*/
 /**
    @file    iniparser.h
@@ -304,4 +306,7 @@ dictionary * iniparser_load(const char * ininame);
 /*--------------------------------------------------------------------------*/
 void iniparser_freedict(dictionary * d);
 
+#endif
+#ifdef __cplusplus
+}
 #endif

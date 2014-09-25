@@ -42,6 +42,20 @@
 
 extern RecoveryUI* ui;
 
+bool COTSettings::TestINI(Device* device) {
+	dictionary * ini;
+	char * ini_file = "/sdcard/test.ini"
+	
+	ini = iniparser_load(ini_file);
+	if (ini = NULL) {
+		ui->Print("Can't load /sdcard/test.ini!\n");
+		return false;
+	}
+	char * testentry = iniparser_getstring(ini, "test:string", NULL);
+	ui->Print(testentry);
+	return true;
+}
+
 void COTSettings::ShowMainMenu(Device* device) {
     static const char* SettingsMenuHeaders[] = { "Settings",
         "",
@@ -59,6 +73,11 @@ void COTSettings::ShowMainMenu(Device* device) {
         switch (SettingsSelection) {
             case ZIP_OPTIONS:
                 //COTPackage::ShowZipOptionsMenu(device);
+                if (COTSettings::TestINI(device)) {
+					ui->Print("true\n");
+				} else {
+					ui->Print("false\n");
+				}
                 break;
 
             case Device::kGoBack:

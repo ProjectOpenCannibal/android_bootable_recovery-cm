@@ -1,4 +1,6 @@
-
+#ifdef __cplusplus
+extern "C"{
+#endif
 /*-------------------------------------------------------------------------*/
 /**
    @file    iniparser.c
@@ -746,3 +748,6 @@ void iniparser_freedict(dictionary * d)
 }
 
 /* vim: set ts=4 et sw=4 tw=75 */
+#ifdef __cplusplus
+}
+#endif
