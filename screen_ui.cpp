@@ -34,6 +34,7 @@
 #include "screen_ui.h"
 #include "ui.h"
 #include "install.h"
+#include "roots.h"
 
 #include "cot/includes.h"
 
@@ -437,7 +438,7 @@ void ScreenRecoveryUI::progress_loop() {
 void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
     int result;
     if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_display_surface(filename, surface);
+		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), surface);
 	} else {
 		result = res_create_display_surface(filename, surface);
 	}
@@ -449,7 +450,7 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, int
 void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
     int result;
     if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_multi_display_surface(filename, frames, surface);
+		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), frames, surface);
 	} else {
 		result = res_create_multi_display_surface(filename, frames, surface);
 	}
@@ -461,7 +462,7 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
 void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
     int result;
     if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_localized_alpha_surface(filename, locale, surface);
+		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), locale, surface);
 	} else {
 		result = res_create_localized_alpha_surface(filename, locale, surface);
 	}
