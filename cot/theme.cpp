@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <dirent.h>
 
 #include "../bootloader.h"
 #include "../common.h"
@@ -108,30 +109,93 @@ void COTTheme::LoadTheme(Device* device, const char* themename) {
 	COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", NULL);
 }
 
+int COTTheme::compare_string(const void* a, const void* b) {
+    return strcmp(*(const char**)a, *(const char**)b);
+}
+
 void COTTheme::ChooseThemeMenu(Device* device) {
+	ensure_path_mounted("/data/media");
+	ensure_path_mounted("/sdcard");
 	static const char* headers[] = { "Choose Theme",
-		"",
-		NULL
+									"",
+									NULL
 	};
+    DIR* d;
+    struct dirent* de;
+    d = opendir("/sdcard/themes");
+    if (d == NULL) {
+        LOGE("error opening /sdcard/themes: %s\n", strerror(errno));
+        return;
+    }
+
+    int d_size = 0;
+    int d_alloc = 10;
+    char** dirs = (char**)malloc(d_alloc * sizeof(char*));
+    int z_size = 1;
+    int z_alloc = 10;
+    char** zips = (char**)malloc(z_alloc * sizeof(char*));
+    zips[0] = strdup("default");
+
+    while ((de = readdir(d)) != NULL) {
+        int name_len = strlen(de->d_name);
+
+        if (de->d_type == DT_DIR) {
+            // skip "." and ".." entries
+            if (name_len == 1 && de->d_name[0] == '.') continue;
+            if (name_len == 2 && de->d_name[0] == '.' &&
+                de->d_name[1] == '.') continue;
+
+            if (d_size >= d_alloc) {
+                d_alloc *= 2;
+                dirs = (char**)realloc(dirs, d_alloc * sizeof(char*));
+            }
+            dirs[d_size] = (char*)malloc(name_len + 2);
+            strcpy(dirs[d_size], de->d_name);
+            dirs[d_size][name_len] = '/';
+            dirs[d_size][name_len+1] = '\0';
+            ++d_size;
+        }
+    }
+    closedir(d);
+
+    qsort(dirs, d_size, sizeof(char*), compare_string);
+    qsort(zips, z_size, sizeof(char*), compare_string);
+    
+    // append dirs to the zips list
+    if (d_size + z_size + 1 > z_alloc) {
+        z_alloc = d_size + z_size + 1;
+        zips = (char**)realloc(zips, z_alloc * sizeof(char*));
+    }
+    memcpy(zips + z_size, dirs, d_size * sizeof(char*));
+    free(dirs);
+    z_size += d_size;
+    zips[z_size] = NULL;
+    
+    int result;
+    int chosen_item = 0;
 	
-	static const char* menuitems[] = { "Use default theme",
-		"Use custom theme",
-		NULL
-	};
-	
-	for (;;) {
-		int result = get_menu_selection(headers, menuitems, 0, 0, device);
-		switch (result) {
-			case 0:
-				COTTheme::LoadTheme(device, "default");
-				ui->ResetIcons(0);
-				return;
-			case 1:
-				COTTheme::LoadTheme(device, "custom");
-				ui->ResetIcons(1);
-				return;
-			case Device::kGoBack:
-                return;
+	do {
+		LOGE("Showing the selection menu...\n");
+		chosen_item = get_menu_selection(headers, zips, 1, chosen_item, device);
+		LOGE("Selected something...\n");
+		if (chosen_item == 0) {
+			COTTheme::theme_path = "default";
+			COTTheme::use_theme = false;
+			break;
 		}
-	}
+		
+		char* item = zips[chosen_item];
+		int item_len = strlen(item);
+		
+		char new_path[PATH_MAX];
+		strlcpy(new_path, item, PATH_MAX);
+		
+		LOGE("Chose %s ...\n", item);
+		break;
+	} while (true);
+	
+	int i;
+    for (i = 0; i < z_size; ++i) free(zips[i]);
+    free(zips);
+    free(headers);
 }
