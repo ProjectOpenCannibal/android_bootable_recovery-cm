@@ -44,7 +44,7 @@
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
-const char* COTTheme::theme_path = "custom";
+const char* COTTheme::theme_path = "default";
 bool COTTheme::use_theme = false;
 int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };
 int COTTheme::C_TOP[4] = { 208, 208, 208, 255};
@@ -55,18 +55,35 @@ int COTTheme::C_TEXT_FILL[4] = { 0, 0, 0, 255 };
 int COTTheme::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };
 int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
-void COTTheme::LoadTheme(Device* device, const char* themename) {
+void COTTheme::LoadTheme(Device* device, char * themename) {
+	LOGE("Loading theme %s...\n", themename);
 	ensure_path_mounted("/data/media");
 	ensure_path_mounted("/sdcard");
 	dictionary * ini;
 	if (strcmp(themename, "default")) {
+		char * theme_base = "/sdcard/themes/";
+		char * theme_end = "/theme.ini";
+		char * full_theme_file = (char *)malloc(strlen(theme_base) + strlen(theme_end) + strlen(themename));
+		strcpy(full_theme_file, "/sdcard/themes/");
+		strcat(full_theme_file, themename);
+		strcat(full_theme_file, "/theme.ini");
+		ini = iniparser_load(full_theme_file);
+		if (ini == NULL) {
+			LOGE("Can't load theme %s from %s!\n", themename, full_theme_file);
+			return;
+		}
+		LOGE("Theme %s loaded from %s!\n", themename, full_theme_file);
 		COTTheme::use_theme = true;
-		char * ini_file = "/sdcard/themes/custom/theme.ini";
-		ini = iniparser_load(ini_file);
+		COTTheme::theme_path = themename;
 	} else {
-		COTTheme::use_theme = false;
 		char * ini_file = "/res/images/default_theme.ini";
 		ini = iniparser_load(ini_file);
+		if (ini == NULL) {
+			LOGE("Can't load theme %s!\n", themename);
+			return;
+		}
+		COTTheme::use_theme = false;
+		COTTheme::theme_path = "default";
 	}
 	COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
 	COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
@@ -151,8 +168,7 @@ void COTTheme::ChooseThemeMenu(Device* device) {
             }
             dirs[d_size] = (char*)malloc(name_len + 2);
             strcpy(dirs[d_size], de->d_name);
-            dirs[d_size][name_len] = '/';
-            dirs[d_size][name_len+1] = '\0';
+            dirs[d_size][name_len] = '\0';
             ++d_size;
         }
     }
@@ -174,14 +190,10 @@ void COTTheme::ChooseThemeMenu(Device* device) {
     int result;
     int chosen_item = 0;
 	
-	do {
-		LOGE("Showing the selection menu...\n");
+	for (;;) {
 		chosen_item = get_menu_selection(headers, zips, 1, chosen_item, device);
-		LOGE("Selected something...\n");
-		if (chosen_item == 0) {
-			COTTheme::theme_path = "default";
-			COTTheme::use_theme = false;
-			break;
+		if (chosen_item == Device::kGoBack) {
+			return;
 		}
 		
 		char* item = zips[chosen_item];
@@ -191,11 +203,14 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		strlcpy(new_path, item, PATH_MAX);
 		
 		LOGE("Chose %s ...\n", item);
-		break;
-	} while (true);
-	
-	int i;
-    for (i = 0; i < z_size; ++i) free(zips[i]);
-    free(zips);
-    free(headers);
+		COTTheme::theme_path = item;
+		COTTheme::use_theme = true;
+		COTTheme::LoadTheme(device, item);
+		int i;
+		for (i = 0; i < z_size; ++i) free(zips[i]);
+		free(zips);
+		free(headers);
+		ui->ResetIcons();
+		return;
+	}
 }

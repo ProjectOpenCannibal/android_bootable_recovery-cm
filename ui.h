@@ -97,8 +97,8 @@ class RecoveryUI {
     virtual ~RecoveryUI() { }
 
 	// Init icons
-	virtual void ResetIcons( int is_sdcard_theme);
-	virtual void InitIcons(int is_sdcard_theme);
+	virtual void ResetIcons();
+	virtual void InitIcons();
 	
     // Initialize the object; called before anything else.
     virtual void Init();

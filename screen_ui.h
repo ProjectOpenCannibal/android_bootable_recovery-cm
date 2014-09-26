@@ -29,8 +29,8 @@ class ScreenRecoveryUI : public RecoveryUI {
   public:
     ScreenRecoveryUI();
 
-	void ResetIcons(int is_sdcard_theme);
-	void InitIcons(int is_sdcard_theme);
+	void ResetIcons();
+	void InitIcons();
     void Init();
     void SetLocale(const char* locale);
 
@@ -155,9 +155,9 @@ class ScreenRecoveryUI : public RecoveryUI {
     static void* progress_thread(void* cookie);
     void progress_loop();
 
-	void LoadBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme, const char* theme_name);
-    void LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, int is_sdcard_theme, const char* theme_name);
-    void LoadLocalizedBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme, const char* theme_name);
+	void LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name);
+    void LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name);
+    void LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name);
 };
 
 #endif  // RECOVERY_UI_H

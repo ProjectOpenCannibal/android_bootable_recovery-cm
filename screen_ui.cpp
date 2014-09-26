@@ -459,10 +459,10 @@ void ScreenRecoveryUI::progress_loop() {
     }
 }
 
-void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
+void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
-    if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), surface);
+    if (strcmp(theme_name, "default")) {
+		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
 	} else {
 		result = res_create_display_surface(filename, surface);
 	}
@@ -471,10 +471,10 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, int
     }
 }
 
-void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
+void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name = "default") {
     int result;
-    if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), frames, surface);
+    if (strcmp(theme_name, "default")) {
+		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
 	} else {
 		result = res_create_multi_display_surface(filename, frames, surface);
 	}
@@ -483,10 +483,10 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
     }
 }
 
-void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, int is_sdcard_theme = 0, const char* theme_name = NULL) {
+void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
-    if (is_sdcard_theme != 0) {
-		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), locale, surface);
+    if (strcmp(theme_name, "default")) {
+		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
 	} else {
 		result = res_create_localized_alpha_surface(filename, locale, surface);
 	}
@@ -495,10 +495,10 @@ void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* sur
     }
 }
 
-void ScreenRecoveryUI::ResetIcons(int is_sdcard_theme = 0)
+void ScreenRecoveryUI::ResetIcons()
 {
 	pthread_mutex_lock(&updateMutex);
-	ScreenRecoveryUI::InitIcons(is_sdcard_theme);
+	ScreenRecoveryUI::InitIcons();
 	update_screen_locked();
 	pthread_mutex_unlock(&updateMutex);
 	
@@ -507,27 +507,29 @@ void ScreenRecoveryUI::ResetIcons(int is_sdcard_theme = 0)
     //if (show_text) ScreenRecoveryUI::ShowText(true);
 }
 
-void ScreenRecoveryUI::InitIcons(int is_sdcard_theme = 0)
+void ScreenRecoveryUI::InitIcons()
 {
-	LoadBitmap("icon_header", &headerIcon, is_sdcard_theme);
+	const char* theme_name = COTTheme::theme_path;
+	LOGE("Loading resources for theme %s\n", theme_name);
+	LoadBitmap("icon_header", &headerIcon, theme_name);
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
 	backgroundIcon[NONE] = NULL;
-    LoadBitmapArray("icon_installing", &installing_frames, &installation, is_sdcard_theme);
+    LoadBitmapArray("icon_installing", &installing_frames, &installation, theme_name);
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;
     backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
-    LoadBitmap("icon_info", &backgroundIcon[INFO], is_sdcard_theme);
-    LoadBitmap("icon_error", &backgroundIcon[ERROR], is_sdcard_theme);
+    LoadBitmap("icon_info", &backgroundIcon[INFO], theme_name);
+    LoadBitmap("icon_error", &backgroundIcon[ERROR], theme_name);
     backgroundIcon[NO_COMMAND] = backgroundIcon[ERROR];
 
-    LoadBitmap("progress_empty", &progressBarEmpty, is_sdcard_theme);
-    LoadBitmap("progress_fill", &progressBarFill, is_sdcard_theme);
-    LoadBitmap("stage_empty", &stageMarkerEmpty, is_sdcard_theme);
-    LoadBitmap("stage_fill", &stageMarkerFill, is_sdcard_theme);
+    LoadBitmap("progress_empty", &progressBarEmpty, theme_name);
+    LoadBitmap("progress_fill", &progressBarFill, theme_name);
+    LoadBitmap("stage_empty", &stageMarkerEmpty, theme_name);
+    LoadBitmap("stage_fill", &stageMarkerFill, theme_name);
 
-    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], is_sdcard_theme);
-    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], is_sdcard_theme);
-    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], is_sdcard_theme);
+    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], theme_name);
+    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], theme_name);
+    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], theme_name);
     LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
 }
 
@@ -553,7 +555,7 @@ void ScreenRecoveryUI::Init()
     text_cols = gr_fb_width() / char_width;
     if (text_cols > kMaxCols - 1) text_cols = kMaxCols - 1;
 
-	ScreenRecoveryUI::InitIcons(0);
+	ScreenRecoveryUI::InitIcons();
 
 	text_first_row = (header_height / char_height) + 1;
 	menu_item_start = text_first_row * char_height;
