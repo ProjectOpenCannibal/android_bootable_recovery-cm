@@ -17,5 +17,13 @@ class COTTheme {
 	public:
 		static const char* theme_path;
 		static bool use_theme;
+		static int C_HEADER[4];
+		static int C_TOP[4];
+		static int C_MENU_SEL_FG[4];
+		static int C_MENU_SEL_BG[4];
+		static int C_LOG[4];
+		static int C_TEXT_FILL[4];
+		static int C_ERROR_TEXT[4];
+		static int C_DEFAULT[4];
 		static void ChooseThemeMenu(Device* device);
 };

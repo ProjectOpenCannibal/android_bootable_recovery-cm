@@ -45,6 +45,14 @@ extern ScreenRecoveryUI* screen;
 
 const char* COTTheme::theme_path = "custom";
 bool COTTheme::use_theme = false;
+int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };
+int COTTheme::C_TOP[4] = { 208, 208, 208, 255};
+int COTTheme::C_MENU_SEL_FG[4] = { 25, 160, 210, 255 };
+int COTTheme::C_MENU_SEL_BG[4] = { 60, 60, 61, 255 };
+int COTTheme::C_LOG[4] = { 76, 76, 76, 255 };
+int COTTheme::C_TEXT_FILL[4] = { 0, 0, 0, 255 };
+int COTTheme::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };
+int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
 void COTTheme::ChooseThemeMenu(Device* device) {
 	static const char* headers[] = { "Choose Theme",
