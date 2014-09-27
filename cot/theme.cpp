@@ -45,7 +45,7 @@ extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
 // Keep the dictionary in memory so we can access it anywhere
-dictionary * COTTheme::ini;
+dictionary * COTTheme::themeini;
 
 
 bool COTTheme::use_theme = false;
@@ -69,8 +69,8 @@ void COTTheme::LoadTheme(char * themename) {
 		strcpy(full_theme_file, "/sdcard/themes/");
 		strcat(full_theme_file, themename);
 		strcat(full_theme_file, "/theme.ini");
-		ini = iniparser_load(full_theme_file);
-		if (ini == NULL) {
+		themeini = iniparser_load(full_theme_file);
+		if (themeini == NULL) {
 			LOGE("Can't load theme %s from %s!\n", themename, full_theme_file);
 			return;
 		}
@@ -78,52 +78,52 @@ void COTTheme::LoadTheme(char * themename) {
 		COTTheme::use_theme = true;
 	} else {
 		char * ini_file = "/res/images/default_theme.ini";
-		ini = iniparser_load(ini_file);
-		if (ini == NULL) {
+		themeini = iniparser_load(ini_file);
+		if (themeini == NULL) {
 			LOGE("Can't load theme %s!\n", themename);
 			return;
 		}
 		COTTheme::use_theme = false;
 	}
-	COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
-	COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
-	COTTheme::C_HEADER[2] = iniparser_getint(ini, "theme:header_b", NULL);
-	COTTheme::C_HEADER[3] = iniparser_getint(ini, "theme:header_a", NULL);
+	COTTheme::C_HEADER[0] = iniparser_getint(themeini, "theme:header_r", NULL);
+	COTTheme::C_HEADER[1] = iniparser_getint(themeini, "theme:header_g", NULL);
+	COTTheme::C_HEADER[2] = iniparser_getint(themeini, "theme:header_b", NULL);
+	COTTheme::C_HEADER[3] = iniparser_getint(themeini, "theme:header_a", NULL);
 		
-	COTTheme::C_TOP[0] = iniparser_getint(ini, "theme:top_r", NULL);
-	COTTheme::C_TOP[1] = iniparser_getint(ini, "theme:top_g", NULL);
-	COTTheme::C_TOP[2] = iniparser_getint(ini, "theme:top_b", NULL);
-	COTTheme::C_TOP[3] = iniparser_getint(ini, "theme:top_a", NULL);
+	COTTheme::C_TOP[0] = iniparser_getint(themeini, "theme:top_r", NULL);
+	COTTheme::C_TOP[1] = iniparser_getint(themeini, "theme:top_g", NULL);
+	COTTheme::C_TOP[2] = iniparser_getint(themeini, "theme:top_b", NULL);
+	COTTheme::C_TOP[3] = iniparser_getint(themeini, "theme:top_a", NULL);
 		
-	COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(ini, "theme:menufg_r", NULL);
-	COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(ini, "theme:menufg_g", NULL);
-	COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(ini, "theme:menufg_b", NULL);
-	COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(ini, "theme:menufg_a", NULL);
+	COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(themeini, "theme:menufg_r", NULL);
+	COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(themeini, "theme:menufg_g", NULL);
+	COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(themeini, "theme:menufg_b", NULL);
+	COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(themeini, "theme:menufg_a", NULL);
 		
-	COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(ini, "theme:menubg_r", NULL);
-	COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(ini, "theme:menubg_g", NULL);
-	COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(ini, "theme:menubg_b", NULL);
-	COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(ini, "theme:menubg_a", NULL);
+	COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(themeini, "theme:menubg_r", NULL);
+	COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(themeini, "theme:menubg_g", NULL);
+	COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(themeini, "theme:menubg_b", NULL);
+	COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(themeini, "theme:menubg_a", NULL);
 		
-	COTTheme::C_LOG[0] = iniparser_getint(ini, "theme:log_r", NULL);
-	COTTheme::C_LOG[1] = iniparser_getint(ini, "theme:log_g", NULL);
-	COTTheme::C_LOG[2] = iniparser_getint(ini, "theme:log_b", NULL);
-	COTTheme::C_LOG[3] = iniparser_getint(ini, "theme:log_a", NULL);
+	COTTheme::C_LOG[0] = iniparser_getint(themeini, "theme:log_r", NULL);
+	COTTheme::C_LOG[1] = iniparser_getint(themeini, "theme:log_g", NULL);
+	COTTheme::C_LOG[2] = iniparser_getint(themeini, "theme:log_b", NULL);
+	COTTheme::C_LOG[3] = iniparser_getint(themeini, "theme:log_a", NULL);
 		
-	COTTheme::C_TEXT_FILL[0] = iniparser_getint(ini, "theme:textfill_r", NULL);
-	COTTheme::C_TEXT_FILL[1] = iniparser_getint(ini, "theme:textfill_g", NULL);
-	COTTheme::C_TEXT_FILL[2] = iniparser_getint(ini, "theme:textfill_b", NULL);
-	COTTheme::C_TEXT_FILL[3] = iniparser_getint(ini, "theme:textfill_a", NULL);
+	COTTheme::C_TEXT_FILL[0] = iniparser_getint(themeini, "theme:textfill_r", NULL);
+	COTTheme::C_TEXT_FILL[1] = iniparser_getint(themeini, "theme:textfill_g", NULL);
+	COTTheme::C_TEXT_FILL[2] = iniparser_getint(themeini, "theme:textfill_b", NULL);
+	COTTheme::C_TEXT_FILL[3] = iniparser_getint(themeini, "theme:textfill_a", NULL);
 		
-	COTTheme::C_ERROR_TEXT[0] = iniparser_getint(ini, "theme:errortext_r", NULL);
-	COTTheme::C_ERROR_TEXT[1] = iniparser_getint(ini, "theme:errortext_g", NULL);
-	COTTheme::C_ERROR_TEXT[2] = iniparser_getint(ini, "theme:errortext_b", NULL);
-	COTTheme::C_ERROR_TEXT[3] = iniparser_getint(ini, "theme:errortext_a", NULL);
+	COTTheme::C_ERROR_TEXT[0] = iniparser_getint(themeini, "theme:errortext_r", NULL);
+	COTTheme::C_ERROR_TEXT[1] = iniparser_getint(themeini, "theme:errortext_g", NULL);
+	COTTheme::C_ERROR_TEXT[2] = iniparser_getint(themeini, "theme:errortext_b", NULL);
+	COTTheme::C_ERROR_TEXT[3] = iniparser_getint(themeini, "theme:errortext_a", NULL);
 	
-	COTTheme::C_DEFAULT[0] = iniparser_getint(ini, "theme:default_r", NULL);
-	COTTheme::C_DEFAULT[1] = iniparser_getint(ini, "theme:default_g", NULL);
-	COTTheme::C_DEFAULT[2] = iniparser_getint(ini, "theme:default_b", NULL);
-	COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", NULL);
+	COTTheme::C_DEFAULT[0] = iniparser_getint(themeini, "theme:default_r", NULL);
+	COTTheme::C_DEFAULT[1] = iniparser_getint(themeini, "theme:default_g", NULL);
+	COTTheme::C_DEFAULT[2] = iniparser_getint(themeini, "theme:default_b", NULL);
+	COTTheme::C_DEFAULT[3] = iniparser_getint(themeini, "theme:default_a", NULL);
 }
 
 int COTTheme::compare_string(const void* a, const void* b) {
@@ -207,7 +207,6 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		int i;
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);
-		free(headers);
 		ui->ResetIcons();
 		return;
 	}

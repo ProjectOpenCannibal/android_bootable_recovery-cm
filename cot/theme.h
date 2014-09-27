@@ -18,7 +18,7 @@
 
 class COTTheme {
 	public:
-		static dictionary * ini;
+		static dictionary * themeini;
 		static bool use_theme;
 		static int C_HEADER[4];
 		static int C_TOP[4];
