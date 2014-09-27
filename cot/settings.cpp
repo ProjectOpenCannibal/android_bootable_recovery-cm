@@ -85,6 +85,8 @@ void COTSettings::LoadSettings() {
 	
 	char * theme_name = iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL);
 	COTTheme::LoadTheme(theme_name);
+	
+	ui->ResetIcons();
 }
 
 void COTSettings::ShowMainMenu(Device* device) {
