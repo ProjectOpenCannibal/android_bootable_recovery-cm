@@ -12,10 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include "iniparser/dictionary.h"
+#include "iniparser/iniparser.h"
 
 class COTTheme {
 	public:
-		static const char* theme_path;
+		static dictionary * ini;
 		static bool use_theme;
 		static int C_HEADER[4];
 		static int C_TOP[4];
@@ -25,7 +28,7 @@ class COTTheme {
 		static int C_TEXT_FILL[4];
 		static int C_ERROR_TEXT[4];
 		static int C_DEFAULT[4];
-		static void LoadTheme(Device* device, char * themename);
+		static void LoadTheme(char * themename);
 		static int compare_string(const void* a, const void* b);
 		static void ChooseThemeMenu(Device* device);
 };
