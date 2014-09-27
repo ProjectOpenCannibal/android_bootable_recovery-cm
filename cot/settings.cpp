@@ -74,6 +74,8 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 }
 
 void COTSettings::LoadSettings() {
+	ensure_path_mounted("/data/media");
+	ensure_path_mounted("/sdcard");
 	char * ini_file = "/sdcard/cot/settings.ini";
 	
 	COTSettings::settingsini = iniparser_load(ini_file);
