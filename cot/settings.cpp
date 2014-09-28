@@ -63,9 +63,9 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 	} else {
 		FILE * ini;
 		ini = fopen_path("/sdcard/cot/settings.ini", "w");
-		const char* theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
+		char* theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
 		iniparser_set(COTSettings::settingsini, "settings", NULL);
-		iniparser_set(COTSettings::settingsini, "settings:theme", theme_name);
+		iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::current_theme);
 		iniparser_dump_ini(COTSettings::settingsini, ini);
 		fclose(ini);
 		LOGE("Settings updated!\n");
@@ -86,6 +86,7 @@ void COTSettings::LoadSettings() {
 	}
 	
 	char * theme_name = iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL);
+	COTTheme::current_theme = iniparser_getstring(COTTheme::current_theme, "settings:theme", NULL);
 	COTTheme::LoadTheme(theme_name);
 	
 	ui->ResetIcons();
