@@ -515,7 +515,7 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	LOGE("Loading resources for theme %s\n");
+	LOGE("Loading resources for theme %s\n", COTTheme::current_theme);
 	LoadBitmap("icon_header", &headerIcon);
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
