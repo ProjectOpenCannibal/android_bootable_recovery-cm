@@ -86,7 +86,7 @@ void COTSettings::LoadSettings() {
 	}
 	
 	char * theme_name = iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL);
-	COTTheme::current_theme = iniparser_getstring(COTTheme::current_theme, "settings:theme", NULL);
+	COTTheme::current_theme = iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL);
 	COTTheme::LoadTheme(theme_name);
 	
 	ui->ResetIcons();
