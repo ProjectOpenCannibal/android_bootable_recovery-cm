@@ -1362,7 +1362,6 @@ main(int argc, char **argv) {
     ui = device->GetUI();
     gCurrentUI = ui;
 
-	COTSettings::LoadSettings();
     ui->Init();
 
     int st_cur, st_max;

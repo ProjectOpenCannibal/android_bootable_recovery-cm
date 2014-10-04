@@ -509,7 +509,11 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	const char* theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
+	// This will be removed when the settings implementation is complete
+	// Otherwise the UI doesn't load on first boot!
+	COTTheme::LoadTheme("default");
+	
+	const char* theme_name = iniparser_getstring(COTTheme::ini, "theme:name", NULL);
 	LOGE("Loading resources for theme %s\n", theme_name);
 	LoadBitmap("icon_header", &headerIcon, theme_name);
     header_height = gr_get_height(headerIcon);

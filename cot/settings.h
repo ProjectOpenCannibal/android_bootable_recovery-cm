@@ -12,14 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "iniparser/dictionary.h"
-#include "iniparser/iniparser.h"
 
 class COTSettings {
 	public:
-		static dictionary * settingsini;
 		static void ShowMainMenu(Device* device);
-		static void CreateOrSaveSettings(int is_new);
-		static void LoadSettings();
+		static bool TestINI(Device* device);
 };

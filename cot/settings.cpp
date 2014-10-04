@@ -43,48 +43,18 @@
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
-// Keep the settings dictionary in memory so we can access it anywhere
-dictionary * COTSettings::settingsini;
-
-void COTSettings::CreateOrSaveSettings(int is_new) {
-	if (is_new == 1) {
-		LOGE("Creating new settings file...\n");
-		FILE * ini;
-		ini = fopen_path("/sdcard/cot/settings.ini", "w");
-		fprintf(ini,
-			"; COT Settings INI\n"
-			";\n"
-			"\n"
-			"[settings]\n"
-			"theme = default\n"
-			"\n");
-		fclose(ini);
-		LOGE("Settings created!\n");
-	} else {
-		FILE * ini;
-		ini = fopen_path("/sdcard/cot/settings.ini", "w");
-		const char* theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
-		iniparser_set(COTSettings::settingsini, "settings", NULL);
-		iniparser_set(COTSettings::settingsini, "settings:theme", theme_name);
-		iniparser_dump_ini(COTSettings::settingsini, ini);
-		fclose(ini);
-		LOGE("Settings updated!\n");
-	}
-	return;
-}
-
-void COTSettings::LoadSettings() {
-	char * ini_file = "/sdcard/cot/settings.ini";
+bool COTSettings::TestINI(Device* device) {
+	dictionary * ini;
+	char * ini_file = "/sdcard/test.ini";
 	
-	COTSettings::settingsini = iniparser_load(ini_file);
-	if (COTSettings::settingsini == NULL) {
-		LOGE("Can't load /sdcard/cot/settings.ini, creating...\n");
-		COTSettings::CreateOrSaveSettings(1);
-		COTSettings::settingsini = iniparser_load("/sdcard/cot/settings.ini");
+	ini = iniparser_load(ini_file);
+	if (ini == NULL) {
+		ui->Print("Can't load /sdcard/test.ini!\n");
+		return false;
 	}
-	
-	char * theme_name = iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL);
-	COTTheme::LoadTheme(theme_name);
+	char * testentry = iniparser_getstring(ini, "test:string", NULL);
+	ui->Print(testentry);
+	return true;
 }
 
 void COTSettings::ShowMainMenu(Device* device) {
