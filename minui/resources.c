@@ -132,7 +132,7 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
     return result;
 }
 
-static int open_sdcard_png(const char* name, const char* storage_path, const char * themename, png_structp* png_ptr, png_infop* info_ptr,
+static int open_sdcard_png(const char* name, const char* storage_path, const char* themename, png_structp* png_ptr, png_infop* info_ptr,
                     png_uint_32* width, png_uint_32* height, png_byte* channels) {
     char resPath[256];
     unsigned char header[8];
@@ -284,7 +284,7 @@ static void transform_rgb_to_draw(unsigned char* input_row,
     }
 }
 
-int res_create_sdcard_display_surface(const char* name, const char* storage_path, const char * themename, gr_surface* pSurface) {
+int res_create_sdcard_display_surface(const char* name, const char* storage_path, const char* themename, gr_surface* pSurface) {
     gr_surface surface = NULL;
     int result = 0;
     png_structp png_ptr = NULL;
@@ -354,7 +354,7 @@ int res_create_display_surface(const char* name, gr_surface* pSurface) {
     return result;
 }
 
-int res_create_sdcard_multi_display_surface(const char* name, const char* storage_path, const char * themename, int* frames, gr_surface** pSurface) {
+int res_create_sdcard_multi_display_surface(const char* name, const char* storage_path, const char* themename, int* frames, gr_surface** pSurface) {
     gr_surface* surface = NULL;
     int result = 0;
     png_structp png_ptr = NULL;
@@ -502,7 +502,7 @@ exit:
     return result;
 }
 
-int res_create_sdcard_alpha_surface(const char* name, const char* storage_path, const char * themename, gr_surface* pSurface) {
+int res_create_sdcard_alpha_surface(const char* name, const char* storage_path, const char* themename, gr_surface* pSurface) {
     gr_surface surface = NULL;
     int result = 0;
     png_structp png_ptr = NULL;
@@ -605,7 +605,7 @@ static int matches_locale(const char* loc, const char* locale) {
     return (strncmp(locale, loc, i) == 0 && locale[i] == '_');
 }
 
-int res_create_sdcard_localized_alpha_surface(const char* name, const char* storage_path, const char * themename, const char* locale, gr_surface* pSurface) {
+int res_create_sdcard_localized_alpha_surface(const char* name, const char* storage_path, const char* themename, const char* locale, gr_surface* pSurface) {
 										
     gr_surface surface = NULL;
     int result = 0;

@@ -459,11 +459,9 @@ void ScreenRecoveryUI::progress_loop() {
     }
 }
 
-void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char * theme_name = "default") {
+void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
-    LOGE("Loading bitmap %s...\n", filename);
     if (strcmp(theme_name, "default")) {
-		LOGE("Loading sdcard resources...\n");
 		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
 	} else {
 		result = res_create_display_surface(filename, surface);
@@ -473,11 +471,9 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, con
     }
 }
 
-void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char * theme_name = "default") {
+void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name = "default") {
     int result;
-    LOGE("Loading bitmap array %s...\n", filename);
     if (strcmp(theme_name, "default")) {
-		LOGE("Loading sdcard resources...\n");
 		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
 	} else {
 		result = res_create_multi_display_surface(filename, frames, surface);
@@ -487,11 +483,9 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
     }
 }
 
-void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char * theme_name = "default") {
+void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
-    LOGE("Loading localized bitmap %s...\n", filename);
     if (strcmp(theme_name, "default")) {
-		LOGE("Loading sdcard resources...\n");
 		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
 	} else {
 		result = res_create_localized_alpha_surface(filename, locale, surface);
@@ -515,7 +509,7 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	const char * theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
+	const char* theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
 	LOGE("Loading resources for theme %s\n", theme_name);
 	LoadBitmap("icon_header", &headerIcon, theme_name);
     header_height = gr_get_height(headerIcon);
@@ -537,7 +531,6 @@ void ScreenRecoveryUI::InitIcons()
     LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], theme_name);
     LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], theme_name);
     LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
-    LOGE("Resources loaded!\n");
 }
 
 void ScreenRecoveryUI::Init()
