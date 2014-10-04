@@ -15,7 +15,7 @@
 
 class COTTheme {
 	public:
-		static std::string chosen_theme;
+		static String8 chosen_theme;
 		static const char* theme_path;
 		static bool use_theme;
 		static int C_HEADER[4];

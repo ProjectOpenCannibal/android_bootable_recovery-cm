@@ -41,10 +41,12 @@
 #include "includes.h"
 #include "external.h"
 
+using namespace android;
+
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
-std::string chosen_theme;
+String8 COTTheme::chosen_theme;
 const char* COTTheme::theme_path = "default";
 bool COTTheme::use_theme = false;
 int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };

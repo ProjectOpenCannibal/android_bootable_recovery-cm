@@ -24,6 +24,14 @@ ifeq ($(RECOVERY_VARIANT),cm)
 
 include $(CLEAR_VARS)
 
+LOCAL_COT_SRC_FILES := \
+    cot/settings.cpp \
+    cot/ors.cpp \
+    cot/package.cpp \
+    cot/theme.cpp \
+    cot/iniparser/iniparser.c \
+    cot/iniparser/dictionary.c
+
 LOCAL_SRC_FILES := \
     recovery.cpp \
     bootloader.cpp \
@@ -34,7 +42,8 @@ LOCAL_SRC_FILES := \
     messagesocket.cpp \
     asn1_decoder.cpp \
     verifier.cpp \
-    adb_install.cpp
+    adb_install.cpp \
+    $(LOCAL_COT_SRC_FILES)
 
 # External tools
 LOCAL_SRC_FILES += \
@@ -55,8 +64,6 @@ RECOVERY_API_VERSION := 3
 RECOVERY_FSTAB_VERSION := 2
 LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION)
 
-LOCAL_C_INCLUDES += bionic external/stlport/stlport
-
 LOCAL_STATIC_LIBRARIES := \
     libext4_utils_static \
     libmake_ext4fs_static \
@@ -76,15 +83,13 @@ LOCAL_STATIC_LIBRARIES := \
     libminui \
     libpng \
     libfs_mgr \
-    libstlport_static \
     libcutils \
     liblog \
     libselinux \
     libstdc++ \
     libm \
     libc \
-    libcrecovery \
-    libcot
+    libcrecovery
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -191,7 +196,6 @@ ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
     LOCAL_CFLAGS += -DUSE_F2FS
     LOCAL_STATIC_LIBRARIES += libmake_f2fs libfsck_f2fs libfibmap_f2fs
 endif
-LOCAL_C_INCLUDES += bionic external/stlport/stlport
 LOCAL_STATIC_LIBRARIES += \
     libsparse_static \
     libvoldclient \
@@ -203,7 +207,6 @@ LOCAL_STATIC_LIBRARIES += \
     libtar \
     libselinux \
     libutils \
-    libstlport_static \
     libcutils \
     libstdc++ \
     liblog \
@@ -291,7 +294,5 @@ include $(LOCAL_PATH)/libcrecovery/Android.mk \
     $(LOCAL_PATH)/edify/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/voldclient/Android.mk \
-    $(LOCAL_PATH)/cot/Android.mk
-
+    $(LOCAL_PATH)/voldclient/Android.mk
 endif
