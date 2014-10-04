@@ -26,8 +26,11 @@ LOCAL_SRC_FILES := \
     iniparser/dictionary.c
     
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
+LOCAL_C_INCLUDES += bionic external/stlport/stlport
 LOCAL_C_INCLUDES += system/extras/ext4_utils system/core/fs_mgr/include external/fsck_msdos
 LOCAL_C_INCLUDES += system/vold
+
+LOCAL_STATIC_LIBRARIES += libstlport_static libcutils libstdc++
 
 ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
     LOCAL_CFLAGS += -DUSE_F2FS
