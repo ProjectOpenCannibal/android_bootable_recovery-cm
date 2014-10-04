@@ -44,10 +44,7 @@
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
-// Keep the dictionary in memory so we can access it anywhere
-dictionary * COTTheme::ini;
-
-
+const char* COTTheme::theme_path = "default";
 bool COTTheme::use_theme = false;
 int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };
 int COTTheme::C_TOP[4] = { 208, 208, 208, 255};
@@ -58,10 +55,11 @@ int COTTheme::C_TEXT_FILL[4] = { 0, 0, 0, 255 };
 int COTTheme::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };
 int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
-void COTTheme::LoadTheme(char * themename) {
+void COTTheme::LoadTheme(Device* device, char * themename) {
 	LOGE("Loading theme %s...\n", themename);
 	ensure_path_mounted("/data/media");
 	ensure_path_mounted("/sdcard");
+	dictionary * ini;
 	if (strcmp(themename, "default")) {
 		char * theme_base = "/sdcard/themes/";
 		char * theme_end = "/theme.ini";
@@ -76,6 +74,7 @@ void COTTheme::LoadTheme(char * themename) {
 		}
 		LOGE("Theme %s loaded from %s!\n", themename, full_theme_file);
 		COTTheme::use_theme = true;
+		COTTheme::theme_path = themename;
 	} else {
 		char * ini_file = "/res/images/default_theme.ini";
 		ini = iniparser_load(ini_file);
@@ -84,6 +83,7 @@ void COTTheme::LoadTheme(char * themename) {
 			return;
 		}
 		COTTheme::use_theme = false;
+		COTTheme::theme_path = "default";
 	}
 	COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
 	COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
@@ -203,7 +203,9 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		strlcpy(new_path, item, PATH_MAX);
 		
 		LOGE("Chose %s ...\n", item);
-		COTTheme::LoadTheme(item);
+		COTTheme::theme_path = item;
+		COTTheme::use_theme = true;
+		COTTheme::LoadTheme(device, item);
 		int i;
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);
