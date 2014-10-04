@@ -41,8 +41,6 @@
 #include "includes.h"
 #include "external.h"
 
-using namespace android;
-
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 

@@ -83,6 +83,7 @@ LOCAL_STATIC_LIBRARIES := \
     libminui \
     libpng \
     libfs_mgr \
+    libutils \
     libcutils \
     liblog \
     libselinux \
@@ -139,6 +140,15 @@ LOCAL_MODULE_TAGS := eng
 LOCAL_LDFLAGS += -Wl,--no-fatal-warnings
 
 LOCAL_C_INCLUDES += system/extras/ext4_utils
+
+LOCAL_C_INCLUDES +=         	\
+    system/core/fs_mgr/include	\
+    system/core/include     	\
+    system/core/libcutils       \
+    external/libtar             \
+    external/libtar/listhash    \
+    external/zlib               \
+    bionic/libc/bionic
 
 include $(BUILD_EXECUTABLE)
 
