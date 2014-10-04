@@ -44,6 +44,7 @@
 extern RecoveryUI* ui;
 extern ScreenRecoveryUI* screen;
 
+std::string chosen_theme;
 const char* COTTheme::theme_path = "default";
 bool COTTheme::use_theme = false;
 int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };
