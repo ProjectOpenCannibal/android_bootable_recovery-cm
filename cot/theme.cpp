@@ -49,7 +49,6 @@ dictionary * COTTheme::themeini;
 
 
 bool COTTheme::use_theme = false;
-char * COTTheme::current_theme;
 int COTTheme::C_HEADER[4] = { 111, 111, 111, 255 };
 int COTTheme::C_TOP[4] = { 208, 208, 208, 255};
 int COTTheme::C_MENU_SEL_FG[4] = { 25, 160, 210, 255 };
@@ -205,7 +204,6 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		
 		LOGE("Chose %s ...\n", item);
 		COTTheme::LoadTheme(item);
-		COTTheme::current_theme = item;
 		int i;
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);

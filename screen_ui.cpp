@@ -459,12 +459,12 @@ void ScreenRecoveryUI::progress_loop() {
     }
 }
 
-void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface) {
+void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char * theme_name = "default") {
     int result;
     LOGE("Loading bitmap %s...\n", filename);
-    if (COTTheme::use_theme == true) {
+    if (strcmp(theme_name, "default")) {
 		LOGE("Loading sdcard resources...\n");
-		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), COTTheme::current_theme, surface);
+		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
 	} else {
 		result = res_create_display_surface(filename, surface);
 	}
@@ -473,12 +473,12 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface) {
     }
 }
 
-void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface) {
+void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char * theme_name = "default") {
     int result;
     LOGE("Loading bitmap array %s...\n", filename);
-    if (COTTheme::use_theme == true) {
+    if (strcmp(theme_name, "default")) {
 		LOGE("Loading sdcard resources...\n");
-		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), COTTheme::current_theme, frames, surface);
+		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
 	} else {
 		result = res_create_multi_display_surface(filename, frames, surface);
 	}
@@ -487,12 +487,12 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
     }
 }
 
-void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface) {
+void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char * theme_name = "default") {
     int result;
     LOGE("Loading localized bitmap %s...\n", filename);
-    if (COTTheme::use_theme == true) {
+    if (strcmp(theme_name, "default")) {
 		LOGE("Loading sdcard resources...\n");
-		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), COTTheme::current_theme, locale, surface);
+		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
 	} else {
 		result = res_create_localized_alpha_surface(filename, locale, surface);
 	}
@@ -515,26 +515,27 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	LOGE("Loading resources for theme %s\n");
-	LoadBitmap("icon_header", &headerIcon);
+	const char * theme_name = iniparser_getstring(COTTheme::themeini, "theme:name", NULL);
+	LOGE("Loading resources for theme %s\n", theme_name);
+	LoadBitmap("icon_header", &headerIcon, theme_name);
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
 	backgroundIcon[NONE] = NULL;
-    LoadBitmapArray("icon_installing", &installing_frames, &installation);
+    LoadBitmapArray("icon_installing", &installing_frames, &installation, theme_name);
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;
     backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
-    LoadBitmap("icon_info", &backgroundIcon[INFO]);
-    LoadBitmap("icon_error", &backgroundIcon[ERROR]);
+    LoadBitmap("icon_info", &backgroundIcon[INFO], theme_name);
+    LoadBitmap("icon_error", &backgroundIcon[ERROR], theme_name);
     backgroundIcon[NO_COMMAND] = backgroundIcon[ERROR];
 
-    LoadBitmap("progress_empty", &progressBarEmpty);
-    LoadBitmap("progress_fill", &progressBarFill);
-    LoadBitmap("stage_empty", &stageMarkerEmpty);
-    LoadBitmap("stage_fill", &stageMarkerFill);
+    LoadBitmap("progress_empty", &progressBarEmpty, theme_name);
+    LoadBitmap("progress_fill", &progressBarFill, theme_name);
+    LoadBitmap("stage_empty", &stageMarkerEmpty, theme_name);
+    LoadBitmap("stage_fill", &stageMarkerFill, theme_name);
 
-    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE]);
-    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING]);
-    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND]);
+    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], theme_name);
+    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], theme_name);
+    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], theme_name);
     LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
     LOGE("Resources loaded!\n");
 }
