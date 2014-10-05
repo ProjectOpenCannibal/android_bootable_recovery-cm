@@ -509,9 +509,6 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	LOGE("Loading resources for theme %s\n", COTTheme::chosen_theme.string());
-	const char *theme_name = COTTheme::chosen_theme;
-	LOGI("Const Char theme_name is %s\n", theme_name);
 	LoadBitmap("icon_header", &headerIcon, COTTheme::chosen_theme.string());
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
