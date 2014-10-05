@@ -1363,7 +1363,10 @@ main(int argc, char **argv) {
     gCurrentUI = ui;
 	ensure_path_mounted("/data/media");
 	ensure_path_mounted("/sdcard");
+	
     ui->Init();
+    
+    COTSettings::LoadSettings();
 
     int st_cur, st_max;
     if (stage != NULL && sscanf(stage, "%d/%d", &st_cur, &st_max) == 2) {

@@ -55,7 +55,7 @@ int COTTheme::C_TEXT_FILL[4] = { 0, 0, 0, 255 };
 int COTTheme::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };
 int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
-void COTTheme::LoadTheme(Device* device, char * themename) {
+void COTTheme::LoadTheme(char * themename) {
 	LOGE("Loading theme %s...\n", themename);
 	ensure_path_mounted("/data/media");
 	ensure_path_mounted("/sdcard");
@@ -203,7 +203,7 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		int i;
 		COTTheme::chosen_theme = item;
 		COTTheme::use_theme = true;
-		COTTheme::LoadTheme(device, item);
+		COTTheme::LoadTheme(item);
 		ui->ResetIcons();
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);

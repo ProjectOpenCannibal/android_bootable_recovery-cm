@@ -26,7 +26,7 @@ class COTTheme {
 		static int C_TEXT_FILL[4];
 		static int C_ERROR_TEXT[4];
 		static int C_DEFAULT[4];
-		static void LoadTheme(Device* device, char * themename);
+		static void LoadTheme(char * themename);
 		static int compare_string(const void* a, const void* b);
 		static void ChooseThemeMenu(Device* device);
 };
