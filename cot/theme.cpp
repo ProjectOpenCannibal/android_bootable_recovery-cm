@@ -61,18 +61,15 @@ void COTTheme::LoadTheme(Device* device, char * themename) {
 	ensure_path_mounted("/sdcard");
 	dictionary * ini;
 	if (strcmp(themename, "default")) {
-		char * theme_base = "/sdcard/themes/";
-		char * theme_end = "/theme.ini";
-		char * full_theme_file = (char *)malloc(strlen(theme_base) + strlen(theme_end) + strlen(themename));
-		strcpy(full_theme_file, "/sdcard/themes/");
-		strcat(full_theme_file, themename);
-		strcat(full_theme_file, "/theme.ini");
-		ini = iniparser_load(full_theme_file);
+		String8 theme_file("/sdcard/themes/");
+		theme_file += themename;
+		theme_file += "/theme.ini";
+		ini = iniparser_load(theme_file.string());
 		if (ini == NULL) {
-			LOGE("Can't load theme %s from %s!\n", themename, full_theme_file);
+			LOGE("Can't load theme %s from %s!\n", themename, theme_file.string());
 			return;
 		}
-		LOGE("Theme %s loaded from %s!\n", themename, full_theme_file);
+		LOGE("Theme %s loaded from %s!\n", themename, theme_file.string());
 		COTTheme::use_theme = true;
 		COTTheme::chosen_theme = themename;
 	} else {
@@ -204,12 +201,12 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		
 		LOGE("Chose %s ...\n", item);
 		int i;
-		for (i = 0; i < z_size; ++i) free(zips[i]);
-		free(zips);
 		COTTheme::chosen_theme = item;
 		COTTheme::use_theme = true;
 		COTTheme::LoadTheme(device, item);
 		ui->ResetIcons();
+		for (i = 0; i < z_size; ++i) free(zips[i]);
+		free(zips);
 		return;
 	}
 }
