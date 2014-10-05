@@ -66,7 +66,8 @@ void COTTheme::LoadTheme(char * themename) {
 		theme_file += "/theme.ini";
 		ini = iniparser_load(theme_file.string());
 		if (ini == NULL) {
-			LOGE("Can't load theme %s from %s!\n", themename, theme_file.string());
+			LOGE("Can't load theme %s from %s, switching to default!\n", themename, theme_file.string());
+			COTTheme::LoadTheme("default");
 			return;
 		}
 		LOGE("Theme %s loaded from %s!\n", themename, theme_file.string());
