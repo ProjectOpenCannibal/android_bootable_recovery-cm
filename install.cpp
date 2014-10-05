@@ -242,8 +242,7 @@ really_install_package(const char *path, int* wipe_cache, Device* device)
 		LOGI("verify_file returned %d\n", err);
 		if (err != VERIFY_SUCCESS) {
 			LOGE("signature verification failed\n");
-			LOGE("\nIf you want to install untrusted packages, please\n");
-			LOGE("disable signature verification in Recovery Settings.\n");
+			LOGE("\nIf you want to install untrusted packages, please\ndisable signature verification in Recovery Settings.\n");
 			ret = INSTALL_CORRUPT;
 			goto out;
 		}

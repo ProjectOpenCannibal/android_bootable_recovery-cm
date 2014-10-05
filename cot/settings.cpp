@@ -64,6 +64,7 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 			"\n");
 		fclose(ini);
 	} else {
+		ui->DialogShowInfo("Saving settings...");
 		FILE * ini;
 		String8 base_path(get_primary_storage_path());
 		base_path += "/cot/settings.ini";
@@ -73,6 +74,8 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 		iniparser_set(COTSettings::settingsini, "settings:zip_sigverif", COTSettings::zip_sigverif.string());
 		iniparser_dump_ini(COTSettings::settingsini, ini);
 		fclose(ini);
+		sleep(2);
+		ui->DialogDismiss();
 	}
 	return;
 }
