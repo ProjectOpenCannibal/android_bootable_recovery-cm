@@ -235,19 +235,17 @@ really_install_package(const char *path, int* wipe_cache, Device* device)
 
     set_perf_mode(true);
 	int err;
-	if (signature_verification_enable != 0) {
+	if (COTSettings::zip_sigverif != "0") {
 		ui->Print("Verifying update package...\n");
 		err = verify_file(path, loadedKeys, numKeys);
 		free(loadedKeys);
 		LOGI("verify_file returned %d\n", err);
 		if (err != VERIFY_SUCCESS) {
-			ui->SetBackground(RecoveryUI::NONE);
-			int install_anyway = COTPackage::InstallUntrustedZip(device);
-			if (install_anyway != 0) {
-				LOGE("signature verification failed\n");
-				ret = INSTALL_CORRUPT;
-				goto out;
-			}
+			LOGE("signature verification failed\n");
+			LOGE("\nIf you want to install untrusted packages, please\n");
+			LOGE("disable signature verification in Recovery Settings.\n");
+			ret = INSTALL_CORRUPT;
+			goto out;
 		}
 	} else {
 		ui->Print("Skipping signature verification...\n");

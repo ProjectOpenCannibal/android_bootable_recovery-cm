@@ -46,6 +46,8 @@ extern ScreenRecoveryUI* screen;
 // Keep the settings dictionary in memory so we can access it anywhere
 dictionary * COTSettings::settingsini;
 
+String8 COTSettings::zip_sigverif("1");
+
 void COTSettings::CreateOrSaveSettings(int is_new) {
 	if (is_new == 1) {
 		FILE * ini;
@@ -58,6 +60,7 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 			"\n"
 			"[settings]\n"
 			"theme = default\n"
+			"zip_sigverif = 1\n"
 			"\n");
 		fclose(ini);
 	} else {
@@ -67,6 +70,7 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 		ini = fopen_path(base_path.string(), "w");
 		iniparser_set(COTSettings::settingsini, "settings", NULL);
 		iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::chosen_theme.string());
+		iniparser_set(COTSettings::settingsini, "settings:zip_sigverif", COTSettings::zip_sigverif.string());
 		iniparser_dump_ini(COTSettings::settingsini, ini);
 		fclose(ini);
 	}
@@ -82,6 +86,7 @@ void COTSettings::LoadSettings() {
 		base_path += "/cot/settings.ini";
 		COTSettings::settingsini = iniparser_load(base_path.string());
 	}
+	COTSettings::zip_sigverif = iniparser_getstring(COTSettings::settingsini, "settings:zip_sigverif", NULL);
 	COTTheme::LoadTheme(iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL));
 	
 	ui->ResetIcons();
@@ -94,10 +99,12 @@ void COTSettings::ShowMainMenu(Device* device) {
     };
 
     static const char* SettingsMenuItems[] = { "Theme",
+		"Zip Signature Verification",
         NULL
     };
     
     #define THEME_OPTIONS 0
+    #define ZIP_VERIF_OPTIONS 1
 
     for (;;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
@@ -106,8 +113,42 @@ void COTSettings::ShowMainMenu(Device* device) {
                 //COTPackage::ShowZipOptionsMenu(device);
                 COTTheme::ChooseThemeMenu(device);
                 break;
+            case ZIP_VERIF_OPTIONS:
+				COTSettings::ShowZipVerifMenu(device);
+				break;
             case Device::kGoBack:
                 return;
         }
     }
+}
+
+void COTSettings::ShowZipVerifMenu(Device* device) {
+	static const char* ZipVerifMenuHeaders[] = { "Zip Verification",
+		"",
+		NULL
+	};
+	
+	static const char* ZipVerifMenuItems[] = { "Enable Zip Verification",
+		"Disable Zip Verification",
+		NULL
+	};
+	
+	#define ZIP_VERIF_ON 0
+	#define ZIP_VERIF_OFF 1
+	
+	for (;;) {
+		int ZipVerifSelection = get_menu_selection(ZipVerifMenuHeaders, ZipVerifMenuItems, 0, 0, device);
+		switch (ZipVerifSelection) {
+			case ZIP_VERIF_ON:
+				COTSettings::zip_sigverif = "1";
+				break;
+			case ZIP_VERIF_OFF:
+				COTSettings::zip_sigverif = "0";
+				break;
+			case Device::kGoBack:
+				return;
+		}
+		COTSettings::CreateOrSaveSettings(0);
+		return;
+	}
 }

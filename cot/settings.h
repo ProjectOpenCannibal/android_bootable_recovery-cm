@@ -18,8 +18,10 @@
 
 class COTSettings {
 	public:
+		static String8 zip_sigverif;
 		static dictionary * settingsini;
 		static void CreateOrSaveSettings(int is_new);
 		static void LoadSettings();
 		static void ShowMainMenu(Device* device);
+		static void ShowZipVerifMenu(Device* device);
 };
