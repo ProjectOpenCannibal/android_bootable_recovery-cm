@@ -204,6 +204,9 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		COTTheme::chosen_theme = item;
 		COTTheme::use_theme = true;
 		COTTheme::LoadTheme(item);
+		
+		COTSettings::CreateOrSaveSettings(0);
+		
 		ui->ResetIcons();
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);
