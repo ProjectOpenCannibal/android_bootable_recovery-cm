@@ -235,7 +235,7 @@ really_install_package(const char *path, int* wipe_cache, Device* device)
 
     set_perf_mode(true);
 	int err;
-	if (COTSettings::zip_sigverif != "0") {
+	if (signature_verification_enable != 0) {
 		ui->Print("Verifying update package...\n");
 		err = verify_file(path, loadedKeys, numKeys);
 		free(loadedKeys);
