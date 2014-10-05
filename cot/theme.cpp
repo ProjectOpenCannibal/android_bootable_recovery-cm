@@ -203,13 +203,12 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 		strlcpy(new_path, item, PATH_MAX);
 		
 		LOGE("Chose %s ...\n", item);
-		COTTheme::chosen_theme = item;
-		COTTheme::use_theme = true;
-		COTTheme::LoadTheme(device, item);
 		int i;
 		for (i = 0; i < z_size; ++i) free(zips[i]);
 		free(zips);
-		free(headers);
+		COTTheme::chosen_theme = item;
+		COTTheme::use_theme = true;
+		COTTheme::LoadTheme(device, item);
 		ui->ResetIcons();
 		return;
 	}
