@@ -49,7 +49,9 @@ dictionary * COTSettings::settingsini;
 void COTSettings::CreateOrSaveSettings(int is_new) {
 	if (is_new == 1) {
 		FILE * ini;
-		ini = fopen_path("/sdcard/cot/settings.ini", "w");
+		String8 base_path(get_primary_storage_path());
+		base_path += "/cot/settings.ini";
+		ini = fopen_path(base_path.string(), "w");
 		fprintf(ini,
 			"; COT Settings INI\n"
 			";\n"
@@ -60,7 +62,9 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 		fclose(ini);
 	} else {
 		FILE * ini;
-		ini = fopen_path("/sdcard/cot/settings.ini", "w");
+		String8 base_path(get_primary_storage_path());
+		base_path += "/cot/settings.ini";
+		ini = fopen_path(base_path.string(), "w");
 		iniparser_set(COTSettings::settingsini, "settings", NULL);
 		iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::chosen_theme.string());
 		iniparser_dump_ini(COTSettings::settingsini, ini);
@@ -74,7 +78,9 @@ void COTSettings::LoadSettings() {
 	COTSettings::settingsini = iniparser_load(ini_file);
 	if (COTSettings::settingsini == NULL) {
 		COTSettings::CreateOrSaveSettings(1);
-		COTSettings::settingsini = iniparser_load("/sdcard/cot/settings.ini");
+		String8 base_path(get_primary_storage_path());
+		base_path += "/cot/settings.ini";
+		COTSettings::settingsini = iniparser_load(base_path.string());
 	}
 	COTTheme::LoadTheme(iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL));
 	

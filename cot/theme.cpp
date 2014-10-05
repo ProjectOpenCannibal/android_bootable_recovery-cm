@@ -61,7 +61,9 @@ void COTTheme::LoadTheme(char * themename) {
 	ensure_path_mounted("/sdcard");
 	dictionary * ini;
 	if (strcmp(themename, "default")) {
-		String8 theme_file("/sdcard/themes/");
+		
+		String8 theme_file(get_primary_storage_path());
+		theme_file += "/cot/themes/";
 		theme_file += themename;
 		theme_file += "/theme.ini";
 		ini = iniparser_load(theme_file.string());
@@ -137,9 +139,11 @@ void COTTheme::ChooseThemeMenu(Device* device) {
 	};
     DIR* d;
     struct dirent* de;
-    d = opendir("/sdcard/themes");
+    String8 base_path(get_primary_storage_path());
+    base_path += "/cot/themes";
+    d = opendir(base_path.string());
     if (d == NULL) {
-        LOGE("error opening /sdcard/themes: %s\n", strerror(errno));
+        LOGE("error opening %s: %s\n", base_path.string(), strerror(errno));
         return;
     }
 
