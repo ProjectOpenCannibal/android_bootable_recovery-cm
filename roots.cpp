@@ -634,9 +634,6 @@ int setup_install_mounts() {
         if (strcmp(v->mount_point, "/tmp") == 0 ||
             strcmp(v->mount_point, "/cache") == 0) {
             if (ensure_path_mounted(v->mount_point) != 0) return -1;
-
-        } else {
-            if (ensure_path_unmounted(v->mount_point) != 0) return -1;
         }
     }
     return 0;
