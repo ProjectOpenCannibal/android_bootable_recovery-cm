@@ -1361,7 +1361,8 @@ main(int argc, char **argv) {
     Device* device = make_device();
     ui = device->GetUI();
     gCurrentUI = ui;
-
+	ensure_path_mounted("/data/media");
+	ensure_path_mounted("/sdcard");
     ui->Init();
 
     int st_cur, st_max;

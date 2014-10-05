@@ -509,27 +509,26 @@ void ScreenRecoveryUI::ResetIcons()
 
 void ScreenRecoveryUI::InitIcons()
 {
-	const char* theme_name = COTTheme::theme_path;
-	LOGE("Loading resources for theme %s\n", theme_name);
-	LoadBitmap("icon_header", &headerIcon, theme_name);
+	LOGE("Loading resources for theme %s\n", COTTheme::chosen_theme.string());
+	LoadBitmap("icon_header", &headerIcon, COTTheme::chosen_theme.string());
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
 	backgroundIcon[NONE] = NULL;
-    LoadBitmapArray("icon_installing", &installing_frames, &installation, theme_name);
+    LoadBitmapArray("icon_installing", &installing_frames, &installation, COTTheme::chosen_theme.string());
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;
     backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
-    LoadBitmap("icon_info", &backgroundIcon[INFO], theme_name);
-    LoadBitmap("icon_error", &backgroundIcon[ERROR], theme_name);
+    LoadBitmap("icon_info", &backgroundIcon[INFO], COTTheme::chosen_theme.string());
+    LoadBitmap("icon_error", &backgroundIcon[ERROR], COTTheme::chosen_theme.string());
     backgroundIcon[NO_COMMAND] = backgroundIcon[ERROR];
 
-    LoadBitmap("progress_empty", &progressBarEmpty, theme_name);
-    LoadBitmap("progress_fill", &progressBarFill, theme_name);
-    LoadBitmap("stage_empty", &stageMarkerEmpty, theme_name);
-    LoadBitmap("stage_fill", &stageMarkerFill, theme_name);
+    LoadBitmap("progress_empty", &progressBarEmpty, COTTheme::chosen_theme.string());
+    LoadBitmap("progress_fill", &progressBarFill, COTTheme::chosen_theme.string());
+    LoadBitmap("stage_empty", &stageMarkerEmpty, COTTheme::chosen_theme.string());
+    LoadBitmap("stage_fill", &stageMarkerFill, COTTheme::chosen_theme.string());
 
-    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], theme_name);
-    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], theme_name);
-    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], theme_name);
+    LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], COTTheme::chosen_theme.string());
+    LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], COTTheme::chosen_theme.string());
+    LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], COTTheme::chosen_theme.string());
     LoadLocalizedBitmap("error_text", &backgroundText[ERROR]);
 }
 
