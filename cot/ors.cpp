@@ -140,7 +140,9 @@ int ORS::run_ors_script_file(Device* device) {
                 String8 ors_install_path(get_primary_storage_path());
                 if (ors_install_path == "/sdcard") {
                     // we're using /sdcard, so strip out '/sdcard' from the GooManager given path
-                    memmove (value, value+7, strlen (value+7));
+                   for (int i = 7; i < SCRIPT_COMMAND_SIZE; ++i) {
+                       value[i-7] = value[i];
+                   }
                     
                     // now we can append the file path
                     ors_install_path += "/0";
