@@ -4,4 +4,5 @@
 class COTStorage {
 	public:
 		static void MountInternalStorage();
+		static void UnmountInternalStorage();
 };

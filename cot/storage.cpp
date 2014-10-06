@@ -47,3 +47,9 @@ void COTStorage::MountInternalStorage() {
 	ensure_path_mounted("/sdcard");
 	ensure_path_mounted("/storage/sdcard0");
 }
+
+void COTStorage::UnmountInternalStorage() {
+	ensure_path_unmounted("/sdcard");
+	ensure_path_unmounted("/storage/sdcard0");
+	ensure_path_unmounted("/data/media");
+}
