@@ -145,8 +145,10 @@ int ORS::run_ors_script_file(void) {
                     // now we can append the file path
                     ors_install_path += "/0";
                     ors_install_path += value;
+                } else {
+                    // we're using /storage/sdcard0, so we shouldn't modify the path
+                    ors_install_path = value;
                 }
-                    
                 ui->Print("Installing zip file '%s'\n", ors_install_path.string());
                 /*
                  * We need to implement this externally now, disabled until we do.
