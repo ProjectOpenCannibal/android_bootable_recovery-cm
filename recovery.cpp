@@ -1263,7 +1263,7 @@ static struct vold_callbacks v_callbacks = {
 int
 main(int argc, char **argv) {
     time_t start = time(NULL);
-
+    
     // If this binary is started with the single argument "--adbd",
     // instead of being the normal recovery binary, it turns into kind
     // of a stripped-down version of adbd that only supports the
@@ -1275,18 +1275,18 @@ main(int argc, char **argv) {
         adb_main();
         return 0;
     }
-
+    
     // Handle alternative invocations
     char* command = argv[0];
     char* stripped = strrchr(argv[0], '/');
     if (stripped)
         command = stripped + 1;
-
+    
     if (strcmp(command, "recovery") != 0) {
         struct recovery_cmd cmd = get_command(command);
         if (cmd.name)
             return cmd.main_func(argc, argv);
-
+        
         if (!strcmp(command, "setup_adbd")) {
             load_volume_table();
             setup_adbd();
@@ -1302,17 +1302,17 @@ main(int argc, char **argv) {
         }
         return busybox_driver(argc, argv);
     }
-
+    
     // Clear umask for packages that copy files out to /tmp and then over
     // to /system without properly setting all permissions (eg. gapps).
     umask(0);
-
+    
     // If these fail, there's not really anywhere to complain...
     freopen(TEMPORARY_LOG_FILE, "a", stdout); setbuf(stdout, NULL);
     freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
-
+    
     printf("Starting recovery on %s", ctime(&start));
-
+    
     load_volume_table();
     vold_client_start(&v_callbacks, 0);
     vold_set_automount(1);
@@ -1321,87 +1321,87 @@ main(int argc, char **argv) {
     get_args(&argc, &argv);
     
     if (is_data_media()) {
-		setup_data_media();
-	}
-
+        setup_data_media();
+    }
+    
     const char *send_intent = NULL;
     const char *update_package = NULL;
     int wipe_data = 0, wipe_cache = 0, wipe_media = 0, show_text = 0, sideload = 0;
     bool just_exit = false;
     bool shutdown_after = false;
-
+    
     int arg;
     while ((arg = getopt_long(argc, argv, "", OPTIONS, NULL)) != -1) {
         switch (arg) {
-        case 's': send_intent = optarg; break;
-        case 'u': update_package = optarg; break;
-        case 'w': wipe_data = wipe_cache = 1; break;
-        case 'm': wipe_media = 1; break;
-        case 'c': wipe_cache = 1; break;
-        case 't': show_text = 1; break;
-        case 'x': just_exit = true; break;
-        case 'l': locale = optarg; break;
-        case 'a': sideload = 1; break;
-        case 'p': shutdown_after = true; break;
-        case 'g': {
-            if (stage == NULL || *stage == '\0') {
-                char buffer[20] = "1/";
-                strncat(buffer, optarg, sizeof(buffer)-3);
-                stage = strdup(buffer);
+            case 's': send_intent = optarg; break;
+            case 'u': update_package = optarg; break;
+            case 'w': wipe_data = wipe_cache = 1; break;
+            case 'm': wipe_media = 1; break;
+            case 'c': wipe_cache = 1; break;
+            case 't': show_text = 1; break;
+            case 'x': just_exit = true; break;
+            case 'l': locale = optarg; break;
+            case 'a': sideload = 1; break;
+            case 'p': shutdown_after = true; break;
+            case 'g': {
+                if (stage == NULL || *stage == '\0') {
+                    char buffer[20] = "1/";
+                    strncat(buffer, optarg, sizeof(buffer)-3);
+                    stage = strdup(buffer);
+                }
+                break;
             }
-            break;
-        }
-        case '?':
-            LOGE("Invalid command argument\n");
-            continue;
+            case '?':
+                LOGE("Invalid command argument\n");
+                continue;
         }
     }
-
+    
     if (locale == NULL) {
         load_locale_from_cache();
     }
     printf("locale is [%s]\n", locale);
     printf("stage is [%s]\n", stage);
-
+    
     Device* device = make_device();
     ui = device->GetUI();
     gCurrentUI = ui;
-	COTStorage::MountInternalStorage();
-	
+    COTStorage::MountInternalStorage();
+    
     ui->Init();
     
     COTSettings::LoadSettings();
-
+    
     int st_cur, st_max;
     if (stage != NULL && sscanf(stage, "%d/%d", &st_cur, &st_max) == 2) {
         ui->SetStage(st_cur, st_max);
     }
-
+    
     ui->SetLocale(locale);
     ui->SetBackground(RecoveryUI::NONE);
     if (show_text) ui->ShowText(true);
-
+    
     /*enable the backlight*/
     write_file("/sys/class/leds/lcd-backlight/brightness", "128");
-
+    
     struct selinux_opt seopts[] = {
-      { SELABEL_OPT_PATH, "/file_contexts" }
+        { SELABEL_OPT_PATH, "/file_contexts" }
     };
-
+    
     sehandle = selabel_open(SELABEL_CTX_FILE, seopts, 1);
-
+    
     if (!sehandle) {
         ui->Print("Warning: No file_contexts\n");
     }
-
+    
     device->StartRecovery();
-
+    
     printf("Command:");
     for (arg = 0; arg < argc; arg++) {
         printf(" \"%s\"", argv[arg]);
     }
     printf("\n");
-
+    
     if (update_package) {
         // For backwards compatibility on the cache partition only, if
         // we're given an old 'root' path "CACHE:foo", change it to
@@ -1417,14 +1417,14 @@ main(int argc, char **argv) {
         }
     }
     printf("\n");
-
+    
     property_list(print_property, NULL);
     property_get("ro.build.display.id", recovery_version, "");
     printf("\n");
-
+    
     int status = INSTALL_SUCCESS;
-
-#ifdef HAVE_OEMLOCK
+    
+    #ifdef HAVE_OEMLOCK
     if (oem_lock == OEM_LOCK_UNLOCK) {
         if (device->WipeData()) status = INSTALL_ERROR;
         if (erase_volume("/data", true)) status = INSTALL_ERROR;
@@ -1434,81 +1434,81 @@ main(int argc, char **argv) {
         // Force reboot regardless of actual status
         status = INSTALL_SUCCESS;
     } else
-#endif
-    if (update_package != NULL) {
-        status = install_package(update_package, &wipe_cache, TEMPORARY_INSTALL_FILE, device);
-        if (status == INSTALL_SUCCESS) {
-			if (wipe_data) {
-				if (device->WipeData()) status = INSTALL_ERROR;
-				if (erase_volume("/data", wipe_media)) status = INSTALL_ERROR;
-				if (status != INSTALL_SUCCESS) {
-					ui->Print("Data wipe (requested by package) failed.\n");
-				}
-			} else if (wipe_media) {
-				if (erase_volume("media")) status = INSTALL_ERROR;
-				if (status != INSTALL_SUCCESS) {
-					ui->Print("Media wipe (requested by package) failed.\n");
-				}
-			}
-			if (wipe_cache) {
-				if (erase_volume("/cache")) {
-					LOGE("Cache wipe (requested by package) failed.");
-				}
-			}
-        }
-        if (status != INSTALL_SUCCESS) {
-            ui->Print("Installation aborted.\n");
-
-            // If this is an eng or userdebug build, then automatically
-            // turn the text display on if the script fails so the error
-            // message is visible.
-            char buffer[PROPERTY_VALUE_MAX+1];
-            property_get("ro.build.fingerprint", buffer, "");
-            if (strstr(buffer, ":userdebug/") || strstr(buffer, ":eng/")) {
-                ui->ShowText(true);
+        #endif
+        if (update_package != NULL) {
+            status = install_package(update_package, &wipe_cache, TEMPORARY_INSTALL_FILE, device);
+            if (status == INSTALL_SUCCESS) {
+                if (wipe_data) {
+                    if (device->WipeData()) status = INSTALL_ERROR;
+                    if (erase_volume("/data", wipe_media)) status = INSTALL_ERROR;
+                    if (status != INSTALL_SUCCESS) {
+                        ui->Print("Data wipe (requested by package) failed.\n");
+                    }
+                } else if (wipe_media) {
+                    if (erase_volume("media")) status = INSTALL_ERROR;
+                    if (status != INSTALL_SUCCESS) {
+                        ui->Print("Media wipe (requested by package) failed.\n");
+                    }
+                }
+                if (wipe_cache) {
+                    if (erase_volume("/cache")) {
+                        LOGE("Cache wipe (requested by package) failed.");
+                    }
+                }
             }
+            if (status != INSTALL_SUCCESS) {
+                ui->Print("Installation aborted.\n");
+                
+                // If this is an eng or userdebug build, then automatically
+                // turn the text display on if the script fails so the error
+                // message is visible.
+                char buffer[PROPERTY_VALUE_MAX+1];
+                property_get("ro.build.fingerprint", buffer, "");
+                if (strstr(buffer, ":userdebug/") || strstr(buffer, ":eng/")) {
+                    ui->ShowText(true);
+                }
+            }
+        } else if (wipe_data) {
+            if (device->WipeData()) status = INSTALL_ERROR;
+            if (erase_volume("/data", wipe_media)) status = INSTALL_ERROR;
+            if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
+            if (status != INSTALL_SUCCESS) ui->Print("Data wipe failed.\n");
+        } else if (wipe_cache) {
+            if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
+            if (status != INSTALL_SUCCESS) ui->Print("Cache wipe failed.\n");
+        } else if (wipe_media) {
+            if (erase_volume("media")) status = INSTALL_ERROR;
+            if (status != INSTALL_SUCCESS) ui->Print("Media wipe failed.\n");
+        } else if (sideload) {
+            status = enter_sideload_mode(&wipe_cache, device);
+        } else if (!just_exit) {
+            status = INSTALL_NONE;  // No command specified
+            ui->SetBackground(RecoveryUI::NO_COMMAND);
+            if (ORS::check_for_script_file()) ORS::run_ors_script_file();
         }
-    } else if (wipe_data) {
-        if (device->WipeData()) status = INSTALL_ERROR;
-        if (erase_volume("/data", wipe_media)) status = INSTALL_ERROR;
-        if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
-        if (status != INSTALL_SUCCESS) ui->Print("Data wipe failed.\n");
-    } else if (wipe_cache) {
-        if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
-        if (status != INSTALL_SUCCESS) ui->Print("Cache wipe failed.\n");
-    } else if (wipe_media) {
-        if (erase_volume("media")) status = INSTALL_ERROR;
-        if (status != INSTALL_SUCCESS) ui->Print("Media wipe failed.\n");
-    } else if (sideload) {
-        status = enter_sideload_mode(&wipe_cache, device);
-    } else if (!just_exit) {
-        status = INSTALL_NONE;  // No command specified
-        ui->SetBackground(RecoveryUI::NO_COMMAND);
-        if (ORS::check_for_script_file()) ORS::run_ors_script_file();
-    }
-
-    if (status == INSTALL_ERROR || status == INSTALL_CORRUPT) {
-        copy_logs();
-        ui->SetBackground(RecoveryUI::ERROR);
-    }
-    if (status != INSTALL_SUCCESS || ui->IsTextVisible()) {
-        ui->ShowText(true);
-        prompt_and_wait(device, status);
-    }
-
-    // Otherwise, get ready to boot the main system...
-    finish_recovery(send_intent);
-
-    vold_unmount_all();
-
-    sync();
-
-    if (shutdown_after) {
-        ui->Print("Shutting down...\n");
-        property_set(ANDROID_RB_PROPERTY, "shutdown,");
-    } else {
-        ui->Print("Rebooting...\n");
-        property_set(ANDROID_RB_PROPERTY, "reboot,");
-    }
-    return EXIT_SUCCESS;
+        
+        if (status == INSTALL_ERROR || status == INSTALL_CORRUPT) {
+            copy_logs();
+            ui->SetBackground(RecoveryUI::ERROR);
+        }
+        if (status != INSTALL_SUCCESS || ui->IsTextVisible()) {
+            ui->ShowText(true);
+            prompt_and_wait(device, status);
+        }
+        
+        // Otherwise, get ready to boot the main system...
+        finish_recovery(send_intent);
+        
+        vold_unmount_all();
+        
+        sync();
+        
+        if (shutdown_after) {
+            ui->Print("Shutting down...\n");
+            property_set(ANDROID_RB_PROPERTY, "shutdown,");
+        } else {
+            ui->Print("Rebooting...\n");
+            property_set(ANDROID_RB_PROPERTY, "reboot,");
+        }
+        return EXIT_SUCCESS;
 }
