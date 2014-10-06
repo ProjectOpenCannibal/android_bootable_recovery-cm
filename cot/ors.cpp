@@ -102,7 +102,7 @@ int ORS::run_ors_script_file(void) {
     int ors_no_confirm = 0;
     
     if (fp != NULL) {
-        for (i = 20; i > 0; i--) {
+        for (i = 3; i > 0; i--) {
             ui->Print("Waiting for storage to mount (%ds)\n", i);
             COTStorage::MountInternalStorage();
             sleep(1);
