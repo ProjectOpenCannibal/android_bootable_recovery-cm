@@ -57,8 +57,10 @@ int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
 void COTTheme::LoadTheme(char * themename) {
 	LOGE("Loading theme %s...\n", themename);
-	ensure_path_mounted("/data/media");
-	ensure_path_mounted("/sdcard");
+	
+	// Make sure internal storage is mounted
+	COTStorage::MountInternalStorage();
+	
 	dictionary * ini;
 	if (strcmp(themename, "default")) {
 		
@@ -131,8 +133,10 @@ int COTTheme::compare_string(const void* a, const void* b) {
 }
 
 void COTTheme::ChooseThemeMenu(Device* device) {
-	ensure_path_mounted("/data/media");
-	ensure_path_mounted("/sdcard");
+	
+	// Make sure internal storage is mounted
+	COTStorage::MountInternalStorage();
+	
 	static const char* headers[] = { "Choose Theme",
 									"",
 									NULL

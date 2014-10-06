@@ -22,4 +22,5 @@ using namespace android;
 #include "ors.h"
 #include "package.h"
 #include "theme.h"
+#include "storage.h"
 #include "../messagesocket.h"

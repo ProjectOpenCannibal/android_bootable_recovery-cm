@@ -49,6 +49,9 @@ dictionary * COTSettings::settingsini;
 String8 COTSettings::zip_sigverif("1");
 
 void COTSettings::CreateOrSaveSettings(int is_new) {
+	// Make sure internal storage is mounted
+	COTStorage::MountInternalStorage();
+	
 	if (is_new == 1) {
 		FILE * ini;
 		String8 base_path(get_primary_storage_path());
@@ -81,12 +84,14 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 }
 
 void COTSettings::LoadSettings() {
-	char * ini_file = "/sdcard/0/cot/settings.ini";
-	COTSettings::settingsini = iniparser_load(ini_file);
+	// Make sure internal storage is mounted
+	COTStorage::MountInternalStorage();
+	
+	String8 base_path(get_primary_storage_path());
+	base_path += "/0/cot/settings.ini";
+	COTSettings::settingsini = iniparser_load(base_path.string());
 	if (COTSettings::settingsini == NULL) {
 		COTSettings::CreateOrSaveSettings(1);
-		String8 base_path(get_primary_storage_path());
-		base_path += "/0/cot/settings.ini";
 		COTSettings::settingsini = iniparser_load(base_path.string());
 	}
 	COTSettings::zip_sigverif = iniparser_getstring(COTSettings::settingsini, "settings:zip_sigverif", NULL);
