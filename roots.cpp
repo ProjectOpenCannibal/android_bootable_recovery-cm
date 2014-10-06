@@ -269,7 +269,7 @@ fstab_rec* volume_for_path(const char* path) {
 static char* primary_storage_path = NULL;
 char* get_primary_storage_path() {
 	if (primary_storage_path == NULL) {
-		if (volume_for_path("/sdcard/sdcard0"))
+		if (volume_for_path("/storage/sdcard0"))
 			primary_storage_path = "/storage/sdcard0";
 		else
 			primary_storage_path = "/sdcard";
