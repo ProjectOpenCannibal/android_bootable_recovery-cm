@@ -1484,7 +1484,7 @@ main(int argc, char **argv) {
         } else if (!just_exit) {
             status = INSTALL_NONE;  // No command specified
             ui->SetBackground(RecoveryUI::NO_COMMAND);
-            if (ORS::check_for_script_file()) ORS::run_ors_script_file();
+            if (ORS::check_for_script_file()) ORS::run_ors_script_file(device);
         }
         
         if (status == INSTALL_ERROR || status == INSTALL_CORRUPT) {

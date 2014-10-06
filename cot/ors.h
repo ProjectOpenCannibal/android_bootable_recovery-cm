@@ -17,5 +17,5 @@ class ORS {
 public:
   static void delayed_reboot();
   static int check_for_script_file(void);
-  static int run_ors_script_file(void);
+  static int run_ors_script_file(Device* device);
 };

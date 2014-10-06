@@ -84,7 +84,7 @@ int ORS::check_for_script_file(void) {
     return ret_val;
 }
 
-int ORS::run_ors_script_file(void) {
+int ORS::run_ors_script_file(Device* device) {
     FILE *fp = fopen(SCRIPT_FILE_TMP, "r");
     struct stat st;
     int ret_val = 0, cindex, line_len, i, remove_nl;
@@ -150,11 +150,7 @@ int ORS::run_ors_script_file(void) {
                     ors_install_path = value;
                 }
                 ui->Print("Installing zip file '%s'\n", ors_install_path.string());
-                /*
-                 * We need to implement this externally now, disabled until we do.
-                 * 
-                 * ret_val = install_zip(value);
-                 */
+                ret_val = install_package(ors_install_path.string(), 0, "/tmp/last_install", device);
                 if (ret_val != INSTALL_SUCCESS) {
                     LOGE("Error installing zip file '%s'\n", value);
                     ret_val = 1;
