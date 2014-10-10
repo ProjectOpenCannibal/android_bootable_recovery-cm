@@ -1,17 +1,17 @@
 /* Copyright (C) 2014 Project Open Cannibal
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include <ctype.h>
 #include <errno.h>
@@ -43,13 +43,13 @@
 extern RecoveryUI* ui;
 
 void COTStorage::MountInternalStorage() {
-	ensure_path_mounted("/data/media");
-	ensure_path_mounted("/sdcard");
-	ensure_path_mounted("/storage/sdcard0");
+    ensure_path_mounted("/data/media");
+    ensure_path_mounted("/sdcard");
+    ensure_path_mounted("/storage/sdcard0");
 }
 
 void COTStorage::UnmountInternalStorage() {
-	ensure_path_unmounted("/sdcard");
-	ensure_path_unmounted("/storage/sdcard0");
-	ensure_path_unmounted("/data/media");
+    ensure_path_unmounted("/sdcard");
+    ensure_path_unmounted("/storage/sdcard0");
+    ensure_path_unmounted("/data/media");
 }

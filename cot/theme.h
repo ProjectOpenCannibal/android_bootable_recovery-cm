@@ -1,5 +1,5 @@
 /* Copyright (C) 2014 Project Open Cannibal
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,19 +14,19 @@
  */
 
 class COTTheme {
-	public:
-		static String8 chosen_theme;
-		static const char* theme_path;
-		static bool use_theme;
-		static int C_HEADER[4];
-		static int C_TOP[4];
-		static int C_MENU_SEL_FG[4];
-		static int C_MENU_SEL_BG[4];
-		static int C_LOG[4];
-		static int C_TEXT_FILL[4];
-		static int C_ERROR_TEXT[4];
-		static int C_DEFAULT[4];
-		static void LoadTheme(char * themename);
-		static int compare_string(const void* a, const void* b);
-		static void ChooseThemeMenu(Device* device);
+public:
+    static String8 chosen_theme;
+    static const char* theme_path;
+    static bool use_theme;
+    static int C_HEADER[4];
+    static int C_TOP[4];
+    static int C_MENU_SEL_FG[4];
+    static int C_MENU_SEL_BG[4];
+    static int C_LOG[4];
+    static int C_TEXT_FILL[4];
+    static int C_ERROR_TEXT[4];
+    static int C_DEFAULT[4];
+    static void LoadTheme(char * themename);
+    static int compare_string(const void* a, const void* b);
+    static void ChooseThemeMenu(Device* device);
 };

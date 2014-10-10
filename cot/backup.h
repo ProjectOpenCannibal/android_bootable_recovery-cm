@@ -14,10 +14,10 @@
  */
 
 class COTBackup {
-        public:
-            static int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device);
-            static int RestoreBackup(String8 backup_path, Device* device);
-            static void ShowBackupMenu(Device* device);
-            static void ShowRestoreMenu(Device* device);
-            static void ShowMainMenu(Device* device);
-};
+public:
+    static int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device);
+    static int RestoreBackup(String8 backup_path, Device* device);
+    static void ShowBackupMenu(Device* device);
+    static void ShowRestoreMenu(Device* device);
+    static void ShowMainMenu(Device* device);
+  };

@@ -1,17 +1,17 @@
 /* Copyright (C) 2014 Project Open Cannibal
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include <ctype.h>
 #include <errno.h>
@@ -56,76 +56,76 @@ int COTTheme::C_ERROR_TEXT[4] = { 255, 0, 0, 255 };
 int COTTheme::C_DEFAULT[4] = { 255, 255, 255, 255 };
 
 void COTTheme::LoadTheme(char * themename) {
-	LOGE("Loading theme %s...\n", themename);
-	
-	// Make sure internal storage is mounted
-	COTStorage::MountInternalStorage();
-	
-	dictionary * ini;
-	if (strcmp(themename, "default")) {
-		
-		String8 theme_file(get_primary_storage_path());
-		theme_file += "/0/cot/themes/";
-		theme_file += themename;
-		theme_file += "/theme.ini";
-		ini = iniparser_load(theme_file.string());
-		if (ini == NULL) {
-			LOGE("Can't load theme %s from %s, switching to default!\n", themename, theme_file.string());
-			COTTheme::LoadTheme("default");
-			return;
-		}
-		LOGE("Theme %s loaded from %s!\n", themename, theme_file.string());
-		COTTheme::use_theme = true;
-		COTTheme::chosen_theme = themename;
-	} else {
-		char * ini_file = "/res/images/default_theme.ini";
-		ini = iniparser_load(ini_file);
-		if (ini == NULL) {
-			LOGE("Can't load theme %s!\n", themename);
-			return;
-		}
-		COTTheme::use_theme = false;
-		COTTheme::chosen_theme = "default";
-	}
-	COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
-	COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
-	COTTheme::C_HEADER[2] = iniparser_getint(ini, "theme:header_b", NULL);
-	COTTheme::C_HEADER[3] = iniparser_getint(ini, "theme:header_a", NULL);
-		
-	COTTheme::C_TOP[0] = iniparser_getint(ini, "theme:top_r", NULL);
-	COTTheme::C_TOP[1] = iniparser_getint(ini, "theme:top_g", NULL);
-	COTTheme::C_TOP[2] = iniparser_getint(ini, "theme:top_b", NULL);
-	COTTheme::C_TOP[3] = iniparser_getint(ini, "theme:top_a", NULL);
-		
-	COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(ini, "theme:menufg_r", NULL);
-	COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(ini, "theme:menufg_g", NULL);
-	COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(ini, "theme:menufg_b", NULL);
-	COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(ini, "theme:menufg_a", NULL);
-		
-	COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(ini, "theme:menubg_r", NULL);
-	COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(ini, "theme:menubg_g", NULL);
-	COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(ini, "theme:menubg_b", NULL);
-	COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(ini, "theme:menubg_a", NULL);
-		
-	COTTheme::C_LOG[0] = iniparser_getint(ini, "theme:log_r", NULL);
-	COTTheme::C_LOG[1] = iniparser_getint(ini, "theme:log_g", NULL);
-	COTTheme::C_LOG[2] = iniparser_getint(ini, "theme:log_b", NULL);
-	COTTheme::C_LOG[3] = iniparser_getint(ini, "theme:log_a", NULL);
-		
-	COTTheme::C_TEXT_FILL[0] = iniparser_getint(ini, "theme:textfill_r", NULL);
-	COTTheme::C_TEXT_FILL[1] = iniparser_getint(ini, "theme:textfill_g", NULL);
-	COTTheme::C_TEXT_FILL[2] = iniparser_getint(ini, "theme:textfill_b", NULL);
-	COTTheme::C_TEXT_FILL[3] = iniparser_getint(ini, "theme:textfill_a", NULL);
-		
-	COTTheme::C_ERROR_TEXT[0] = iniparser_getint(ini, "theme:errortext_r", NULL);
-	COTTheme::C_ERROR_TEXT[1] = iniparser_getint(ini, "theme:errortext_g", NULL);
-	COTTheme::C_ERROR_TEXT[2] = iniparser_getint(ini, "theme:errortext_b", NULL);
-	COTTheme::C_ERROR_TEXT[3] = iniparser_getint(ini, "theme:errortext_a", NULL);
-	
-	COTTheme::C_DEFAULT[0] = iniparser_getint(ini, "theme:default_r", NULL);
-	COTTheme::C_DEFAULT[1] = iniparser_getint(ini, "theme:default_g", NULL);
-	COTTheme::C_DEFAULT[2] = iniparser_getint(ini, "theme:default_b", NULL);
-	COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", NULL);
+    LOGE("Loading theme %s...\n", themename);
+    
+    // Make sure internal storage is mounted
+    COTStorage::MountInternalStorage();
+    
+    dictionary * ini;
+    if (strcmp(themename, "default")) {
+        
+        String8 theme_file(get_primary_storage_path());
+        theme_file += "/0/cot/themes/";
+        theme_file += themename;
+        theme_file += "/theme.ini";
+        ini = iniparser_load(theme_file.string());
+        if (ini == NULL) {
+            LOGE("Can't load theme %s from %s, switching to default!\n", themename, theme_file.string());
+            COTTheme::LoadTheme("default");
+            return;
+        }
+        LOGE("Theme %s loaded from %s!\n", themename, theme_file.string());
+        COTTheme::use_theme = true;
+        COTTheme::chosen_theme = themename;
+    } else {
+        char * ini_file = "/res/images/default_theme.ini";
+        ini = iniparser_load(ini_file);
+        if (ini == NULL) {
+            LOGE("Can't load theme %s!\n", themename);
+            return;
+        }
+        COTTheme::use_theme = false;
+        COTTheme::chosen_theme = "default";
+    }
+    COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
+    COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
+    COTTheme::C_HEADER[2] = iniparser_getint(ini, "theme:header_b", NULL);
+    COTTheme::C_HEADER[3] = iniparser_getint(ini, "theme:header_a", NULL);
+    
+    COTTheme::C_TOP[0] = iniparser_getint(ini, "theme:top_r", NULL);
+    COTTheme::C_TOP[1] = iniparser_getint(ini, "theme:top_g", NULL);
+    COTTheme::C_TOP[2] = iniparser_getint(ini, "theme:top_b", NULL);
+    COTTheme::C_TOP[3] = iniparser_getint(ini, "theme:top_a", NULL);
+    
+    COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(ini, "theme:menufg_r", NULL);
+    COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(ini, "theme:menufg_g", NULL);
+    COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(ini, "theme:menufg_b", NULL);
+    COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(ini, "theme:menufg_a", NULL);
+    
+    COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(ini, "theme:menubg_r", NULL);
+    COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(ini, "theme:menubg_g", NULL);
+    COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(ini, "theme:menubg_b", NULL);
+    COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(ini, "theme:menubg_a", NULL);
+    
+    COTTheme::C_LOG[0] = iniparser_getint(ini, "theme:log_r", NULL);
+    COTTheme::C_LOG[1] = iniparser_getint(ini, "theme:log_g", NULL);
+    COTTheme::C_LOG[2] = iniparser_getint(ini, "theme:log_b", NULL);
+    COTTheme::C_LOG[3] = iniparser_getint(ini, "theme:log_a", NULL);
+    
+    COTTheme::C_TEXT_FILL[0] = iniparser_getint(ini, "theme:textfill_r", NULL);
+    COTTheme::C_TEXT_FILL[1] = iniparser_getint(ini, "theme:textfill_g", NULL);
+    COTTheme::C_TEXT_FILL[2] = iniparser_getint(ini, "theme:textfill_b", NULL);
+    COTTheme::C_TEXT_FILL[3] = iniparser_getint(ini, "theme:textfill_a", NULL);
+    
+    COTTheme::C_ERROR_TEXT[0] = iniparser_getint(ini, "theme:errortext_r", NULL);
+    COTTheme::C_ERROR_TEXT[1] = iniparser_getint(ini, "theme:errortext_g", NULL);
+    COTTheme::C_ERROR_TEXT[2] = iniparser_getint(ini, "theme:errortext_b", NULL);
+    COTTheme::C_ERROR_TEXT[3] = iniparser_getint(ini, "theme:errortext_a", NULL);
+    
+    COTTheme::C_DEFAULT[0] = iniparser_getint(ini, "theme:default_r", NULL);
+    COTTheme::C_DEFAULT[1] = iniparser_getint(ini, "theme:default_g", NULL);
+    COTTheme::C_DEFAULT[2] = iniparser_getint(ini, "theme:default_b", NULL);
+    COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", NULL);
 }
 
 int COTTheme::compare_string(const void* a, const void* b) {
@@ -133,14 +133,14 @@ int COTTheme::compare_string(const void* a, const void* b) {
 }
 
 void COTTheme::ChooseThemeMenu(Device* device) {
-	
-	// Make sure internal storage is mounted
-	COTStorage::MountInternalStorage();
-	
-	static const char* headers[] = { "Choose Theme",
-									"",
-									NULL
-	};
+    
+    // Make sure internal storage is mounted
+    COTStorage::MountInternalStorage();
+    
+    static const char* headers[] = { "Choose Theme",
+        "",
+        NULL
+    };
     DIR* d;
     struct dirent* de;
     String8 base_path(get_primary_storage_path());
@@ -150,7 +150,7 @@ void COTTheme::ChooseThemeMenu(Device* device) {
         LOGE("error opening %s: %s\n", base_path.string(), strerror(errno));
         return;
     }
-
+    
     int d_size = 0;
     int d_alloc = 10;
     char** dirs = (char**)malloc(d_alloc * sizeof(char*));
@@ -158,16 +158,16 @@ void COTTheme::ChooseThemeMenu(Device* device) {
     int z_alloc = 10;
     char** zips = (char**)malloc(z_alloc * sizeof(char*));
     zips[0] = strdup("default");
-
+    
     while ((de = readdir(d)) != NULL) {
         int name_len = strlen(de->d_name);
-
+        
         if (de->d_type == DT_DIR) {
             // skip "." and ".." entries
             if (name_len == 1 && de->d_name[0] == '.') continue;
             if (name_len == 2 && de->d_name[0] == '.' &&
                 de->d_name[1] == '.') continue;
-
+            
             if (d_size >= d_alloc) {
                 d_alloc *= 2;
                 dirs = (char**)realloc(dirs, d_alloc * sizeof(char*));
@@ -179,7 +179,7 @@ void COTTheme::ChooseThemeMenu(Device* device) {
         }
     }
     closedir(d);
-
+    
     qsort(dirs, d_size, sizeof(char*), compare_string);
     qsort(zips, z_size, sizeof(char*), compare_string);
     
@@ -195,30 +195,30 @@ void COTTheme::ChooseThemeMenu(Device* device) {
     
     int result;
     int chosen_item = 0;
-	
-	for (;;) {
-		chosen_item = get_menu_selection(headers, zips, 1, chosen_item, device);
-		if (chosen_item == Device::kGoBack) {
-			return;
-		}
-		
-		char* item = zips[chosen_item];
-		int item_len = strlen(item);
-		
-		char new_path[PATH_MAX];
-		strlcpy(new_path, item, PATH_MAX);
-		
-		LOGE("Chose %s ...\n", item);
-		int i;
-		COTTheme::chosen_theme = item;
-		COTTheme::use_theme = true;
-		COTTheme::LoadTheme(item);
-		
-		COTSettings::CreateOrSaveSettings(0);
-		
-		ui->ResetIcons();
-		for (i = 0; i < z_size; ++i) free(zips[i]);
-		free(zips);
-		return;
-	}
+    
+    for (;;) {
+        chosen_item = get_menu_selection(headers, zips, 1, chosen_item, device);
+        if (chosen_item == Device::kGoBack) {
+            return;
+        }
+        
+        char* item = zips[chosen_item];
+        int item_len = strlen(item);
+        
+        char new_path[PATH_MAX];
+        strlcpy(new_path, item, PATH_MAX);
+        
+        LOGE("Chose %s ...\n", item);
+        int i;
+        COTTheme::chosen_theme = item;
+        COTTheme::use_theme = true;
+        COTTheme::LoadTheme(item);
+        
+        COTSettings::CreateOrSaveSettings(0);
+        
+        ui->ResetIcons();
+        for (i = 0; i < z_size; ++i) free(zips[i]);
+        free(zips);
+        return;
+    }
 }
