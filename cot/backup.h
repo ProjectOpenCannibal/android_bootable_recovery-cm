@@ -12,16 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <utils/String8.h>
-using namespace android;
 
-#include "../libcrecovery/common.h"
-#include "iniparser/iniparser.h"
-#include "iniparser/dictionary.h"
-#include "settings.h"
-#include "ors.h"
-#include "package.h"
-#include "theme.h"
-#include "storage.h"
-#include "backup.h"
-#include "../messagesocket.h"
+class COTBackup {
+        public:
+            static int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device);
+            static int RestoreBackup(String8 backup_path, Device* device);
+            static void ShowBackupMenu(Device* device);
+            static void ShowRestoreMenu(Device* device);
+            static void ShowMainMenu(Device* device);
+};
