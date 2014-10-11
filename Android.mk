@@ -27,11 +27,11 @@ include $(CLEAR_VARS)
 LOCAL_COT_SRC_FILES := \
     cot/settings.cpp \
     cot/ors.cpp \
-    cot/package.cpp \
     cot/theme.cpp \
     cot/storage.cpp \
     cot/iniparser/iniparser.c \
     cot/iniparser/dictionary.c
+    #cot/package.cpp \  # appended to the end because a comment breaks build otherwise
 
 LOCAL_SRC_FILES := \
     recovery.cpp \
@@ -305,5 +305,6 @@ include $(LOCAL_PATH)/libcrecovery/Android.mk \
     $(LOCAL_PATH)/edify/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/voldclient/Android.mk
+    $(LOCAL_PATH)/voldclient/Android.mk \
+    #$(LOCAL_PATH)/su/Android.mk
 endif

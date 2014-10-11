@@ -40,56 +40,103 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
-//extern static int signature_verification_enabled;
 
-int COTPackage::ShowSigVerifMenu(Device* device) {
-	static const char* headers[] = { "Signature Verification",
+// Slightly modified from CWM and previous COT versions
+int verify_root_and_recovery(Device* device) {		
+	if (ensure_path_mounted("/system") != 0)
+		return 0;
+
+	int ret = 0;
+	struct stat st;
+
+	static const char* VerifyRootHeaders[] = { "Verify Root and Recovery",
 		"",
 		NULL
 	};
-	
-	static const char* menuitems[] = {"Disable signature verification - resets on reboot",
-		NULL
-	};
-	
-	for (;;) {
-		int selected = get_menu_selection(headers, menuitems, 0, 0, device);
-		return selected;
-	}
-}
 
-void COTPackage::ShowZipOptionsMenu(Device* device) {
-	static const char* headers[] = { "ZIP Options",
-		"",
-		NULL
-	};
-	
-	static const char* menuitems[] = {"Signature Verification",
-		NULL
-	};
-	
-	for (;;) {
-		int selected = get_menu_selection(headers, menuitems, 0, 0, device);
-		if (selected == 0) {
-			COTPackage::ShowSigVerifMenu(device);
+    #define FIX_ROOT_OR_RECOVERY 0
+
+	// check to see if install-recovery.sh is going to clobber recovery
+	// install-recovery.sh is also used to run the su daemon on stock rom for 4.3+
+	// so verify that doesn't exist...
+	if (0 != lstat("/system/etc/.installed_su_daemon", &st)) {
+		// check install-recovery.sh exists and is executable
+		if (0 == lstat("/system/etc/install-recovery.sh", &st)) {
+			if (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)) {
+				ret = 1;
+
+				/* I'm not sure how best to notify the user of what's going on
+				 * here without a super long option, hopefully this will make
+				 * sense to users. */
+				static const char* VerifyRootItems[] = { "Disable stock recovery flash and reboot",
+					"Reboot without disabling",
+					NULL
+				};
+
+				for (;;) {
+					int VerifyRootSelection = get_menu_selection(VerifyRootHeaders, VerifyRootItems, 0, 0, device);
+					switch (VerifyRootSelection) {
+						case FIX_ROOT_OR_RECOVERY:
+							__system("chmod -x /system/etc/install-recovery.sh");
+							break;
+						default: break;
+					}
+				}
+			}
+        }
+    }
+
+	int exists = 0;
+
+	if (0 == lstat("/system/bin/su", &st)) {
+		exists = 1;
+		if (S_ISREG(st.st_mode)) {
+			if ((st.st_mode & (S_ISUID | S_ISGID)) != (S_ISUID | S_ISGID)) {
+				ret = 1;
+
+				/* I'm not sure how best to notify the user of what's going on
+				 * here without a super long option, hopefully this will make
+				 * sense to users. */
+				static const char* VerifyRootItems[] = { "Fix root access before rebooting",
+					"Reboot without fixing root",
+					NULL
+				};
+
+				for (;;) {
+					int VerifyRootSelection = get_menu_selection(VerifyRootHeaders, VerifyRootItems, 0, 0, device);
+					switch (VerifyRootSelection) {
+						case FIX_ROOT_OR_RECOVERY:
+							__system("chmod 6755 /system/bin/su");
+							break;
+						default: break;
+					}
+				}
+			}
 		}
-		return;
 	}
-}
 
-int COTPackage::InstallUntrustedZip(Device* device) {
-	static const char* headers[] = { "Testing",
-		"",
-		NULL
-	};
-	
-	static const char* menuitems[] = {"Yes - install untrusted ZIP",
-		"No - abort ZIP installation",
-		NULL
-	};
-	
-	for (;;) {
-		int selected = get_menu_selection(headers, menuitems, 0, 0, device);
-		return selected;
+	if (!exists) {
+		ret = 1;
+
+		/* I'm not sure how best to notify the user of what's going on
+		 * here without a super long option, hopefully this will make
+		 * sense to users. */
+		static const char* VerifyRootItems[] = { "Install root before rebooting",
+			"Reboot without installing root",
+			NULL
+		};
+
+		for (;;) {
+			int VerifyRootSelection = get_menu_selection(VerifyRootHeaders, VerifyRootItems, 0, 0, device);
+			switch (VerifyRootSelection) {
+				case FIX_ROOT_OR_RECOVERY:
+					__system("/sbin/install-su.sh");
+					break;
+				default: break;
+			}
+		}
 	}
+
+	ensure_path_unmounted("/system");
+	return ret;
 }

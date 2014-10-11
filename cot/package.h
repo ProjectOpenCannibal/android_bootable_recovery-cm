@@ -15,7 +15,5 @@
 
 class COTPackage {
 	public:
-		static int ShowSigVerifMenu(Device* device);
-		static void ShowZipOptionsMenu(Device* device);
-		static int InstallUntrustedZip(Device* device);
+		static int verify_root_and_recovery(Device* device);
 };
