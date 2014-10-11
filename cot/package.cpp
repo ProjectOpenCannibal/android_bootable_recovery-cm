@@ -42,7 +42,7 @@
 extern RecoveryUI* ui;
 
 // Slightly modified from CWM and previous COT versions
-int verify_root_and_recovery(Device* device) {		
+int COTPackage::VerifyRootAndRecovery(Device* device) {		
     if (ensure_path_mounted("/system") != 0)
         return 0;
     
