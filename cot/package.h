@@ -14,6 +14,6 @@
  */
 
 class COTPackage {
-	public:
-		static int verify_root_and_recovery(Device* device);
+public:
+    static int verify_root_and_recovery(Device* device);
 };
