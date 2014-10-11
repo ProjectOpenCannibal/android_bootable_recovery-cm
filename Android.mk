@@ -30,9 +30,9 @@ LOCAL_COT_SRC_FILES := \
     cot/theme.cpp \
     cot/storage.cpp \
     cot/backup.cpp \
+    cot/package.cpp \
     cot/iniparser/iniparser.c \
     cot/iniparser/dictionary.c
-    #cot/package.cpp \  # appended to the end because a comment breaks build otherwise
 
 LOCAL_SRC_FILES := \
     recovery.cpp \
