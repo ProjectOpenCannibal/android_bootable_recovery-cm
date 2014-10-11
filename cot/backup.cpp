@@ -41,12 +41,12 @@
 
 extern RecoveryUI* ui;
 
-int COTPackage::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { return 0; }
+int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { return 0; }
 
-int COTPackage::RestoreBackup(String8 backup_path, Device* device) { return 0; }
+int COTBackup::RestoreBackup(String8 backup_path, Device* device) { return 0; }
 
-void COTPackage::ShowBackupMenu(Device* device) { }
+void COTBackup::ShowBackupMenu(Device* device) { }
 
-void COTPackage::ShowRestoreMenu(Device* device) { }
+void COTBackup::ShowRestoreMenu(Device* device) { }
 
-void COTPackage::ShowMainMenu(Device* device) { }
+void COTBackup::ShowMainMenu(Device* device) { }
