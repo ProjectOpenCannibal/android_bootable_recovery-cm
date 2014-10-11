@@ -67,7 +67,7 @@ class Device {
     //   - invoke a specific action (a menu position: any non-negative number)
     virtual int HandleMenuKey(int key, int visible) = 0;
 
-    enum BuiltinAction { NO_ACTION, REBOOT, APPLY_UPDATE, BACKUP_RESTORE,
+    enum BuiltinAction { NO_ACTION, REBOOT, APPLY_UPDATE,
                          WIPE_DATA, WIPE_CACHE, WIPE_MEDIA, RECOVERY_SETTINGS };
 
     // Perform a recovery action selected from the menu.

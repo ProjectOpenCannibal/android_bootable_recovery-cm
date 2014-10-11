@@ -414,19 +414,19 @@ typedef struct _saved_log_file {
 
 int erase_volume(const char *volume, bool force = false) {
     bool is_cache = (strcmp(volume, CACHE_ROOT) == 0);
-    
+
     ui->SetBackground(RecoveryUI::ERASING);
     ui->SetProgressType(RecoveryUI::INDETERMINATE);
-    
+
     saved_log_file* head = NULL;
-    
+
     if (!force && is_cache) {
         // If we're reformatting /cache, we load any
         // "/cache/recovery/last*" files into memory, so we can restore
         // them after the reformat.
-        
+
         ensure_path_mounted(volume);
-        
+
         DIR* d;
         struct dirent* de;
         d = opendir(CACHE_LOG_DIR);
@@ -463,14 +463,14 @@ int erase_volume(const char *volume, bool force = false) {
             }
         }
     }
-    
+
     ui->Print("Formatting %s...\n", volume);
-    
+
     if (volume[0] == '/') {
         ensure_path_unmounted(volume);
     }
     int result = format_volume(volume, force);
-    
+
     if (!force && is_cache) {
         while (head) {
             FILE* f = fopen_path(head->name, "wb");
@@ -486,14 +486,14 @@ int erase_volume(const char *volume, bool force = false) {
             free(head);
             head = temp;
         }
-        
+
         // Any part of the log we'd copied to cache is now gone.
         // Reset the pointer so we copy from the beginning of the temp
         // log.
         tmplog_offset = 0;
         copy_logs();
     }
-    
+
     return result;
 }
 
@@ -620,20 +620,20 @@ get_menu_selection(const char* const * headers, const char* const * items,
     // throw away keys pressed previously, so user doesn't
     // accidentally trigger menu items.
     ui->FlushKeys();
-    
+
     // Count items to detect valid values for absolute selection
     int item_count = 0;
     while (items[item_count] != NULL)
         ++item_count;
-    
+
     ui->StartMenu(headers, items, initial_selection);
     int selected = initial_selection;
     int chosen_item = -1;
-    
+
     while (chosen_item < 0 && chosen_item != Device::kGoBack && chosen_item != Device::kRefresh) {
         int key = ui->WaitKey();
         int visible = ui->IsTextVisible();
-        
+
         if (key == -1) {   // ui_wait_key() timed out
             if (ui->WasTextEverVisible()) {
                 continue;
@@ -648,9 +648,9 @@ get_menu_selection(const char* const * headers, const char* const * items,
         else if (key == -6) {
             return Device::kRefresh;
         }
-        
+
         int action = device->HandleMenuKey(key, visible);
-        
+
         if (action >= 0) {
             if ((action & ~KEY_FLAG_ABS) >= item_count) {
                 action = Device::kNoAction;
@@ -664,7 +664,7 @@ get_menu_selection(const char* const * headers, const char* const * items,
                 usleep(50*1000);
             }
         }
-        
+
         if (action < 0) {
             switch (action) {
                 case Device::kHighlightUp:
@@ -676,13 +676,13 @@ get_menu_selection(const char* const * headers, const char* const * items,
                     selected = ui->SelectMenu(selected);
                     break;
                 case Device::kHighlightUpNoWrap:
-                    --selected;
-                    selected = ui->SelectMenu(selected, false, true);
-                    break;
-                case Device::kHighlightDownNoWrap:
-                    ++selected;
-                    selected = ui->SelectMenu(selected, false, true);
-                    break;
+					--selected;
+					selected = ui->SelectMenu(selected, false, true);
+					break;
+				case Device::kHighlightDownNoWrap:
+					++selected;
+					selected = ui->SelectMenu(selected, false, true);
+					break;
                 case Device::kInvokeItem:
                     chosen_item = selected;
                     break;
@@ -699,7 +699,7 @@ get_menu_selection(const char* const * headers, const char* const * items,
             chosen_item = action;
         }
     }
-    
+
     ui->EndMenu();
     return chosen_item;
 }
@@ -1039,35 +1039,35 @@ show_reboot_menu(Device* device) {
         "",
         NULL
     };
-    
+
     static const char* RebootMenuItems[] = { "Reboot to Android",
-        "Reboot Recovery",
-        "Reboot to Bootloader",
-        NULL
-    };
-    
-    for (;;) {
-        int RebootSelection = get_menu_selection(RebootMenuHeaders, RebootMenuItems, 0, 0, device);
-        switch (RebootSelection) {
-            case 0:
-                // reboot us!
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART, 0, 0);
-                break;
-            case 1:
-                // this will be where we reboot recovery
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
-                break;
-            case 2:
-                // this will be where we reboot bootloader
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART2, 0, "bootloader");
-                break;
-            case Device::kGoBack:
-                return;
-        }
-    }
+		"Reboot Recovery",
+		"Reboot to Bootloader",
+		NULL
+	};
+
+	for (;;) {
+		int RebootSelection = get_menu_selection(RebootMenuHeaders, RebootMenuItems, 0, 0, device);
+		switch (RebootSelection) {
+			case 0:
+				// reboot us!
+				vold_unmount_all();
+				android_reboot(ANDROID_RB_RESTART, 0, 0);
+				break;
+			case 1:
+				// this will be where we reboot recovery
+				vold_unmount_all();
+				android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
+				break;
+			case 2:
+				// this will be where we reboot bootloader
+				vold_unmount_all();
+				android_reboot(ANDROID_RB_RESTART2, 0, "bootloader");
+				break;
+			case Device::kGoBack:
+				return;
+		}
+	}
 }
 
 static void
@@ -1127,18 +1127,14 @@ prompt_and_wait(Device* device, int status) {
                     break;
                     
                 case Device::RECOVERY_SETTINGS:
-                    COTSettings::ShowMainMenu(device);
-                    break;
+					COTSettings::ShowMainMenu(device);
+					break;
 
                 case Device::APPLY_UPDATE:
                     status = show_apply_update_menu(device);
                     if (status == INSTALL_SUCCESS && !ui->IsTextVisible()) {
                         return;  // reboot if logs aren't visible
                     }
-                    break;
-                    
-                case Device::BACKUP_RESTORE:
-                    COTBackup::ShowMainMenu(device);
                     break;
             }
             if (status == Device::kRefresh) {
