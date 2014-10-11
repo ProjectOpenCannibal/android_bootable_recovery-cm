@@ -49,4 +49,29 @@ void COTBackup::ShowBackupMenu(Device* device) { }
 
 void COTBackup::ShowRestoreMenu(Device* device) { }
 
-void COTBackup::ShowMainMenu(Device* device) { }
+void COTBackup::ShowMainMenu(Device* device) {
+    static const char* MainMenuHeaders[] = { "Backup and Restore",
+        "",
+        NULL
+    };
+    
+    static const char* MainMenuItems[] = { "Backup Now",
+        "Restore a backup",
+        NULL
+    };
+    
+#define BACKUP_NOW 0
+#define RESTORE_BACKUP 1
+    
+    for (;;) {
+        int MainMenuSelection = get_menu_selection(MainMenuHeaders, MainMenuItems, 0, 0, device);
+        switch (MainMenuSelection) {
+            case BACKUP_NOW:
+                break;
+            case RESTORE_BACKUP:
+                break;
+            case Device::kGoBack:
+                return;
+        }
+    }
+}
