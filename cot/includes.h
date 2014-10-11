@@ -23,4 +23,5 @@ using namespace android;
 #include "package.h"
 #include "theme.h"
 #include "storage.h"
+#include "backup.h"
 #include "../messagesocket.h"

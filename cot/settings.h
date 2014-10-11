@@ -1,5 +1,5 @@
 /* Copyright (C) 2014 Project Open Cannibal
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "iniparser/dictionary.h"
 #include "iniparser/iniparser.h"
 
 class COTSettings {
-	public:
-		static String8 zip_sigverif;
-		static dictionary * settingsini;
-		static void CreateOrSaveSettings(int is_new);
-		static void LoadSettings();
-		static void ShowMainMenu(Device* device);
-		static void ShowZipVerifMenu(Device* device);
+public:
+    static String8 zip_sigverif;
+    static dictionary * settingsini;
+    static void CreateOrSaveSettings(int is_new);
+    static void LoadSettings();
+    static void ShowMainMenu(Device* device);
+    static void ShowZipVerifMenu(Device* device);
 };

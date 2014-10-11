@@ -1,5 +1,5 @@
 /* Copyright (C) 2014 Project Open Cannibal
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -42,14 +41,12 @@
 
 extern RecoveryUI* ui;
 
-void COTStorage::MountInternalStorage() {
-    ensure_path_mounted("/data/media");
-    ensure_path_mounted("/sdcard");
-    ensure_path_mounted("/storage/sdcard0");
-}
+int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { }
 
-void COTStorage::UnmountInternalStorage() {
-    ensure_path_unmounted("/sdcard");
-    ensure_path_unmounted("/storage/sdcard0");
-    ensure_path_unmounted("/data/media");
-}
+int RestoreBackup(String8 backup_path; Device* device) { }
+
+void ShowBackupMenu(Device* device) { }
+
+void ShowRestoreMenu(Device* device) { }
+
+void ShowMainMenu(Device* device) { }

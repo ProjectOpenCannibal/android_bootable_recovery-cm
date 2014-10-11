@@ -29,6 +29,7 @@ LOCAL_COT_SRC_FILES := \
     cot/ors.cpp \
     cot/theme.cpp \
     cot/storage.cpp \
+    cot/backup.cpp \
     cot/iniparser/iniparser.c \
     cot/iniparser/dictionary.c
     #cot/package.cpp \  # appended to the end because a comment breaks build otherwise
