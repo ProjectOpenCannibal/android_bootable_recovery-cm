@@ -155,40 +155,29 @@ ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
     RECOVERY_LINKS += mkfs.f2fs fsck.f2fs fibmap.f2fs
 endif
 
-RECOVERY_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(RECOVERY_LINKS))
-BUSYBOX_LINKS := $(shell cat external/busybox/busybox-minimal.links)
-exclude := tune2fs mke2fs
-RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
-
-LOCAL_ADDITIONAL_DEPENDENCIES := \
- bu_recovery
-
-LOCAL_ADDITIONAL_DEPENDENCIES += \
- minivold \
- recovery_e2fsck \
- recovery_mke2fs \
- recovery_tune2fs \
- mount.exfat_static
-
-LOCAL_ADDITIONAL_DEPENDENCIES += $(RECOVERY_SYMLINKS) $(RECOVERY_BUSYBOX_SYMLINKS)
-
-include $(BUILD_EXECUTABLE)
-
 # nc is provided by external/netcat
+RECOVERY_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(RECOVERY_LINKS))
 $(RECOVERY_SYMLINKS): RECOVERY_BINARY := $(LOCAL_MODULE)
-$(RECOVERY_SYMLINKS):
+$(RECOVERY_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	@echo "Symlink: $@ -> $(RECOVERY_BINARY)"
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -sf $(RECOVERY_BINARY) $@
 
+ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_SYMLINKS)
+
 # Now let's do recovery symlinks
+BUSYBOX_LINKS := $(shell cat external/busybox/busybox-minimal.links)
+exclude := tune2fs mke2fs
+RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
 $(RECOVERY_BUSYBOX_SYMLINKS): BUSYBOX_BINARY := busybox
-$(RECOVERY_BUSYBOX_SYMLINKS):
+$(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	@echo "Symlink: $@ -> $(BUSYBOX_BINARY)"
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -sf $(BUSYBOX_BINARY) $@
+
+ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_BUSYBOX_SYMLINKS)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := bu_recovery
