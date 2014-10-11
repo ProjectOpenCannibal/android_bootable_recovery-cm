@@ -1128,6 +1128,10 @@ prompt_and_wait(Device* device, int status) {
                         return;  // reboot if logs aren't visible
                     }
                     break;
+                    
+                case Device::BACKUP_RESTORE:
+                    COTBackup::ShowMainMenu(device);
+                    break;
             }
             if (status == Device::kRefresh) {
                 status = 0;

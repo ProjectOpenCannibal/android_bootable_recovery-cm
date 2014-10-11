@@ -21,10 +21,9 @@ include $(CLEAR_VARS)
 LOCAL_COT_SRC_FILES := \
     cot/settings.cpp \
     cot/ors.cpp \
-    cot/theme.cpp \
-    cot/storage.cpp \
-    cot/backup.cpp \
     cot/package.cpp \
+    cot/theme.cpp \
+    cot/backup.cpp \
     cot/iniparser/iniparser.c \
     cot/iniparser/dictionary.c
 
@@ -86,7 +85,8 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libm \
     libc \
-    libcrecovery
+    libcrecovery \
+    libcot
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -301,6 +301,6 @@ include $(LOCAL_PATH)/libcrecovery/Android.mk \
     $(LOCAL_PATH)/edify/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/voldclient/Android.mk 
+    $(LOCAL_PATH)/voldclient/Android.mk
     ##$(LOCAL_PATH)/su/Android.mk
 endif
