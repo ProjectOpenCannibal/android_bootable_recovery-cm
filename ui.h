@@ -72,10 +72,10 @@ struct input_device {
 
     int         rel_sum;            // Accumulated relative movement
 
-    bool        saw_pos_x;          // Did this sequence have an ABS_MT_POSITION_X?
-    bool        saw_pos_y;          // Did this sequence have an ABS_MT_POSITION_Y?
-    bool        saw_mt_report;      // Did this sequence have an SYN_MT_REPORT?
-    bool        saw_tracking_id;    // Did sequence have SYN_TRACKING_ID? 
+    bool        saw_pos_x;          // Did sequence have ABS_MT_POSITION_X?
+    bool        saw_pos_y;          // Did sequence have ABS_MT_POSITION_Y?
+    bool        saw_mt_report;      // Did sequence have SYN_MT_REPORT?
+    bool        saw_tracking_id;    // Did sequence have SYN_TRACKING_ID?
     bool        in_touch;           // Are we in a touch event?
     bool        in_swipe;           // Are we in a swipe event?
 
@@ -95,11 +95,11 @@ class RecoveryUI {
     RecoveryUI();
 
     virtual ~RecoveryUI() { }
+    
+    // Init icons
+    virtual void ResetIcons();
+    virtual void InitIcons();
 
-	// Init icons
-	virtual void ResetIcons();
-	virtual void InitIcons();
-	
     // Initialize the object; called before anything else.
     virtual void Init();
     // Show a stage indicator.  Call immediately after Init().
@@ -188,7 +188,7 @@ class RecoveryUI {
 
     // Set the menu highlight to the given index, and return it (capped to
     // the range [0..numitems).
-    virtual int SelectMenu(int sel, bool abs = false, bool nowrap = false) = 0;
+    virtual int SelectMenu(int sel, bool abs = false) = 0;
 
     // End menu mode, resetting the text overlay so that ui_print()
     // statements will be displayed.

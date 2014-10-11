@@ -165,7 +165,7 @@ void ScreenRecoveryUI::draw_progress_locked()
         SetColor(TEXT_FILL);
         gr_fill(dx, dy, width, height);
 
-		if (progressBarType == DETERMINATE) {
+        if (progressBarType == DETERMINATE) {
             float p = progressScopeStart + progress * progressScopeSize;
             int pos = (int) (p * width);
 
@@ -194,52 +194,52 @@ void ScreenRecoveryUI::SetColor(UIElement e) {
     switch (e) {
         case HEADER:
             gr_color(COTTheme::C_HEADER[0],
-				COTTheme::C_HEADER[1],
-				COTTheme::C_HEADER[2],
-				COTTheme::C_HEADER[3]);
+                     COTTheme::C_HEADER[1],
+                     COTTheme::C_HEADER[2],
+                     COTTheme::C_HEADER[3]);
             break;
         case TOP:
             gr_color(COTTheme::C_TOP[0],
-				COTTheme::C_TOP[1],
-				COTTheme::C_TOP[2],
-				COTTheme::C_TOP[3]);
+                     COTTheme::C_TOP[1],
+                     COTTheme::C_TOP[2],
+                     COTTheme::C_TOP[3]);
             break;
         case MENU:
         case MENU_SEL_FG:
             gr_color(COTTheme::C_MENU_SEL_FG[0],
-				COTTheme::C_MENU_SEL_FG[1],
-				COTTheme::C_MENU_SEL_FG[2],
-				COTTheme::C_MENU_SEL_FG[3]);
+                     COTTheme::C_MENU_SEL_FG[1],
+                     COTTheme::C_MENU_SEL_FG[2],
+                     COTTheme::C_MENU_SEL_FG[3]);
             break;
         case MENU_SEL_BG:
             gr_color(COTTheme::C_MENU_SEL_BG[0],
-				COTTheme::C_MENU_SEL_BG[1],
-				COTTheme::C_MENU_SEL_BG[2],
-				COTTheme::C_MENU_SEL_BG[3]);
+                     COTTheme::C_MENU_SEL_BG[1],
+                     COTTheme::C_MENU_SEL_BG[2],
+                     COTTheme::C_MENU_SEL_BG[3]);
             break;
         case LOG:
             gr_color(COTTheme::C_LOG[0],
-				COTTheme::C_LOG[1],
-				COTTheme::C_LOG[2],
-				COTTheme::C_LOG[3]);
+                     COTTheme::C_LOG[1],
+                     COTTheme::C_LOG[2],
+                     COTTheme::C_LOG[3]);
             break;
         case TEXT_FILL:
             gr_color(COTTheme::C_TEXT_FILL[0],
-				COTTheme::C_TEXT_FILL[1],
-				COTTheme::C_TEXT_FILL[2],
-				COTTheme::C_TEXT_FILL[3]);
+                     COTTheme::C_TEXT_FILL[1],
+                     COTTheme::C_TEXT_FILL[2],
+                     COTTheme::C_TEXT_FILL[3]);
             break;
         case ERROR_TEXT:
             gr_color(COTTheme::C_ERROR_TEXT[0],
-				COTTheme::C_ERROR_TEXT[1],
-				COTTheme::C_ERROR_TEXT[2],
-				COTTheme::C_ERROR_TEXT[3]);
+                     COTTheme::C_ERROR_TEXT[1],
+                     COTTheme::C_ERROR_TEXT[2],
+                     COTTheme::C_ERROR_TEXT[3]);
             break;
         default:
             gr_color(COTTheme::C_DEFAULT[0],
-				COTTheme::C_DEFAULT[1],
-				COTTheme::C_DEFAULT[2],
-				COTTheme::C_DEFAULT[3]);
+                     COTTheme::C_DEFAULT[1],
+                     COTTheme::C_DEFAULT[2],
+                     COTTheme::C_DEFAULT[3]);
             break;
     }
 }
@@ -266,10 +266,9 @@ void ScreenRecoveryUI::draw_menu_item(int textrow, const char *text, int selecte
         SetColor(MENU);
     }
     else {
-		SetColor(MENU);
+        SetColor(MENU);
         gr_text(4, (textrow+1)*char_height-1, text, 0);
     }
-    
     gr_color(SEPARATOR_COLOR);
     gr_fill(0, (textrow+3)*char_height-1, gr_fb_width(), (textrow+3)*char_height+1);
 }
@@ -304,6 +303,7 @@ void ScreenRecoveryUI::draw_dialog()
         int cx, cy;
         gr_set_font("log");
         gr_font_size(&cx, &cy);
+
         int row;
         for (row = 0; row < log_text_rows; ++row) {
             gr_text(2, y, text[row], 0);
@@ -379,11 +379,11 @@ void ScreenRecoveryUI::draw_screen_locked()
             draw_header_icon();
             int nr_items = menu_items - menu_show_start;
             if (nr_items > max_menu_rows)
-				nr_items = max_menu_rows;
-			for (int i = 0; i < nr_items; ++i) {
-				draw_menu_item(text_first_row + 3*i, menu[menu_show_start+i],
-					((menu_show_start+i) == menu_sel));
-			}
+                nr_items = max_menu_rows;
+            for (int i = 0; i < nr_items; ++i) {
+                draw_menu_item(text_first_row + 3*i, menu[menu_show_start+i],
+                        ((menu_show_start+i) == menu_sel));
+            }
         }
     }
 }
@@ -462,10 +462,10 @@ void ScreenRecoveryUI::progress_loop() {
 void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-		result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
-	} else {
-		result = res_create_display_surface(filename, surface);
-	}
+        result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
+    } else {
+        result = res_create_display_surface(filename, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
     }
@@ -474,10 +474,10 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, con
 void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-		result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
-	} else {
-		result = res_create_multi_display_surface(filename, frames, surface);
-	}
+        result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
+    } else {
+        result = res_create_multi_display_surface(filename, frames, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
     }
@@ -486,10 +486,10 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
 void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-		result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
-	} else {
-		result = res_create_localized_alpha_surface(filename, locale, surface);
-	}
+        result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
+    } else {
+        result = res_create_localized_alpha_surface(filename, locale, surface);
+    }
     if (result < 0) {
         LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
     }
@@ -497,34 +497,34 @@ void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* sur
 
 void ScreenRecoveryUI::ResetIcons()
 {
-	pthread_mutex_lock(&updateMutex);
-	ScreenRecoveryUI::InitIcons();
-	update_screen_locked();
-	pthread_mutex_unlock(&updateMutex);
-	
-	ScreenRecoveryUI::ShowText(true);
+    pthread_mutex_lock(&updateMutex);
+    ScreenRecoveryUI::InitIcons();
+    update_screen_locked();
+    pthread_mutex_unlock(&updateMutex);
+    
+    ScreenRecoveryUI::ShowText(true);
     ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
     //if (show_text) ScreenRecoveryUI::ShowText(true);
 }
 
 void ScreenRecoveryUI::InitIcons()
 {
-	LoadBitmap("icon_header", &headerIcon, COTTheme::chosen_theme.string());
+    LoadBitmap("icon_header", &headerIcon, COTTheme::chosen_theme.string());
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
-	backgroundIcon[NONE] = NULL;
+    backgroundIcon[NONE] = NULL;
     LoadBitmapArray("icon_installing", &installing_frames, &installation, COTTheme::chosen_theme.string());
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;
     backgroundIcon[ERASING] = backgroundIcon[INSTALLING_UPDATE];
     LoadBitmap("icon_info", &backgroundIcon[INFO], COTTheme::chosen_theme.string());
     LoadBitmap("icon_error", &backgroundIcon[ERROR], COTTheme::chosen_theme.string());
     backgroundIcon[NO_COMMAND] = backgroundIcon[ERROR];
-
+    
     LoadBitmap("progress_empty", &progressBarEmpty, COTTheme::chosen_theme.string());
     LoadBitmap("progress_fill", &progressBarFill, COTTheme::chosen_theme.string());
     LoadBitmap("stage_empty", &stageMarkerEmpty, COTTheme::chosen_theme.string());
     LoadBitmap("stage_fill", &stageMarkerFill, COTTheme::chosen_theme.string());
-
+    
     LoadLocalizedBitmap("installing_text", &backgroundText[INSTALLING_UPDATE], COTTheme::chosen_theme.string());
     LoadLocalizedBitmap("erasing_text", &backgroundText[ERASING], COTTheme::chosen_theme.string());
     LoadLocalizedBitmap("no_command_text", &backgroundText[NO_COMMAND], COTTheme::chosen_theme.string());
@@ -552,11 +552,11 @@ void ScreenRecoveryUI::Init()
 
     text_cols = gr_fb_width() / char_width;
     if (text_cols > kMaxCols - 1) text_cols = kMaxCols - 1;
+    
+    ScreenRecoveryUI::InitIcons();
 
-	ScreenRecoveryUI::InitIcons();
-
-	text_first_row = (header_height / char_height) + 1;
-	menu_item_start = text_first_row * char_height;
+    text_first_row = (header_height / char_height) + 1;
+    menu_item_start = text_first_row * char_height;
     max_menu_rows = (text_rows - text_first_row) / 3;
 
     RecoveryUI::Init();
@@ -763,7 +763,7 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
     pthread_mutex_unlock(&updateMutex);
 }
 
-int ScreenRecoveryUI::SelectMenu(int sel, bool abs, bool nowrap) {
+int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
     int old_sel;
     pthread_mutex_lock(&updateMutex);
     if (abs) {
@@ -772,19 +772,8 @@ int ScreenRecoveryUI::SelectMenu(int sel, bool abs, bool nowrap) {
     if (show_menu > 0) {
         old_sel = menu_sel;
         menu_sel = sel;
-        if (nowrap) {
-			if (menu_sel < 0) {
-				menu_sel = 0;
-			} else if (menu_sel >= menu_items) {
-				menu_sel = menu_items - 1;
-			}
-		} else {
-			if (menu_sel < 0) {
-				menu_sel = menu_items + menu_sel;
-			} else if (menu_sel >= menu_items) {
-				menu_sel = menu_sel - menu_items;
-			}
-		}
+        if (menu_sel < 0) menu_sel = menu_items + menu_sel;
+        if (menu_sel >= menu_items) menu_sel = menu_sel - menu_items;
         if (menu_sel < menu_show_start && menu_show_start > 0) {
             menu_show_start = menu_sel;
         }

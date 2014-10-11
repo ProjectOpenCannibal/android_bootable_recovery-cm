@@ -77,12 +77,6 @@ class DefaultDevice : public Device {
               case KEY_SEARCH:
                 return kHighlightUp;
 
-			  case KEY_J: // swipe down injected keycode
-			    return kHighlightDownNoWrap;
-			    
-			  case KEY_K: // swipe up injected keycode
-			    return kHighlightUpNoWrap;
-
               case KEY_ENTER:
               case KEY_POWER:
               case BTN_MOUSE:
@@ -114,7 +108,7 @@ class DefaultDevice : public Device {
           case 3: return WIPE_CACHE;
           case 4: return RECOVERY_SETTINGS;
           case 5: return WIPE_MEDIA;
-	  default: return NO_ACTION;
+          default: return NO_ACTION;
         }
     }
 

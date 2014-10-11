@@ -28,9 +28,10 @@
 class ScreenRecoveryUI : public RecoveryUI {
   public:
     ScreenRecoveryUI();
+    
+    void ResetIcons();
+    void InitIcons();
 
-	void ResetIcons();
-	void InitIcons();
     void Init();
     void SetLocale(const char* locale);
 
@@ -64,7 +65,7 @@ class ScreenRecoveryUI : public RecoveryUI {
     virtual int MenuItemHeight() const { return 3*char_height; }
     void StartMenu(const char* const * headers, const char* const * items,
                            int initial_selection);
-    int SelectMenu(int sel, bool abs = false, bool nowrap = false);
+    int SelectMenu(int sel, bool abs = false);
     void EndMenu();
 
     void Redraw();
@@ -155,7 +156,7 @@ class ScreenRecoveryUI : public RecoveryUI {
     static void* progress_thread(void* cookie);
     void progress_loop();
 
-	void LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name);
+    void LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name);
     void LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name);
     void LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name);
 };
