@@ -43,7 +43,7 @@ extern RecoveryUI* ui;
 
 int COTPackage::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { return 0; }
 
-int COTPackage::RestoreBackup(String8 backup_path; Device* device) { return 0; }
+int COTPackage::RestoreBackup(String8 backup_path, Device* device) { return 0; }
 
 void COTPackage::ShowBackupMenu(Device* device) { }
 
