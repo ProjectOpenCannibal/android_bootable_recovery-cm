@@ -155,8 +155,8 @@ void COTSettings::ShowZipVerifMenu(Device* device) {
                 break;
             case Device::kGoBack:
             return;
-          }
+        }
         COTSettings::CreateOrSaveSettings(0);
         return;
-      }
-  }
+    }
+}

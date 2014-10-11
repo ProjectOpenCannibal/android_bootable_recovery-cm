@@ -41,12 +41,87 @@
 
 extern RecoveryUI* ui;
 
-int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { return 0; }
+int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) {
+    fstab_rec* vol = NULL;
+    char* path = NULL;
+
+    if (system == 1) {
+        path = (char*)malloc(1+strlen("system")+1);
+        sprintf(path, "/%s", "system");
+        vol = volume_for_path(path);
+        String8 blkdevice(vol->blk_device);
+        LOGI("Block device for /system is: %s\n", blkdevice.string());
+    }
+    if (data == 1) {
+    }
+    if (cache == 1) {
+    }
+    if (boot == 1) {
+    }
+    if (recovery == 1) {
+    }
+    return 0;
+}
 
 int COTBackup::RestoreBackup(String8 backup_path, Device* device) { return 0; }
 
-void COTBackup::ShowBackupMenu(Device* device) { }
+void COTBackup::ShowBackupMenu(Device* device) {
+    static const char* BackupNowHeaders[] = { "Backup Now",
+        "",
+        NULL
+    };
+    
+    static const char* BackupNowItems[] = { "Yes - backup now",
+        "No - don't backup",
+        NULL
+    };
+    
+#define YES_BACKUP 0
+#define NO_BACKUP 1
+    
+    for (;;) {
+        int BackupNowSelection = get_menu_selection(BackupNowHeaders, BackupNowItems, 0, 0, device);
+        switch (BackupNowSelection) {
+            case YES_BACKUP:
+            {
+                int result = MakeBackup(1, 1, 1, 1, 0, device);
+                break;
+            }
+            case NO_BACKUP:
+                return;
+            case Device::kGoBack:
+                return;
+        }
+    }
+}
 
 void COTBackup::ShowRestoreMenu(Device* device) { }
 
-void COTBackup::ShowMainMenu(Device* device) { }
+void COTBackup::ShowMainMenu(Device* device) {
+    static const char* MainMenuHeaders[] = { "Backup and Restore",
+        "",
+        NULL
+      };
+
+    static const char* MainMenuItems[] = { "Backup Now",
+        "Restore a backup",
+        NULL
+      };
+
+#define BACKUP_NOW 0
+#define RESTORE 1
+
+    for (;;) {
+        int MainMenuSelection = get_menu_selection(MainMenuHeaders, MainMenuItems, 0, 0, device);
+        switch (MainMenuSelection) {
+            case BACKUP_NOW:
+                ShowBackupMenu(device);
+                break;
+            case RESTORE:
+                ShowRestoreMenu(device);
+                break;
+            case Device::kGoBack:
+                return;
+        }
+    }
+}
