@@ -41,9 +41,9 @@
 
 extern RecoveryUI* ui;
 
-int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { }
+int MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) { return 0; }
 
-int RestoreBackup(String8 backup_path; Device* device) { }
+int RestoreBackup(String8 backup_path; Device* device) { return 0; }
 
 void ShowBackupMenu(Device* device) { }
 
