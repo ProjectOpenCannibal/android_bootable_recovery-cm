@@ -71,7 +71,11 @@ LOCAL_STATIC_LIBRARIES := \
     libsdcard \
     libminzip \
     libz \
+    libcrecovery \
+    libflashutils \
     libmtdutils \
+    libmmcutils \
+    libbmlutils \
     libmincrypt \
     libminadbd \
     libbusybox \
@@ -85,7 +89,6 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libm \
     libc \
-    libcrecovery \
     libcot
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
@@ -290,12 +293,15 @@ LOCAL_STATIC_LIBRARIES := \
 include $(BUILD_EXECUTABLE)
 
 
-include $(LOCAL_PATH)/libcrecovery/Android.mk \
+include $(LOCAL_PATH)/bmlutils/Android.mk \
+    $(LOCAL_PATH)/flashutils/Android.mk \
+    $(LOCAL_PATH)/libcrecovery/Android.mk \
     $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/minelf/Android.mk \
     $(LOCAL_PATH)/minzip/Android.mk \
     $(LOCAL_PATH)/minadbd/Android.mk \
     $(LOCAL_PATH)/mtdutils/Android.mk \
+    $(LOCAL_PATH)/mmcutils/Android.mk \
     $(LOCAL_PATH)/tests/Android.mk \
     $(LOCAL_PATH)/tools/Android.mk \
     $(LOCAL_PATH)/edify/Android.mk \

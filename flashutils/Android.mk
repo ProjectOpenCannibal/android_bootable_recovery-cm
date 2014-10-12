@@ -21,14 +21,6 @@ $(foreach board_define,$(BOARD_RECOVERY_DEFINES), \
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := flash_image.c
-LOCAL_MODULE := flash_image
-LOCAL_MODULE_TAGS := optional
-LOCAL_STATIC_LIBRARIES := libflashutils libmtdutils libmmcutils libbmlutils libcrecovery
-LOCAL_SHARED_LIBRARIES := libcutils libc
-include $(BUILD_EXECUTABLE)
-
-include $(CLEAR_VARS)
 LOCAL_SRC_FILES := dump_image.c
 LOCAL_MODULE := dump_image
 LOCAL_MODULE_TAGS := optional
@@ -44,7 +36,7 @@ LOCAL_STATIC_LIBRARIES := libflashutils libmtdutils libmmcutils libbmlutils libc
 LOCAL_SHARED_LIBRARIES := libcutils libc
 include $(BUILD_EXECUTABLE)
 
-ALL_DEFAULT_INSTALLED_MODULES += $(addprefix $(TARGET_OUT)/bin/, flash_image dump_image erase_image)
+ALL_DEFAULT_INSTALLED_MODULES += $(addprefix $(TARGET_OUT)/bin/, dump_image erase_image)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := flash_image.c
