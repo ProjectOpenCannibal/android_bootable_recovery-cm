@@ -42,14 +42,43 @@
 extern RecoveryUI* ui;
 
 int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) {
-    fstab_rec* vol = NULL;
-    char* path = NULL;
     
-    path = (char*)malloc(1+strlen("system")+1);
-    sprintf(path, "/%s", "system");
-    vol = volume_for_path(path);
-    String8 blkdevice(vol->blk_device);
-    LOGI("Block device for /system is: %s\n", blkdevice.string());
+    if (boot == 1) {
+        fstab_rec* vol = NULL;
+        char* path = NULL;
+        path = (char*)malloc(1+strlen("boot")+1);
+        sprintf(path, "/%s", "boot");
+        vol = volume_for_path(path);
+        String8 blkdevice(vol->blk_device);
+        LOGI("Block device for /boot is: %s\n", blkdevice.string());
+    }
+    if (system == 1) {
+        fstab_rec* vol = NULL;
+        char* path = NULL;
+        path = (char*)malloc(1+strlen("system")+1);
+        sprintf(path, "/%s", "system");
+        vol = volume_for_path(path);
+        String8 blkdevice(vol->blk_device);
+        LOGI("Block device for /system is: %s\n", blkdevice.string());
+    }
+    if (data == 1) {
+        fstab_rec* vol = NULL;
+        char* path = NULL;
+        path = (char*)malloc(1+strlen("data")+1);
+        sprintf(path, "/%s", "data");
+        vol = volume_for_path(path);
+        String8 blkdevice(vol->blk_device);
+        LOGI("Block device for /data is: %s\n", blkdevice.string());
+    }
+    if (cache == 1) {
+        fstab_rec* vol = NULL;
+        char* path = NULL;
+        path = (char*)malloc(1+strlen("cache")+1);
+        sprintf(path, "/%s", "cache");
+        vol = volume_for_path(path);
+        String8 blkdevice(vol->blk_device);
+        LOGI("Block device for /cache is: %s\n", blkdevice.string());
+    }
     return 0;
 }
 
