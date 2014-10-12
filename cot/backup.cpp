@@ -31,6 +31,7 @@
 #include "../ui.h"
 #include "../screen_ui.h"
 #include "../device.h"
+#include "../flashutils/flashutils.h"
 
 #include "cutils/properties.h"
 
@@ -44,6 +45,7 @@ extern RecoveryUI* ui;
 int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) {
     
     if (boot == 1) {
+        int ret;
         fstab_rec* vol = NULL;
         char* path = NULL;
         path = (char*)malloc(1+strlen("boot")+1);
@@ -51,6 +53,10 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
         vol = volume_for_path(path);
         String8 blkdevice(vol->blk_device);
         LOGI("Block device for /boot is: %s\n", blkdevice.string());
+        String8 tmp("/sdcard/0/cot/boot.img");
+        if (0 != (ret = backup_raw_partition(vol->fs_type, vol->blk_device, tmp.string()))) {
+            LOGE("Error while backing up boot image!");
+        }
     }
     if (system == 1) {
         fstab_rec* vol = NULL;
