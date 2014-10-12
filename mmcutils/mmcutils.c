@@ -27,6 +27,10 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -648,3 +652,6 @@ int cmd_mmc_get_partition_device(const char *partition, char *device)
     strcpy(device, p->device_index);
     return 0;
 }
+#ifdef __cplusplus
+}
+#endif

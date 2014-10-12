@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -154,3 +158,7 @@ int get_partition_device(const char *partition, char *device)
             return -1;
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

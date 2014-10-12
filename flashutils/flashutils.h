@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C"{
+#endif
 #ifndef FLASHUTILS_H
 #define FLASHUTILS_H
 
@@ -47,4 +50,7 @@ enum flash_type {
     BML = 3
 };
 
+#endif
+#ifdef __cplusplus
+}
 #endif

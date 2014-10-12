@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -101,3 +105,6 @@ int main(int argc, char **argv)
 
     return erase_raw_partition(NULL, argv[1]);
 }
+#ifdef __cplusplus
+}
+#endif

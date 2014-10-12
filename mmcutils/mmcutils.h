@@ -27,6 +27,10 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #ifndef MMCUTILS_H_
 #define MMCUTILS_H_
 
@@ -89,3 +93,6 @@ int format_ext3_device(const char *device);
 #endif  // MMCUTILS_H_
 
 
+#ifdef __cplusplus
+}
+#endif

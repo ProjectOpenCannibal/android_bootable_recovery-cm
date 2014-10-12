@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -153,3 +157,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "failed with error: %d\n", ret);
     return ret;
 }
+
+#ifdef __cplusplus
+}
+#endif

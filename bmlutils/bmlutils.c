@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C"{
+#endif
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -204,3 +207,6 @@ int format_rfs_device (const char *device, const char *path) {
 
     return 0;
 }
+#ifdef __cplusplus
+}
+#endif
