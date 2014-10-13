@@ -114,6 +114,10 @@ void COTBackup::GenerateBackupPath(char* backup_path) {
             if (ANDROID_VERSION[i] == '\n') ANDROID_VERSION[i] = NULL; // no newline please!
         }
     }
+    String8 mBackupDir("/");
+    mBackupDir += get_primary_storage_path();
+    mBackupDir += "/0/cot/backup";
+    COTStorage::EnsureDirectoryExists(mBackupDir.string());
     sprintf(backup_path, "%s/0/cot/backup/%s-%s", get_primary_storage_path(), ANDROID_VERSION, timestamp);
 }
 
@@ -124,8 +128,7 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
     String8 bPath(backup_path);
     
     LOGI("Backup path: %s\n", bPath.string());
-    COTStorage::EnsureDirectoryExists(bPath.string());
-    bPath += "/backup.ab";
+    bPath += ".ab";
     
     char tmp[1024];
     int fd = open(bPath.string(), O_CREAT|O_WRONLY|O_EXCL, 0777);
@@ -134,7 +137,7 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
         LOGE("Failed to open file: %s\n", strerror(errno));
     }else{
         fd = open(bPath.string(), O_WRONLY);
-        sprintf(tmp, "bu %d backup boot cache", fd);
+        sprintf(tmp, "bu %d backup boot system data cache", fd);
         __system(tmp);
     }
     close(fd);
@@ -162,7 +165,7 @@ void COTBackup::ShowBackupMenu(Device* device) {
         switch (BackupNowSelection) {
             case YES_BACKUP:
                 MakeBackup(1, 1, 1, 1, 0, device);
-                break;
+                return;
             case NO_BACKUP:
                 return;
             case Device::kGoBack:
