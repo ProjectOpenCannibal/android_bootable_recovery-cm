@@ -17,6 +17,7 @@
 
 #include "roots.h"
 
+#include "common.h"
 #include "bu.h"
 
 #include "messagesocket.h"
@@ -25,7 +26,7 @@
 
 using namespace android;
 
-struct selabel_handle *sehandle;
+extern struct selabel_handle *sehandle;
 
 int sockfd;
 TAR* tar;
@@ -37,7 +38,7 @@ SHA1_CTX sha1_ctx;
 MD5_CTX md5_ctx;
 
 static MessageSocket ms;
-
+/*
 void
 ui_print(const char* format, ...) {
     char buffer[256];
@@ -48,7 +49,7 @@ ui_print(const char* format, ...) {
     va_end(ap);
 
     fputs(buffer, stdout);
-}
+}*/
 
 void logmsg(const char *fmt, ...)
 {
@@ -285,7 +286,7 @@ static void do_exit(int rc)
     exit(rc);
 }
 
-int main(int argc, char **argv)
+int bu_main(int argc, char **argv)
 {
     int n;
     int rc = 1;

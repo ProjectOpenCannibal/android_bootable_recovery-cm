@@ -29,6 +29,9 @@ LOCAL_COT_SRC_FILES := \
     cot/iniparser/dictionary.c
 
 LOCAL_SRC_FILES := \
+    bu.cpp \
+    backup.cpp \
+    restore.cpp \
     recovery.cpp \
     bootloader.cpp \
     install.cpp \
@@ -89,8 +92,7 @@ LOCAL_STATIC_LIBRARIES := \
     libselinux \
     libstdc++ \
     libm \
-    libc \
-    libcot
+    libc
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -111,8 +113,16 @@ ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
 endif
 
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
-LOCAL_C_INCLUDES += system/extras/ext4_utils system/core/fs_mgr/include external/fsck_msdos
+LOCAL_C_INCLUDES += system/extras/ext4_utils external/fsck_msdos
 LOCAL_C_INCLUDES += system/vold
+
+LOCAL_C_INCLUDES += system/core/fs_mgr/include	\
+    system/core/include     	\
+    system/core/libcutils       \
+    external/libtar             \
+    external/libtar/listhash    \
+    external/zlib               \
+    bionic/libc/bionic
 
 ifneq ($(BOARD_RECOVERY_BLDRMSG_OFFSET),)
     LOCAL_CFLAGS += -DBOARD_RECOVERY_BLDRMSG_OFFSET=$(BOARD_RECOVERY_BLDRMSG_OFFSET)
@@ -142,7 +152,7 @@ LOCAL_LDFLAGS += -Wl,--no-fatal-warnings
 LOCAL_C_INCLUDES += system/extras/ext4_utils
 
 # Symlinks
-RECOVERY_LINKS := busybox getprop reboot sdcard setup_adbd setprop start stop vdc
+RECOVERY_LINKS := busybox getprop reboot sdcard setup_adbd setprop start stop vdc bu
 
 ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
     RECOVERY_LINKS += mkfs.f2fs fsck.f2fs fibmap.f2fs
@@ -153,9 +163,6 @@ RECOVERY_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(RECOVERY_LI
 BUSYBOX_LINKS := $(shell cat external/busybox/busybox-minimal.links)
 exclude := tune2fs mke2fs
 RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
-
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    bu_recovery
 
 LOCAL_ADDITIONAL_DEPENDENCIES += \
     minivold \
@@ -183,58 +190,6 @@ $(RECOVERY_BUSYBOX_SYMLINKS):
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -sf $(BUSYBOX_BINARY) $@
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := bu_recovery
-LOCAL_MODULE_STEM := bu
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
-LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_SRC_FILES := \
-    bu.cpp \
-    backup.cpp \
-    restore.cpp \
-    messagesocket.cpp \
-    roots.cpp
-LOCAL_CFLAGS += -DMINIVOLD
-ifeq ($(TARGET_USERIMAGES_USE_EXT4), true)
-    LOCAL_CFLAGS += -DUSE_EXT4
-    LOCAL_C_INCLUDES += system/extras/ext4_utils
-    LOCAL_STATIC_LIBRARIES += libext4_utils_static libz
-endif
-ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
-    LOCAL_CFLAGS += -DUSE_F2FS
-    LOCAL_STATIC_LIBRARIES += libmake_f2fs libfsck_f2fs libfibmap_f2fs
-endif
-LOCAL_STATIC_LIBRARIES += \
-    libsparse_static \
-    libvoldclient \
-    libz \
-    libmtdutils \
-    libminadbd \
-    libminui \
-    libfs_mgr \
-    libtar \
-    libselinux \
-    libutils \
-    libcutils \
-    libstdc++ \
-    liblog \
-    libm \
-    libc
-
-LOCAL_C_INCLUDES +=         	\
-    system/core/fs_mgr/include	\
-    system/core/include     	\
-    system/core/libcutils       \
-    external/libtar             \
-    external/libtar/listhash    \
-    external/zlib               \
-    bionic/libc/bionic
-
-
-include $(BUILD_EXECUTABLE)
 
 # make_ext4fs
 include $(CLEAR_VARS)
