@@ -60,3 +60,4 @@ extern int create_tar(const char* compress, const char* mode);
 
 extern int do_backup(int argc, char** argv);
 extern int do_restore(int argc, char** argv);
+extern int bu_main(int argc, char **argv);

@@ -42,6 +42,7 @@
 #include "ui.h"
 #include "screen_ui.h"
 #include "device.h"
+#include "bu.h"
 
 #include "voldclient/voldclient.h"
 
@@ -1295,6 +1296,9 @@ main(int argc, char **argv) {
         if (strstr(argv[0], "stop")) {
             property_set("ctl.stop", argv[1]);
             return 0;
+        }
+        if (strstr(argv[0], "bu")) {
+            return bu_main(argc, argv);
         }
         return busybox_driver(argc, argv);
     }

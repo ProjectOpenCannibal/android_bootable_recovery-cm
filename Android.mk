@@ -86,6 +86,7 @@ LOCAL_STATIC_LIBRARIES := \
     libminui \
     libpng \
     libfs_mgr \
+    libtar \
     libutils \
     libcutils \
     liblog \

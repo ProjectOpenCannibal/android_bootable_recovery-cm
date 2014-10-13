@@ -33,7 +33,6 @@ int pigz_main(int argc, char **argv);
 int sdcard_main(int argc, char **argv);
 int start_main(int argc, char **argv);
 int stop_main(int argc, char **argv);
-int bu_main(int argc, char **argv);
 #ifdef USE_F2FS
 int make_f2fs_main(int argc, char **argv);
 int fsck_f2fs_main(int argc, char **argv);
@@ -61,7 +60,6 @@ static const struct recovery_cmd recovery_cmds[] = {
     { "sdcard",         sdcard_main },
     { "start",          start_main },
     { "stop",           stop_main },
-    { "bu",             bu_main },
 #ifdef USE_F2FS
     { "mkfs.f2fs",      make_f2fs_main },
     { "fsck.f2fs",      fsck_f2fs_main },
