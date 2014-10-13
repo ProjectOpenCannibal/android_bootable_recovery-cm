@@ -251,24 +251,22 @@ static tartype_t tar_io_gz = {
 int create_tar(const char* compress, const char* mode)
 {
     int rc = -1;
-
+    
     SHA1Init(&sha1_ctx);
     MD5_Init(&md5_ctx);
-
+    
     if (!compress || strcasecmp(compress, "none") == 0) {
         rc = tar_fdopen(&tar, sockfd, "foobar", &tar_io,
-                0, /* oflags: unused */
-                0, /* mode: unused */
-                TAR_GNU | TAR_STORE_SELINUX /* options */);
+                        0, /* oflags: unused */
+                        0, /* mode: unused */
+                        TAR_GNU | TAR_STORE_SELINUX /* options */);
     }
     else if (strcasecmp(compress, "gzip") == 0) {
         gzf = gzdopen(sockfd, mode);
-        if (gzf != NULL) {
-            rc = tar_fdopen(&tar, 0, "foobar", &tar_io_gz,
-                    0, /* oflags: unused */
-                    0, /* mode: unused */
-                    TAR_GNU | TAR_STORE_SELINUX /* options */);
-        }
+        rc = tar_fdopen(&tar, sockfd, "foobar", &tar_io_gz,
+                        0, /* oflags: unused */
+                        0, /* mode: unused */
+                        TAR_GNU | TAR_STORE_SELINUX /* options */);
     }
     return rc;
 }
@@ -297,6 +295,14 @@ int bu_main(int argc, char **argv)
         logmsg("Not enough args (%d)\n", argc);
         do_exit(1);
     }
+    
+    /*
+     * backup call:
+     *  bu backup fd boot system data cache
+     * 
+     * restore call:
+     *  bu restore fd
+     */
 
     // progname sockfd args...
     int optidx = 1;

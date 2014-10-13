@@ -25,3 +25,4 @@ using namespace android;
 #include "storage.h"
 #include "backup.h"
 #include "../messagesocket.h"
+#include "../bu.h"
