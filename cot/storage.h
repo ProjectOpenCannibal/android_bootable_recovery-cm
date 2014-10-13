@@ -20,4 +20,5 @@ class COTStorage {
 public:
     static void MountInternalStorage();
     static void UnmountInternalStorage();
+    static void EnsureDirectoryExists(const char* dir);
 };

@@ -20,4 +20,8 @@ public:
     static void ShowBackupMenu(Device* device);
     static void ShowRestoreMenu(Device* device);
     static void ShowMainMenu(Device* device);
-  };
+    
+private:
+    static void GenerateBackupPath(char* backup_path);
+    static char* GetAndroidVersion();
+};

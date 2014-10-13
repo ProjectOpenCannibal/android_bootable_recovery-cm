@@ -53,3 +53,9 @@ void COTStorage::UnmountInternalStorage() {
     ensure_path_unmounted("/storage/sdcard0");
     ensure_path_unmounted("/data/media");
 }
+
+void COTStorage::EnsureDirectoryExists(const char* dir) {
+    char tmp[1024];
+    sprintf(tmp, "mkdir -p %s ; chmod 777 %s", dir, dir);
+    __system(tmp);
+}

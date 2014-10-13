@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "../bootloader.h"
 #include "../common.h"
@@ -42,7 +43,85 @@
 
 extern RecoveryUI* ui;
 
+char* COTBackup::GetAndroidVersion() {
+    char* result;
+    char* ANDROID_VERSION;
+    ensure_path_mounted("/system");
+    FILE * vers = fopen("/system/build.prop", "r");
+    if (vers == NULL)
+    {
+        return NULL;
+    }
+    char line[512];
+    while(fgets(line, sizeof(line), vers) != NULL) //read a line
+    {
+        if (strstr(line, "ro.build.display.id") != NULL)
+        {
+            char* strptr = strstr(line, "=") + 1;
+            result = (char*)calloc(strlen(strptr) + 1, sizeof(char));
+            strcpy(result, strptr);
+            break; //leave the loop, we found what we're after
+        }
+    }
+    fclose(vers);
+    ensure_path_unmounted("/system");
+    //strip only the android version from it
+    LOGI("RAW VERSION: %s\n", result);
+    int length = strlen(result);
+    LOGI("LENGTH: %d\n", length);
+    int i, k, found;
+    for (i=0; i<length; i++) {
+        k = i;
+        //Android versions follow this scheme: AAADD, A=A-Z, D=0-9, ICS has an extra digit at the end
+        if (isalpha(result[k]) && isalpha(result[k++]) && isalpha(result[k++]) && isdigit(result[k++]) && isdigit(result[k++])) {
+            LOGI("Version number found at positions %d through %d:\n", i, k);
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        ANDROID_VERSION = (char*)calloc(strlen(result) + 1, sizeof(char));
+        int n = 0;
+        for (i-=1; i<=k; i++) {
+            ANDROID_VERSION[n] = result[i];
+            n++;
+        }
+        ANDROID_VERSION[n] = '\0';
+    } else {
+        return NULL;
+    }
+    LOGI("Memory Address: %d\n", &ANDROID_VERSION);
+    LOGI("ANDROID VERSION: %s\n", ANDROID_VERSION);
+    return ANDROID_VERSION;
+}
+
+void COTBackup::GenerateBackupPath(char* backup_path) {
+    char fmt[64], timestamp[64];
+    struct timeval tv;
+    struct tm *tm;
+    gettimeofday(&tv, NULL);
+    if ((tm = localtime(&tv.tv_sec)) != NULL) {
+        LOGI("Generating timestamp...\n");
+        strftime(fmt, sizeof fmt, "%Y-%m-%d_%H%M", tm);
+        snprintf(timestamp, sizeof timestamp, fmt, tv.tv_usec);
+    }
+    char* ANDROID_VERSION = GetAndroidVersion();
+    if (ANDROID_VERSION) {
+        int vers_length = strlen(ANDROID_VERSION);
+        int i;
+        for (i=0; i<vers_length; i++) {
+            if (ANDROID_VERSION[i] == '\n') ANDROID_VERSION[i] = NULL; // no newline please!
+        }
+    }
+    sprintf(backup_path, "%s/0/cot/backup/%s-%s", get_primary_storage_path(), ANDROID_VERSION, timestamp);
+}
+
 int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) {
+    char backup_path[1024];
+    GenerateBackupPath(backup_path);
+    
+    String8 bPath(backup_path);
+    LOGI("Backup path: %s\n", bPath.string());
     
     if (boot == 1) {
         int ret;
@@ -53,9 +132,12 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
         vol = volume_for_path(path);
         String8 blkdevice(vol->blk_device);
         LOGI("Block device for /boot is: %s\n", blkdevice.string());
-        String8 tmp("/sdcard/0/cot/boot.img");
+        String8 tmp(backup_path);
+        COTStorage::EnsureDirectoryExists(tmp.string());
+        tmp += "/boot.img";
+        LOGI("Backing up boot to %s\n", tmp.string());
         if (0 != (ret = backup_raw_partition(vol->fs_type, vol->blk_device, tmp.string()))) {
-            LOGE("Error while backing up boot image!");
+            LOGE("Error while backing up boot image!\n");
         }
     }
     if (system == 1) {

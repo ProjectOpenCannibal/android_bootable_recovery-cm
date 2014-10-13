@@ -23,6 +23,7 @@ LOCAL_COT_SRC_FILES := \
     cot/ors.cpp \
     cot/package.cpp \
     cot/theme.cpp \
+    cot/storage.cpp \
     cot/backup.cpp \
     cot/iniparser/iniparser.c \
     cot/iniparser/dictionary.c
