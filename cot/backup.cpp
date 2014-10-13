@@ -144,7 +144,19 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
     return 0;
 }
 
-int COTBackup::RestoreBackup(String8 backup_path, Device* device) { return 0; }
+int COTBackup::RestoreBackup(String8 backup_path, Device* device) {
+    char tmp[1024];
+    int fd = open(backup_path.string(), O_RDWR);
+    LOGI("Got restore fd: %d\n", fd);
+    if (fd == -1) {
+        LOGE("Failed to open file: %s\n", strerror(errno));
+    }else{
+        sprintf(tmp, "bu %d restore", fd);
+        __system(tmp);
+    }
+    close(fd);
+    return 0;
+}
 
 void COTBackup::ShowBackupMenu(Device* device) {
     static const char* BackupNowHeaders[] = { "Backup Now",
@@ -176,10 +188,11 @@ void COTBackup::ShowBackupMenu(Device* device) {
 
 void COTBackup::ShowRestoreMenu(Device* device) {
     String8 mRestorePath(get_primary_storage_path());
-    mRestorePath += "/0/cot/backup";
+    mRestorePath += "/0/cot/backup/";
     char* cRestoreBackupFile = COTStorage::ChooseFileMenu(mRestorePath.string(), ".ab", NULL, device);
     String8 mRestoreBackupFile(cRestoreBackupFile);
     LOGI("File to restore: %s\n", mRestoreBackupFile.string());
+    int ret = RestoreBackup(mRestoreBackupFile, device);
     return;
 }
 
