@@ -174,7 +174,9 @@ void COTBackup::ShowBackupMenu(Device* device) {
     }
 }
 
-void COTBackup::ShowRestoreMenu(Device* device) { return; }
+void COTBackup::ShowRestoreMenu(Device* device) {
+    return;
+}
 
 void COTBackup::ShowMainMenu(Device* device) {
     static const char* MainMenuHeaders[] = { "Backup and Restore",

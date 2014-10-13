@@ -21,4 +21,8 @@ public:
     static void MountInternalStorage();
     static void UnmountInternalStorage();
     static void EnsureDirectoryExists(const char* dir);
+    static char* ChooseFileMenu(const char* directory, const char* fileExtensionOrDirectory, const char* headers[], Device* device);
+private:
+    static void FreeStringArray(char** array);
+    static char** gather_files(const char* directory, const char* fileExtensionOrDirectory, int* numFiles);
 };
