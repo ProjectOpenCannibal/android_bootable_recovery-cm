@@ -263,10 +263,12 @@ int create_tar(const char* compress, const char* mode)
     }
     else if (strcasecmp(compress, "gzip") == 0) {
         gzf = gzdopen(sockfd, mode);
-        rc = tar_fdopen(&tar, sockfd, "foobar", &tar_io_gz,
-                        0, /* oflags: unused */
-                        0, /* mode: unused */
-                        TAR_GNU | TAR_STORE_SELINUX /* options */);
+        if (gzf != NULL) {
+            rc = tar_fdopen(&tar, sockfd, "foobar", &tar_io_gz,
+                            0, /* oflags: unused */
+                            0, /* mode: unused */
+                            TAR_GNU | TAR_STORE_SELINUX /* options */);
+        }
     }
     return rc;
 }
