@@ -244,6 +244,6 @@ char* COTStorage::ChooseFileMenu(const char* directory, const char* fileExtensio
     
     FreeStringArray(files);
     FreeStringArray(dirs);
-    free(fixed_headers);
+    //free(fixed_headers);
     return return_value;
 }

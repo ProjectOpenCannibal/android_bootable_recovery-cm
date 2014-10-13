@@ -175,6 +175,11 @@ void COTBackup::ShowBackupMenu(Device* device) {
 }
 
 void COTBackup::ShowRestoreMenu(Device* device) {
+    String8 mRestorePath(get_primary_storage_path());
+    mRestorePath += "/0/cot/backup";
+    char* cRestoreBackupFile = COTStorage::ChooseFileMenu(mRestorePath.string(), ".ab", NULL, device);
+    String8 mRestoreBackupFile(cRestoreBackupFile);
+    LOGI("File to restore: %s\n", mRestoreBackupFile.string());
     return;
 }
 
