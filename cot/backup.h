@@ -22,7 +22,6 @@ public:
     static void ShowMainMenu(Device* device);
     
 private:
-    static int BackupPartition(const char* mPartition, const char* backup_path);
     static void GenerateBackupPath(char* backup_path);
     static char* GetAndroidVersion();
 };

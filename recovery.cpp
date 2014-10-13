@@ -42,7 +42,6 @@
 #include "ui.h"
 #include "screen_ui.h"
 #include "device.h"
-#include "bu.h"
 
 #include "voldclient/voldclient.h"
 

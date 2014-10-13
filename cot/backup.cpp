@@ -18,6 +18,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
 
@@ -116,61 +117,27 @@ void COTBackup::GenerateBackupPath(char* backup_path) {
     sprintf(backup_path, "%s/0/cot/backup/%s-%s", get_primary_storage_path(), ANDROID_VERSION, timestamp);
 }
 
-int COTBackup::BackupPartition(const char* mPartition, const char* backup_path) {
-    String8 backupString("Backing up ");
-    backupString += mPartition;
-    backupString += "...";
-    ui->DialogShowInfo(backupString.string());
-    int ret;
-    fstab_rec* vol = NULL;
-    char* path = NULL;
-    path = (char*)malloc(1+strlen(mPartition)+1);
-    sprintf(path, "/%s", mPartition);
-    vol = volume_for_path(path);
-    String8 blkdevice(vol->blk_device);
-    LOGI("Block device for /%s is: %s\n", mPartition, blkdevice.string());
-    String8 tmp(backup_path);
-    COTStorage::EnsureDirectoryExists(tmp.string());
-    tmp += "/";
-    tmp += mPartition;
-    tmp += ".img";
-    LOGI("Backing up %s to %s\n", mPartition, tmp.string());
-    if (0 != (ret = backup_raw_partition(vol->fs_type, vol->blk_device, tmp.string()))) {
-        LOGE("Error while backing up %s image!\n", mPartition);
-        ui->DialogDismiss();
-        return -1;
-    }
-    ui->DialogDismiss();
-    return 0;
-}
-
 int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recovery, Device* device) {
     char backup_path[1024];
     GenerateBackupPath(backup_path);
     
     String8 bPath(backup_path);
-    LOGI("Backup path: %s\n", bPath.string());
     
-    if (boot == 1) {
-        if (0 != BackupPartition("boot", backup_path)) { return -1; }
+    LOGI("Backup path: %s\n", bPath.string());
+    COTStorage::EnsureDirectoryExists(bPath.string());
+    bPath += "/backup.ab";
+    
+    char tmp[1024];
+    int fd = open(bPath.string(), O_CREAT|O_WRONLY|O_EXCL, 0777);
+    LOGI("Got fd: %d\n", fd);
+    if (fd == -1) {
+        LOGE("Failed to open file: %s\n", strerror(errno));
+    }else{
+        fd = open(bPath.string(), O_WRONLY);
+        sprintf(tmp, "bu %d backup boot cache", fd);
+        __system(tmp);
     }
-    if (system == 1) {
-        if (0 != BackupPartition("system", backup_path)) { return -1; }
-    }
-    if (data == 1) {
-        ui->DialogShowInfo("Backing up data...");
-        fstab_rec* vol = NULL;
-        char* path = NULL;
-        path = (char*)malloc(1+strlen("data")+1);
-        sprintf(path, "/%s", "data");
-        vol = volume_for_path(path);
-        String8 blkdevice(vol->blk_device);
-        LOGI("Block device for /data is: %s\n", blkdevice.string());
-        ui->DialogDismiss();
-    }
-    if (cache == 1) {
-        if (0 != BackupPartition("cache", backup_path)) { return -1; }
-    }
+    close(fd);
     return 0;
 }
 
