@@ -166,25 +166,11 @@ static int do_restore_tree(int sockfd)
 {
     int rc = 0;
     ssize_t len;
-    const char* compress = "none";
+    const char* compress = "gzip";
     char buf[512];
     char rootpath[] = "/";
 
     logmsg("do_restore_tree: enter\n");
-
-    len = recv(sockfd, buf, sizeof(buf), MSG_PEEK);
-    if (len < 0) {
-        logmsg("do_restore_tree: peek(%d) failed (%d:%s)\n", sockfd, rc, strerror(errno));
-        return -1;
-    }
-    if (len < 2) {
-        logmsg("do_restore_tree: peek returned %d\n", len);
-        return -1;
-    }
-    if (buf[0] == 0x1f && buf[1] == 0x8b) {
-        logmsg("do_restore_tree: is gzip\n");
-        compress = "gzip";
-    }
 
     create_tar(compress, "r");
 

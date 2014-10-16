@@ -220,11 +220,7 @@ int do_backup(int argc, char **argv)
             optval = argv[optidx];
             ++optidx;
         }
-        if (!strcmp(optname, "compress")) {
-            opt_compress = optval;
-            logmsg("do_backup: compress=%s\n", opt_compress);
-        }
-        else if (!strcmp(optname, "hash")) {
+        if (!strcmp(optname, "hash")) {
             opt_hash = optval;
             logmsg("do_backup: hash=%s\n", opt_hash);
         }
