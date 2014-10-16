@@ -197,6 +197,10 @@ void COTBackup::ShowDeleteMenu(Device* device) {
     String8 mDeletePath(get_primary_storage_path());
     mDeletePath += "/0/cot/backup/";
     char* file = COTStorage::ChooseFileMenu(mDeletePath.string(), ".ab", NULL, device);
+    
+    if (file == NULL)
+        return;
+    
     String8 mDeleteBackupFile(file);
     LOGI("File to delete: %s\n", mDeleteBackupFile.string());
     ui->DialogShowInfo("Deleting backup...");
@@ -210,6 +214,10 @@ void COTBackup::ShowRestoreMenu(Device* device) {
     String8 mRestorePath(get_primary_storage_path());
     mRestorePath += "/0/cot/backup/";
     char* cRestoreBackupFile = COTStorage::ChooseFileMenu(mRestorePath.string(), ".ab", NULL, device);
+    
+    if (cRestoreBackupFile == NULL)
+        return;
+    
     String8 mRestoreBackupFile(cRestoreBackupFile);
     LOGI("File to restore: %s\n", mRestoreBackupFile.string());
     int ret = RestoreBackup(mRestoreBackupFile, device);
