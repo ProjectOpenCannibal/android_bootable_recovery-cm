@@ -19,8 +19,14 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/sendfile.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 #include "../bootloader.h"
 #include "../common.h"
@@ -43,6 +49,22 @@
 #include "external.h"
 
 extern RecoveryUI* ui;
+
+ssize_t do_sendfile(int out_fd, int in_fd, off_t offset, size_t count) {
+    ssize_t bytes_sent;
+    size_t total_bytes_sent = 0;
+    while (total_bytes_sent < count) {
+        if ((bytes_sent == sendfile(out_fd, in_fd, &offset, count - total_bytes_sent)) <= 0) {
+            if (errno == EINTR || errno == EAGAIN) {
+                continue;
+            }
+            LOGI("POC: Sendfile error!\n");
+            return -1;
+        }
+        total_bytes_sent += bytes_sent;
+    }
+    return total_bytes_sent;
+}
 
 char* COTBackup::GetAndroidVersion() {
     char* result;
@@ -146,15 +168,30 @@ int COTBackup::MakeBackup(int system, int data, int cache, int boot, int recover
 
 int COTBackup::RestoreBackup(String8 backup_path, Device* device) {
     char tmp[1024];
-    int fd = open(backup_path.string(), O_RDWR);
-    LOGI("Got restore fd: %d\n", fd);
-    if (fd == -1) {
+    int read_fd;
+    int write_fd;
+    struct stat stat_buf;
+    off_t offset = 0;
+        
+    read_fd = open(backup_path.string(), O_RDONLY);
+    fstat(read_fd, &stat_buf);
+    LOGI("Got restore fd: %d\n", read_fd);
+    if (read_fd == -1) {
         LOGE("Failed to open file: %s\n", strerror(errno));
     }else{
-        sprintf(tmp, "bu %d restore", fd);
+        write_fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+        
+        LOGI("POC: Socket created (%d)\n", write_fd);
+        LOGI("POC: Sending data from %d to %d\n", read_fd, write_fd);
+        sendfile(write_fd, read_fd, 0, stat_buf.st_size);
+        
+        sprintf(tmp, "bu %d restore", write_fd);
+        LOGI("POC: Beginning restore...\n");
         __system(tmp);
+        
     }
-    close(fd);
+    close(read_fd);
+    close(write_fd);
     return 0;
 }
 
