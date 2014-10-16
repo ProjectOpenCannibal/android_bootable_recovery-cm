@@ -158,6 +158,13 @@ int COTBackup::RestoreBackup(String8 backup_path, Device* device) {
     return 0;
 }
 
+int COTBackup::DeleteBackup(String8 backup_path, Device* device) {
+    char tmp[1024];
+    sprintf(tmp, "rm %s", backup_path.string());
+    __system(tmp);
+    return 0;
+}
+
 void COTBackup::ShowBackupMenu(Device* device) {
     static const char* BackupNowHeaders[] = { "Backup Now",
         "",
@@ -186,6 +193,19 @@ void COTBackup::ShowBackupMenu(Device* device) {
     }
 }
 
+void COTBackup::ShowDeleteMenu(Device* device) {
+    String8 mDeletePath(get_primary_storage_path());
+    mDeletePath += "/0/cot/backup/";
+    char* file = COTStorage::ChooseFileMenu(mDeletePath.string(), ".ab", NULL, device);
+    String8 mDeleteBackupFile(file);
+    LOGI("File to delete: %s\n", mDeleteBackupFile.string());
+    ui->DialogShowInfo("Deleting backup...");
+    int ret = DeleteBackup(mDeleteBackupFile, device);
+    sleep(1);
+    ui->DialogDismiss();
+    return;
+}
+
 void COTBackup::ShowRestoreMenu(Device* device) {
     String8 mRestorePath(get_primary_storage_path());
     mRestorePath += "/0/cot/backup/";
@@ -204,11 +224,13 @@ void COTBackup::ShowMainMenu(Device* device) {
     
     static const char* MainMenuItems[] = { "Backup Now",
         "Restore a backup",
+        "Delete backup files",
         NULL
     };
     
 #define BACKUP_NOW 0
 #define RESTORE_BACKUP 1
+#define DELETE_BACKUP 2
     
     for (;;) {
         int MainMenuSelection = get_menu_selection(MainMenuHeaders, MainMenuItems, 0, 0, device);
@@ -218,6 +240,9 @@ void COTBackup::ShowMainMenu(Device* device) {
                 break;
             case RESTORE_BACKUP:
                 ShowRestoreMenu(device);
+                break;
+            case DELETE_BACKUP:
+                ShowDeleteMenu(device);
                 break;
             case Device::kGoBack:
                 return;
