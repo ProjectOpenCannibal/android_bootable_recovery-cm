@@ -299,6 +299,11 @@ void ScreenRecoveryUI::draw_dialog()
         draw_background_locked(dialog_icon);
     }
     draw_header_icon();
+    if (COTTheme::BatteryIndicator == "true") {
+        COTBattery::SetBatteryLevel();
+        LoadBitmap(COTTheme::BatteryLevel.string(), &batteryIcon, COTTheme::chosen_theme.string());
+        draw_battery_icon();
+    }
 
     int iconHeight = gr_get_height(backgroundIcon[dialog_icon]);
 
@@ -393,6 +398,8 @@ void ScreenRecoveryUI::draw_screen_locked()
         if (show_menu) {
             draw_header_icon();
             if (COTTheme::BatteryIndicator == "true") {
+                COTBattery::SetBatteryLevel();
+                LoadBitmap(COTTheme::BatteryLevel.string(), &batteryIcon, COTTheme::chosen_theme.string());
                 draw_battery_icon();
             }
             int nr_items = menu_items - menu_show_start;
@@ -523,20 +530,6 @@ void ScreenRecoveryUI::ResetIcons()
     ScreenRecoveryUI::ShowText(true);
     ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
     //if (show_text) ScreenRecoveryUI::ShowText(true);
-}
-
-void ScreenRecoveryUI::SetBatteryIcon(const char* bat_icon)
-{
-    pthread_mutex_lock(&updateMutex);
-    // 10 icons, representing 
-    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 90-100, 100
-    LoadBitmap(COTTheme::BatteryLevel.string(), &batteryIcon, COTTheme::chosen_theme.string());
-    update_screen_locked();
-    pthread_mutex_unlock(&updateMutex);
-    
-    ScreenRecoveryUI::ShowText(true);
-    ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
-    LOGI("Setting battery icon...\n");
 }
 
 void ScreenRecoveryUI::InitIcons()

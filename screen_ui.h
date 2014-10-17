@@ -30,7 +30,6 @@ class ScreenRecoveryUI : public RecoveryUI {
     ScreenRecoveryUI();
     
     void ResetIcons();
-    void SetBatteryIcon(const char* bat_icon);
     void InitIcons();
 
     void Init();

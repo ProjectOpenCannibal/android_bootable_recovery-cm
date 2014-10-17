@@ -258,8 +258,6 @@ RecoveryUI::RecoveryUI() :
 
 void RecoveryUI::ResetIcons() {}
 
-void RecoveryUI::SetBatteryIcon(const char* bat_icon) {}
-
 void RecoveryUI::InitIcons() {}
 
 void RecoveryUI::Init() {
