@@ -16,6 +16,8 @@
 
 #include "asn1_decoder.h"
 #include "common.h"
+# include <utils/String8.h>
+using namespace android;
 #include "ui.h"
 #include "verifier.h"
 

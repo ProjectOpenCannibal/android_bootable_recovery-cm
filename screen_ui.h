@@ -30,6 +30,7 @@ class ScreenRecoveryUI : public RecoveryUI {
     ScreenRecoveryUI();
     
     void ResetIcons();
+    void SetBatteryIcon(const char* bat_icon);
     void InitIcons();
 
     void Init();
@@ -81,6 +82,7 @@ class ScreenRecoveryUI : public RecoveryUI {
 
     pthread_mutex_t updateMutex;
     gr_surface headerIcon;
+    gr_surface batteryIcon;
     gr_surface backgroundIcon[NR_ICONS];
     gr_surface backgroundText[NR_ICONS];
     gr_surface *installation;
@@ -142,11 +144,14 @@ class ScreenRecoveryUI : public RecoveryUI {
 
     int header_height;
     int header_width;
+    int battery_height;
+    int battery_width;
     int text_first_row;
 
     void draw_install_overlay_locked(int frame);
     void draw_background_locked(Icon icon);
     void draw_progress_locked();
+    int  draw_battery_icon();
     int  draw_header_icon();
     void draw_menu_item(int textrow, const char *text, int selected);
     void draw_dialog();

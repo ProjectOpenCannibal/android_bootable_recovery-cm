@@ -18,6 +18,7 @@ using namespace android;
 #include "../libcrecovery/common.h"
 #include "iniparser/iniparser.h"
 #include "iniparser/dictionary.h"
+#include "battery.h"
 #include "settings.h"
 #include "ors.h"
 #include "package.h"

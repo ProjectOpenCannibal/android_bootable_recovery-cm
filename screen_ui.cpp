@@ -31,6 +31,9 @@
 #include "common.h"
 #include "device.h"
 #include "minui/minui.h"
+
+#include <utils/String8.h>
+using namespace android;
 #include "screen_ui.h"
 #include "ui.h"
 #include "install.h"
@@ -87,6 +90,7 @@ ScreenRecoveryUI::ScreenRecoveryUI() :
     max_stage(-1) {
 
     headerIcon = NULL;
+    batteryIcon = NULL;
     for (int i = 0; i < NR_ICONS; i++)
         backgroundIcon[i] = NULL;
 
@@ -244,6 +248,17 @@ void ScreenRecoveryUI::SetColor(UIElement e) {
     }
 }
 
+int ScreenRecoveryUI::draw_battery_icon()
+{
+    gr_surface surface = batteryIcon;
+    int bw = battery_width;
+    int bh = battery_height;
+    int bx = COTTheme::battery_x;
+    int by = COTTheme::battery_y;
+    gr_blit(surface, 0, 0, bw, bh, bx, by);
+    return bh;
+}
+
 int ScreenRecoveryUI::draw_header_icon()
 {
     gr_surface surface = headerIcon;
@@ -377,6 +392,9 @@ void ScreenRecoveryUI::draw_screen_locked()
 
         if (show_menu) {
             draw_header_icon();
+            if (COTTheme::BatteryIndicator == "true") {
+                draw_battery_icon();
+            }
             int nr_items = menu_items - menu_show_start;
             if (nr_items > max_menu_rows)
                 nr_items = max_menu_rows;
@@ -507,11 +525,30 @@ void ScreenRecoveryUI::ResetIcons()
     //if (show_text) ScreenRecoveryUI::ShowText(true);
 }
 
+void ScreenRecoveryUI::SetBatteryIcon(const char* bat_icon)
+{
+    pthread_mutex_lock(&updateMutex);
+    // 10 icons, representing 
+    // 0-10, 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80, 90-100, 100
+    LoadBitmap(COTTheme::BatteryLevel.string(), &batteryIcon, COTTheme::chosen_theme.string());
+    update_screen_locked();
+    pthread_mutex_unlock(&updateMutex);
+    
+    ScreenRecoveryUI::ShowText(true);
+    ScreenRecoveryUI::SetBackground(RecoveryUI::NO_COMMAND);
+    LOGI("Setting battery icon...\n");
+}
+
 void ScreenRecoveryUI::InitIcons()
 {
     LoadBitmap("icon_header", &headerIcon, COTTheme::chosen_theme.string());
     header_height = gr_get_height(headerIcon);
     header_width = gr_get_width(headerIcon);
+    if (COTTheme::BatteryIndicator == "true") {
+        LoadBitmap(COTTheme::BatteryLevel.string(), &batteryIcon, COTTheme::chosen_theme.string());
+        battery_height = gr_get_height(batteryIcon);
+        battery_width = gr_get_width(batteryIcon);
+    }
     backgroundIcon[NONE] = NULL;
     LoadBitmapArray("icon_installing", &installing_frames, &installation, COTTheme::chosen_theme.string());
     backgroundIcon[INSTALLING_UPDATE] = installing_frames ? installation[0] : NULL;

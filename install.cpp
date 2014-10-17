@@ -23,6 +23,10 @@
 #include <unistd.h>
 
 #include "common.h"
+
+#include <utils/String8.h>
+using namespace android;
+
 #include "device.h"
 #include "install.h"
 #include "mincrypt/rsa.h"

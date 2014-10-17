@@ -37,11 +37,15 @@
 #include "device.h"
 #include "minui/minui.h"
 #include "screen_ui.h"
+#include "cot/includes.h"
+#include <utils/String8.h>
+using namespace android;
 #include "ui.h"
 
 #include "voldclient/voldclient.h"
 
 #include "messagesocket.h"
+
 
 #define UI_WAIT_KEY_TIMEOUT_SEC    120
 
@@ -253,6 +257,8 @@ RecoveryUI::RecoveryUI() :
 }
 
 void RecoveryUI::ResetIcons() {}
+
+void RecoveryUI::SetBatteryIcon(const char* bat_icon) {}
 
 void RecoveryUI::InitIcons() {}
 

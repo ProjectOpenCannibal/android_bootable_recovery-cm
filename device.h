@@ -17,6 +17,9 @@
 #ifndef _RECOVERY_DEVICE_H
 #define _RECOVERY_DEVICE_H
 
+# include <utils/String8.h>
+using namespace android;
+
 #include "ui.h"
 
 #define KEY_FLAG_ABS 0x8000

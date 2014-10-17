@@ -98,6 +98,7 @@ class RecoveryUI {
     
     // Init icons
     virtual void ResetIcons();
+    virtual void SetBatteryIcon(const char* bat_icon);
     virtual void InitIcons();
 
     // Initialize the object; called before anything else.
