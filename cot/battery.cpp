@@ -42,7 +42,9 @@
 #include "includes.h"
 #include "external.h"
 
-#define BATTERY_CAP_FILE "/sys/class/power_supply/battery/capacity"
+#ifndef BOARD_BATTERY_CAP_FILE
+#define BOARD_BATTERY_CAP_FILE "/sys/class/power_supply/battery/capacity"
+#endif
 
 extern RecoveryUI* ui;
 
@@ -52,7 +54,7 @@ void COTBattery::SetBatteryLevel() {
     static int level = -1;
     
     char value[4];
-    FILE * capacity = fopen(BATTERY_CAP_FILE,  "rt");
+    FILE * capacity = fopen(BOARD_BATTERY_CAP_FILE,  "rt");
     if (capacity) {
         fgets(value,  4,  capacity);
         fclose(capacity);
