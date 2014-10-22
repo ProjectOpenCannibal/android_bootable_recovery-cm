@@ -20,7 +20,6 @@ using namespace android;
 #include "iniparser/dictionary.h"
 #include "battery.h"
 #include "settings.h"
-#include "ors.h"
 #include "package.h"
 #include "theme.h"
 #include "storage.h"
