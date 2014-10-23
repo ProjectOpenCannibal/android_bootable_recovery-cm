@@ -793,6 +793,32 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
     pthread_mutex_unlock(&updateMutex);
 }
 
+int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
+    #define SCROLL_DOWN 0
+    #define SCROLL_UP 1
+    int old_sel;
+    pthread_mutex_lock(&updateMutex);
+    if (abs) {
+        sel += menu_show_start;
+    }
+    if (show_menu > 0) {
+        old_sel = menu_sel;
+        menu_sel = sel;
+        if (direction == SCROLL_UP) {
+            menu_show_start = menu_show_start - 1;
+        }
+        if (direction == SCROLL_DOWN) {
+            menu_show_start = menu_show_start + 1;
+        }
+        sel = menu_sel;
+        if (menu_sel != old_sel) {
+            update_screen_locked();
+        }
+    }
+    pthread_mutex_unlock(&updateMutex);
+    return sel;
+}
+
 int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
     int old_sel;
     pthread_mutex_lock(&updateMutex);
@@ -802,16 +828,26 @@ int ScreenRecoveryUI::SelectMenu(int sel, bool abs) {
     if (show_menu > 0) {
         old_sel = menu_sel;
         menu_sel = sel;
-        if (menu_sel < 0) menu_sel = menu_items + menu_sel;
-        if (menu_sel >= menu_items) menu_sel = menu_sel - menu_items;
+        if (menu_sel < 0) {
+            // Wraparound from top to bottom
+            menu_sel = menu_items + menu_sel;
+        }
+        if (menu_sel >= menu_items) {
+            // Wraparound back up from the bottom
+            menu_sel = menu_sel - menu_items;
+        }
         if (menu_sel < menu_show_start && menu_show_start > 0) {
+            // We scrolled up
             menu_show_start = menu_sel;
         }
         if (menu_sel - menu_show_start >= max_menu_rows) {
+            // We scrolled down
             menu_show_start = menu_sel - max_menu_rows + 1;
         }
         sel = menu_sel;
-        if (menu_sel != old_sel) update_screen_locked();
+        if (menu_sel != old_sel) {
+            update_screen_locked();
+        }
     }
     pthread_mutex_unlock(&updateMutex);
     return sel;

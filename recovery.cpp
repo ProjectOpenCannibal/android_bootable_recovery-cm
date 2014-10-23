@@ -669,11 +669,11 @@ get_menu_selection(const char* const * headers, const char* const * items,
             switch (action) {
                 case Device::kHighlightUp:
                     --selected;
-                    selected = ui->SelectMenu(selected);
+                    selected = ui->ScrollMenu(selected, 0);
                     break;
                 case Device::kHighlightDown:
                     ++selected;
-                    selected = ui->SelectMenu(selected);
+                    selected = ui->ScrollMenu(selected, 1);
                     break;
                 case Device::kInvokeItem:
                     chosen_item = selected;
