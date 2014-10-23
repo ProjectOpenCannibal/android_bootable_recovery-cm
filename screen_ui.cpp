@@ -806,20 +806,11 @@ int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
         menu_sel = sel;
         if (direction == SCROLL_DOWN) {
             if (menu_show_start > 0) {
-                LOGI("Menu Sel: %d\n", menu_sel);
-                LOGI("Menu Show Start: %d\n", menu_show_start);
-                LOGI("Max Menu Rows: %d\n", max_menu_rows);
-                LOGI("Menu Items: %d\n", menu_items);
                 menu_show_start = menu_show_start - 1;
             }
         }
         if (direction == SCROLL_UP) {
-            LOGI("Menu Sel: %d\n", menu_sel);
-            LOGI("Menu Show Start: %d\n", menu_show_start);
-            LOGI("Max Menu Rows: %d\n", max_menu_rows);
-            LOGI("Menu Items: %d\n", menu_items);
             int diff = max_menu_rows - menu_show_start;
-            LOGI("Diff: %d\n", diff);
             if (menu_items >= max_menu_rows) {
                 if (menu_show_start < diff) {
                     menu_show_start = menu_show_start + 1;
