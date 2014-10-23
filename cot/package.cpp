@@ -81,6 +81,8 @@ int COTPackage::VerifyRootAndRecovery(Device* device) {
                             break;
                         default: break;
                     }
+                    ensure_path_unmounted("/system");
+                    return ret;
                 }
             }
         }
@@ -110,6 +112,8 @@ int COTPackage::VerifyRootAndRecovery(Device* device) {
                             break;
                         default: break;
                     }
+                    ensure_path_unmounted("/system");
+                    return ret;
                 }
             }
         }
@@ -132,8 +136,12 @@ int COTPackage::VerifyRootAndRecovery(Device* device) {
                 case FIX_ROOT_OR_RECOVERY:
                     __system("/sbin/install-su.sh");
                     break;
-                default: break;
+                default:
+                    break;
             }
+
+            ensure_path_unmounted("/system");
+            return ret;
         }
     }
     

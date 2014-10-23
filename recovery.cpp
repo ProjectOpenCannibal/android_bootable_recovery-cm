@@ -1023,6 +1023,13 @@ out:
 
 int ui_root_menu = 0;
 
+static void reboot_main_system(int cmd, int flags, char *arg, Device* device) {
+    COTPackage::VerifyRootAndRecovery(device);
+    finish_recovery(NULL);
+    vold_unmount_all();
+    android_reboot(cmd, flags, arg);
+}
+
 static void
 show_reboot_menu(Device* device) {
     static const char* RebootMenuHeaders[] = { "Reboot",
@@ -1041,18 +1048,15 @@ show_reboot_menu(Device* device) {
         switch (RebootSelection) {
             case 0:
                 // reboot us!
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART, 0, 0);
+                reboot_main_system(ANDROID_RB_RESTART, 0, 0, device);
                 break;
             case 1:
                 // this will be where we reboot recovery
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
+                reboot_main_system(ANDROID_RB_RESTART2, 0, "recovery", device);
                 break;
             case 2:
                 // this will be where we reboot bootloader
-                vold_unmount_all();
-                android_reboot(ANDROID_RB_RESTART2, 0, "bootloader");
+                reboot_main_system(ANDROID_RB_RESTART2, 0, "bootloader", device);
                 break;
             case Device::kGoBack:
                 return;
