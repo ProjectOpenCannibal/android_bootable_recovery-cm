@@ -794,8 +794,8 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
 }
 
 int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
-    #define SCROLL_DOWN 0
-    #define SCROLL_UP 1
+    #define SCROLL_DOWN 1
+    #define SCROLL_UP 0
     int old_sel;
     pthread_mutex_lock(&updateMutex);
     if (abs) {
@@ -804,22 +804,30 @@ int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
     if (show_menu > 0) {
         old_sel = menu_sel;
         menu_sel = sel;
-        if (direction == SCROLL_UP) {
-            menu_show_start = menu_show_start - 1;
-            if (menu_show_start < 0) {
-                menu_show_start = 0;
+        if (direction == SCROLL_DOWN) {
+            if (menu_show_start > 0) {
+                LOGI("Menu Sel: %d\n", menu_sel);
+                LOGI("Menu Show Start: %d\n", menu_show_start);
+                LOGI("Max Menu Rows: %d\n", max_menu_rows);
+                LOGI("Menu Items: %d\n", menu_items);
+                menu_show_start = menu_show_start - 1;
             }
         }
-        if (direction == SCROLL_DOWN) {
+        if (direction == SCROLL_UP) {
+            LOGI("Menu Sel: %d\n", menu_sel);
             LOGI("Menu Show Start: %d\n", menu_show_start);
-            if (menu_show_start < max_menu_rows - menu_show_start) {
-                menu_show_start = menu_show_start + 1;
+            LOGI("Max Menu Rows: %d\n", max_menu_rows);
+            LOGI("Menu Items: %d\n", menu_items);
+            int diff = max_menu_rows - menu_show_start;
+            LOGI("Diff: %d\n", diff);
+            if (menu_items >= max_menu_rows) {
+                if (menu_show_start < diff) {
+                    menu_show_start = menu_show_start + 1;
+                }
             }
         }
         sel = menu_sel;
-        if (menu_sel != old_sel) {
-            update_screen_locked();
-        }
+        update_screen_locked();
     }
     pthread_mutex_unlock(&updateMutex);
     return sel;
