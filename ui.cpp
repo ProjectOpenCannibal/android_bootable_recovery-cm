@@ -54,6 +54,8 @@ using namespace android;
 #define ABS_MT_ANGLE 0x38
 #endif
 
+#define DEBUG_TOUCH 1
+
 static void show_event(int fd, struct input_event *ev)
 {
 #ifdef DEBUG_EVENTS
@@ -553,8 +555,13 @@ void RecoveryUI::time_key(int key_code, int count) {
 }
 
 void RecoveryUI::calibrate_touch(input_device* dev) {
+    #ifndef RECOVERY_TOUCHSCREEN_SWAP_XY
     fb_dimensions.x = gr_fb_width();
     fb_dimensions.y = gr_fb_height();
+    #else
+    fb_dimensions.x = gr_fb_height();
+    fb_dimensions.y = gr_fb_width();
+    #endif
 
     struct input_absinfo info;
     memset(&info, 0, sizeof(info));
