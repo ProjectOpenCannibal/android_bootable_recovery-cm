@@ -1,6 +1,4 @@
 #!/sbin/sh
-# There is no /sbin/su.recovery present so this will NOT work, required binary
-# needs to be added in some way or another.
 cp /sbin/su.recovery /system/xbin/su
 chmod 6755 /system/xbin/su
 ln -sf /system/xbin/su /system/bin/su

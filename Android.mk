@@ -170,6 +170,11 @@ exclude := tune2fs mke2fs
 RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
 
 LOCAL_ADDITIONAL_DEPENDENCIES += \
+    su.recovery \
+    install-su.sh \
+    run-su-daemon.sh
+
+LOCAL_ADDITIONAL_DEPENDENCIES += \
     minivold \
     recovery_e2fsck \
     recovery_mke2fs \
@@ -268,6 +273,6 @@ include $(LOCAL_PATH)/bmlutils/Android.mk \
     $(LOCAL_PATH)/edify/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/voldclient/Android.mk
-    ##$(LOCAL_PATH)/su/Android.mk
+    $(LOCAL_PATH)/voldclient/Android.mk \
+    $(LOCAL_PATH)/su/Android.mk
 endif
