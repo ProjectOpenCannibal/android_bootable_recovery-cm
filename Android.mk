@@ -67,6 +67,7 @@ ifneq ($(BOARD_BATTERY_CAP_FILE),)
     LOCAL_CFLAGS += -DBOARD_BATTERY_CAP_FILE=$(BOARD_BATTERY_CAP_FILE)
 endif
 
+
 LOCAL_STATIC_LIBRARIES := \
     libext4_utils_static \
     libmake_ext4fs_static \
@@ -97,7 +98,8 @@ LOCAL_STATIC_LIBRARIES := \
     libselinux \
     libstdc++ \
     libm \
-    libc
+    libc \
+    libhealthd.default
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -122,6 +124,7 @@ LOCAL_C_INCLUDES += system/extras/ext4_utils external/fsck_msdos
 LOCAL_C_INCLUDES += system/vold
 
 LOCAL_C_INCLUDES += system/core/fs_mgr/include	\
+    system/core/healthd         \
     system/core/include     	\
     system/core/libcutils       \
     external/libtar             \
@@ -179,7 +182,8 @@ LOCAL_ADDITIONAL_DEPENDENCIES += \
     recovery_e2fsck \
     recovery_mke2fs \
     recovery_tune2fs \
-    mount.exfat_static
+    mount.exfat_static \
+    healthd
 
 LOCAL_ADDITIONAL_DEPENDENCIES += $(RECOVERY_SYMLINKS) $(RECOVERY_BUSYBOX_SYMLINKS)
 
