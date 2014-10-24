@@ -332,7 +332,7 @@ int ensure_path_mounted_at_mount_point(const char* path) {
         v = volume_for_path(path);
     }
     if (v == NULL) {
-        LOGE("unknown volume for path [%s]\n", path);
+        LOGI("unknown volume for path [%s]\n", path);
         return -1;
     }
     return ensure_volume_mounted(v);
@@ -419,7 +419,7 @@ int ensure_path_unmounted(const char* path) {
         v = volume_for_path(path);
     }
     if (v == NULL) {
-        LOGE("unknown volume for path [%s]\n", path);
+        LOGI("unknown volume for path [%s]\n", path);
         return -1;
     }
     return ensure_volume_unmounted(v);

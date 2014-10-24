@@ -60,7 +60,7 @@ int COTTheme::battery_x = 0;
 int COTTheme::battery_y = 0;
 
 void COTTheme::LoadTheme(char * themename) {
-    LOGE("Loading theme %s...\n", themename);
+    LOGI("Loading theme %s...\n", themename);
     
     // Make sure internal storage is mounted
     COTStorage::MountInternalStorage();
@@ -74,18 +74,18 @@ void COTTheme::LoadTheme(char * themename) {
         theme_file += "/theme.ini";
         ini = iniparser_load(theme_file.string());
         if (ini == NULL) {
-            LOGE("Can't load theme %s from %s, switching to default!\n", themename, theme_file.string());
+            LOGI("Can't load theme %s from %s, switching to default!\n", themename, theme_file.string());
             COTTheme::LoadTheme("default");
             return;
         }
-        LOGE("Theme %s loaded from %s!\n", themename, theme_file.string());
+        LOGI("Theme %s loaded from %s!\n", themename, theme_file.string());
         COTTheme::use_theme = true;
         COTTheme::chosen_theme = themename;
     } else {
         char * ini_file = "/res/images/default_theme.ini";
         ini = iniparser_load(ini_file);
         if (ini == NULL) {
-            LOGE("Can't load theme %s!\n", themename);
+            LOGI("Can't load theme %s!\n", themename);
             return;
         }
         COTTheme::use_theme = false;

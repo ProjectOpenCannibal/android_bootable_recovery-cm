@@ -492,9 +492,8 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, con
         result = res_create_display_surface(filename, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
-        COTTheme::LoadTheme("default");
-        ResetIcons();
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_display_surface(filename, surface);
     }
 }
 
@@ -506,9 +505,8 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
         result = res_create_multi_display_surface(filename, frames, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
-        COTTheme::LoadTheme("default");
-        ResetIcons();
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_multi_display_surface(filename, frames, surface);
     }
 }
 
@@ -520,9 +518,8 @@ void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* sur
         result = res_create_localized_alpha_surface(filename, locale, surface);
     }
     if (result < 0) {
-        LOGE("missing bitmap %s\n(Code %d)\n", filename, result);
-        COTTheme::LoadTheme("default");
-        ResetIcons();
+        LOGI("missing bitmap %s\n(Code %d)\n", filename, result);
+        res_create_localized_alpha_surface(filename, locale, surface);
     }
 }
 
