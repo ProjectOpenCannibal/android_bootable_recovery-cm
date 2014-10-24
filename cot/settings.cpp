@@ -94,8 +94,8 @@ void COTSettings::LoadSettings() {
         COTSettings::CreateOrSaveSettings(1);
         COTSettings::settingsini = iniparser_load(base_path.string());
       }
-    COTSettings::zip_sigverif = iniparser_getstring(COTSettings::settingsini, "settings:zip_sigverif", NULL);
-    COTTheme::LoadTheme(iniparser_getstring(COTSettings::settingsini, "settings:theme", NULL));
+    COTSettings::zip_sigverif = iniparser_getstring(COTSettings::settingsini, "settings:zip_sigverif", "1");
+    COTTheme::LoadTheme(iniparser_getstring(COTSettings::settingsini, "settings:theme", "default"));
 
     ui->ResetIcons();
   }

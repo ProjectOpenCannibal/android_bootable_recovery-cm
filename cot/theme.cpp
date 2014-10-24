@@ -91,49 +91,49 @@ void COTTheme::LoadTheme(char * themename) {
         COTTheme::use_theme = false;
         COTTheme::chosen_theme = "default";
     }
-    COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", NULL);
-    COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", NULL);
-    COTTheme::C_HEADER[2] = iniparser_getint(ini, "theme:header_b", NULL);
-    COTTheme::C_HEADER[3] = iniparser_getint(ini, "theme:header_a", NULL);
+    COTTheme::C_HEADER[0] = iniparser_getint(ini, "theme:header_r", 111);
+    COTTheme::C_HEADER[1] = iniparser_getint(ini, "theme:header_g", 111);
+    COTTheme::C_HEADER[2] = iniparser_getint(ini, "theme:header_b", 111);
+    COTTheme::C_HEADER[3] = iniparser_getint(ini, "theme:header_a", 255);
     
-    COTTheme::C_TOP[0] = iniparser_getint(ini, "theme:top_r", NULL);
-    COTTheme::C_TOP[1] = iniparser_getint(ini, "theme:top_g", NULL);
-    COTTheme::C_TOP[2] = iniparser_getint(ini, "theme:top_b", NULL);
-    COTTheme::C_TOP[3] = iniparser_getint(ini, "theme:top_a", NULL);
+    COTTheme::C_TOP[0] = iniparser_getint(ini, "theme:top_r", 208);
+    COTTheme::C_TOP[1] = iniparser_getint(ini, "theme:top_g", 208);
+    COTTheme::C_TOP[2] = iniparser_getint(ini, "theme:top_b", 208);
+    COTTheme::C_TOP[3] = iniparser_getint(ini, "theme:top_a", 255);
     
-    COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(ini, "theme:menufg_r", NULL);
-    COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(ini, "theme:menufg_g", NULL);
-    COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(ini, "theme:menufg_b", NULL);
-    COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(ini, "theme:menufg_a", NULL);
+    COTTheme::C_MENU_SEL_FG[0] = iniparser_getint(ini, "theme:menufg_r", 25);
+    COTTheme::C_MENU_SEL_FG[1] = iniparser_getint(ini, "theme:menufg_g", 160);
+    COTTheme::C_MENU_SEL_FG[2] = iniparser_getint(ini, "theme:menufg_b", 210);
+    COTTheme::C_MENU_SEL_FG[3] = iniparser_getint(ini, "theme:menufg_a", 255);
     
-    COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(ini, "theme:menubg_r", NULL);
-    COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(ini, "theme:menubg_g", NULL);
-    COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(ini, "theme:menubg_b", NULL);
-    COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(ini, "theme:menubg_a", NULL);
+    COTTheme::C_MENU_SEL_BG[0] = iniparser_getint(ini, "theme:menubg_r", 60);
+    COTTheme::C_MENU_SEL_BG[1] = iniparser_getint(ini, "theme:menubg_g", 60);
+    COTTheme::C_MENU_SEL_BG[2] = iniparser_getint(ini, "theme:menubg_b", 61);
+    COTTheme::C_MENU_SEL_BG[3] = iniparser_getint(ini, "theme:menubg_a", 255);
     
-    COTTheme::C_LOG[0] = iniparser_getint(ini, "theme:log_r", NULL);
-    COTTheme::C_LOG[1] = iniparser_getint(ini, "theme:log_g", NULL);
-    COTTheme::C_LOG[2] = iniparser_getint(ini, "theme:log_b", NULL);
-    COTTheme::C_LOG[3] = iniparser_getint(ini, "theme:log_a", NULL);
+    COTTheme::C_LOG[0] = iniparser_getint(ini, "theme:log_r", 76);
+    COTTheme::C_LOG[1] = iniparser_getint(ini, "theme:log_g", 76);
+    COTTheme::C_LOG[2] = iniparser_getint(ini, "theme:log_b", 76);
+    COTTheme::C_LOG[3] = iniparser_getint(ini, "theme:log_a", 255);
     
-    COTTheme::C_TEXT_FILL[0] = iniparser_getint(ini, "theme:textfill_r", NULL);
-    COTTheme::C_TEXT_FILL[1] = iniparser_getint(ini, "theme:textfill_g", NULL);
-    COTTheme::C_TEXT_FILL[2] = iniparser_getint(ini, "theme:textfill_b", NULL);
-    COTTheme::C_TEXT_FILL[3] = iniparser_getint(ini, "theme:textfill_a", NULL);
+    COTTheme::C_TEXT_FILL[0] = iniparser_getint(ini, "theme:textfill_r", 0);
+    COTTheme::C_TEXT_FILL[1] = iniparser_getint(ini, "theme:textfill_g", 0);
+    COTTheme::C_TEXT_FILL[2] = iniparser_getint(ini, "theme:textfill_b", 0);
+    COTTheme::C_TEXT_FILL[3] = iniparser_getint(ini, "theme:textfill_a", 255);
     
-    COTTheme::C_ERROR_TEXT[0] = iniparser_getint(ini, "theme:errortext_r", NULL);
-    COTTheme::C_ERROR_TEXT[1] = iniparser_getint(ini, "theme:errortext_g", NULL);
-    COTTheme::C_ERROR_TEXT[2] = iniparser_getint(ini, "theme:errortext_b", NULL);
-    COTTheme::C_ERROR_TEXT[3] = iniparser_getint(ini, "theme:errortext_a", NULL);
+    COTTheme::C_ERROR_TEXT[0] = iniparser_getint(ini, "theme:errortext_r", 255);
+    COTTheme::C_ERROR_TEXT[1] = iniparser_getint(ini, "theme:errortext_g", 0);
+    COTTheme::C_ERROR_TEXT[2] = iniparser_getint(ini, "theme:errortext_b", 0);
+    COTTheme::C_ERROR_TEXT[3] = iniparser_getint(ini, "theme:errortext_a", 255);
     
-    COTTheme::C_DEFAULT[0] = iniparser_getint(ini, "theme:default_r", NULL);
-    COTTheme::C_DEFAULT[1] = iniparser_getint(ini, "theme:default_g", NULL);
-    COTTheme::C_DEFAULT[2] = iniparser_getint(ini, "theme:default_b", NULL);
-    COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", NULL);
+    COTTheme::C_DEFAULT[0] = iniparser_getint(ini, "theme:default_r", 255);
+    COTTheme::C_DEFAULT[1] = iniparser_getint(ini, "theme:default_g", 255);
+    COTTheme::C_DEFAULT[2] = iniparser_getint(ini, "theme:default_b", 255);
+    COTTheme::C_DEFAULT[3] = iniparser_getint(ini, "theme:default_a", 255);
     
-    BatteryIndicator = iniparser_getstring(ini, "theme:batteryindicator", NULL);
-    battery_x = iniparser_getint(ini, "theme:battery_x", NULL);
-    battery_y = iniparser_getint(ini, "theme:battery_y", NULL);
+    BatteryIndicator = iniparser_getstring(ini, "theme:batteryindicator", "false");
+    battery_x = iniparser_getint(ini, "theme:battery_x", 0);
+    battery_y = iniparser_getint(ini, "theme:battery_y", 0);
 }
 
 int COTTheme::compare_string(const void* a, const void* b) {
