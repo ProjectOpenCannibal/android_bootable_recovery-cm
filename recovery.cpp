@@ -668,9 +668,17 @@ get_menu_selection(const char* const * headers, const char* const * items,
         if (action < 0) {
             switch (action) {
                 case Device::kHighlightUp:
-                    selected = ui->ScrollMenu(selected, 0);
+                    --selected;
+                    selected = ui->SelectMenu(selected);
                     break;
                 case Device::kHighlightDown:
+                    ++selected;
+                    selected = ui->SelectMenu(selected);
+                    break;
+                case Device::kScrollUp:
+                    selected = ui->ScrollMenu(selected, 0);
+                    break;
+                case Device::kScrollDown:
                     selected = ui->ScrollMenu(selected, 1);
                     break;
                 case Device::kInvokeItem:
