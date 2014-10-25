@@ -42,6 +42,9 @@
 #include "includes.h"
 #include "external.h"
 
+#define YES 0
+#define NO 1
+
 extern RecoveryUI* ui;
 
 char* COTBackup::GetAndroidVersion() {
@@ -167,25 +170,58 @@ int COTBackup::DeleteBackup(String8 backup_path, Device* device) {
 
 void COTBackup::ShowBackupMenu(Device* device) {
     static const char* BackupNowHeaders[] = { "Backup Now",
+            "",
+            NULL
+    };
+
+    static const char* BackupNowItems[] = { "Yes - backup now",
+            "No - don't backup",
+            NULL
+    };
+
+    for (;;) {
+        int BackupNowSelection = get_menu_selection(BackupNowHeaders, BackupNowItems, 0, 0, device);
+        switch (BackupNowSelection) {
+            case YES:
+                MakeBackup(1, 1, 1, 1, 0, device);
+                return;
+            case NO:
+                return;
+            case Device::kGoBack:
+                return;
+        }
+    }
+}
+
+void COTBackup::ShowRestoreMenu(Device* device) {
+    String8 mRestorePath(get_primary_storage_path());
+    mRestorePath += "/0/cot/backup/";
+    char *cRestoreBackupFile = COTStorage::ChooseFileMenu(mRestorePath.string(), ".ab", NULL, device);
+
+    if (cRestoreBackupFile == NULL)
+        return;
+
+    static const char* RestoreNowHeaders[] = { "Restore Now",
         "",
         NULL
     };
     
-    static const char* BackupNowItems[] = { "Yes - backup now",
-        "No - don't backup",
+    static const char* RestoreNowItems[] = { "Yes - restore now",
+        "No - don't restore",
         NULL
     };
     
-#define YES_BACKUP 0
-#define NO_BACKUP 1
-    
     for (;;) {
-        int BackupNowSelection = get_menu_selection(BackupNowHeaders, BackupNowItems, 0, 0, device);
-        switch (BackupNowSelection) {
-            case YES_BACKUP:
-                MakeBackup(1, 1, 1, 1, 0, device);
+        int RestoreNowSelection = get_menu_selection(RestoreNowHeaders, RestoreNowItems, 0, 0, device);
+        switch (RestoreNowSelection) {
+            case YES:
+            {
+                String8 mRestoreBackupFile(cRestoreBackupFile);
+                LOGI("File to restore: %s\n", mRestoreBackupFile.string());
+                RestoreBackup(mRestoreBackupFile, device);
                 return;
-            case NO_BACKUP:
+            }
+            case NO:
                 return;
             case Device::kGoBack:
                 return;
@@ -207,20 +243,6 @@ void COTBackup::ShowDeleteMenu(Device* device) {
     int ret = DeleteBackup(mDeleteBackupFile, device);
     sleep(1);
     ui->DialogDismiss();
-    return;
-}
-
-void COTBackup::ShowRestoreMenu(Device* device) {
-    String8 mRestorePath(get_primary_storage_path());
-    mRestorePath += "/0/cot/backup/";
-    char* cRestoreBackupFile = COTStorage::ChooseFileMenu(mRestorePath.string(), ".ab", NULL, device);
-    
-    if (cRestoreBackupFile == NULL)
-        return;
-    
-    String8 mRestoreBackupFile(cRestoreBackupFile);
-    LOGI("File to restore: %s\n", mRestoreBackupFile.string());
-    int ret = RestoreBackup(mRestoreBackupFile, device);
     return;
 }
 
