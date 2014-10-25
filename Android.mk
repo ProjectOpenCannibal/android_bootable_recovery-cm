@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Fakery!
+
 ifeq ($(call my-dir),$(call project-path-for,recovery))
 
 LOCAL_PATH := $(call my-dir)
