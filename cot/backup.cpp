@@ -236,14 +236,36 @@ void COTBackup::ShowDeleteMenu(Device* device) {
     
     if (file == NULL)
         return;
-    
-    String8 mDeleteBackupFile(file);
-    LOGI("File to delete: %s\n", mDeleteBackupFile.string());
-    ui->DialogShowInfo("Deleting backup...");
-    int ret = DeleteBackup(mDeleteBackupFile, device);
-    sleep(1);
-    ui->DialogDismiss();
-    return;
+
+    static const char* DeleteNowHeaders[] = { "Delete Now",
+            "",
+            NULL
+    };
+
+    static const char* DeleteNowItems[] = { "Yes - delete backup",
+            "No - don't delete",
+            NULL
+    };
+
+    for (;;) {
+        int RestoreNowSelection = get_menu_selection(DeleteNowHeaders, DeleteNowItems, 0, 0, device);
+        switch (RestoreNowSelection) {
+            case YES:
+            {
+                String8 mDeleteBackupFile(file);
+                LOGI("File to delete: %s\n", mDeleteBackupFile.string());
+                ui->DialogShowInfo("Deleting backup...");
+                int ret = DeleteBackup(mDeleteBackupFile, device);
+                sleep(1);
+                ui->DialogDismiss();
+                return;
+            }
+            case NO:
+                return;
+            case Device::kGoBack:
+                return;
+        }
+    }
 }
 
 void COTBackup::ShowMainMenu(Device* device) {
