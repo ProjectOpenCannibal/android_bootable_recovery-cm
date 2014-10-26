@@ -89,7 +89,6 @@ int COTPackage::VerifyRootAndRecovery(Device* device) {
     }
     
     int exists = 0;
-    
     if (0 == lstat("/system/bin/su", &st)) {
         exists = 1;
         if (S_ISREG(st.st_mode)) {
@@ -118,7 +117,15 @@ int COTPackage::VerifyRootAndRecovery(Device* device) {
             }
         }
     }
-    
+
+    /* Supersu using xbin instead of bin to store it's su binary.
+     * It always fails the above permissions check even after running
+     * chmod despite having the correct permissions to begin with so
+     * for the time being simply leave it in tact if it's present and
+     * assume it works. */
+    if (0 == lstat("/system/xbin/su", &st))
+        exists = 1;
+
     if (!exists) {
         ret = 1;
         
