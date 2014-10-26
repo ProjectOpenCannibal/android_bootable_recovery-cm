@@ -799,14 +799,11 @@ void ScreenRecoveryUI::StartMenu(const char* const * headers, const char* const 
 int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
     #define SCROLL_DOWN 1
     #define SCROLL_UP 0
-    int old_sel;
     pthread_mutex_lock(&updateMutex);
     if (abs) {
         sel += menu_show_start;
     }
     if (show_menu > 0) {
-        old_sel = menu_sel;
-        menu_sel = sel;
         if (direction == SCROLL_DOWN) {
             if (menu_show_start > 0) {
                 menu_show_start = menu_show_start - 1;
@@ -818,7 +815,6 @@ int ScreenRecoveryUI::ScrollMenu(int sel, int direction, bool abs) {
                 menu_show_start = menu_show_start + 1;
             }
         }
-        sel = menu_sel;
         update_screen_locked();
     }
     pthread_mutex_unlock(&updateMutex);
