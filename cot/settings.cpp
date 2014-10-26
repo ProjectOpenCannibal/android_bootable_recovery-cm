@@ -118,7 +118,6 @@ void COTSettings::ShowMainMenu(Device* device) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
         switch (SettingsSelection) {
             case THEME_OPTIONS:
-            //COTPackage::ShowZipOptionsMenu(device);
             COTTheme::ChooseThemeMenu(device);
                 break;
             case ZIP_VERIF_OPTIONS:
