@@ -8,12 +8,12 @@ common_c_includes := \
     external/libpng\
     external/zlib
 
-#ifeq ($(call is-vendor-board-platform,QCOM),true)
-#  common_additional_dependencies := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-#  common_c_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-#  common_src_files += graphics_overlay.c vsync.c
-#  common_cflags += -DMSMFB_OVERLAY
-#endif
+ifeq ($(call is-vendor-board-platform,QCOM),true)
+  common_additional_dependencies := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+  common_c_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+  common_src_files += graphics_overlay.c vsync.c
+  common_cflags += -DMSMFB_OVERLAY
+endif
 
 ifeq ($(subst ",,$(TARGET_RECOVERY_PIXEL_FORMAT)),RGBX_8888)
   common_cflags += -DRECOVERY_RGBX
