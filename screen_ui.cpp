@@ -272,17 +272,19 @@ int ScreenRecoveryUI::draw_header_icon()
 
 void ScreenRecoveryUI::draw_menu_item(int textrow, const char *text, int selected)
 {
+    int x;
+    x = (gr_fb_width()/2 - (char_width*strlen(text))/2);
     if (selected) {
         SetColor(MENU_SEL_BG);
         gr_fill(0, (textrow)*char_height,
                 gr_fb_width(), (textrow+3)*char_height-1);
         SetColor(MENU_SEL_FG);
-        gr_text(4, (textrow+1)*char_height-1, text, 0);
+        gr_text(x, (textrow+1)*char_height-1, text, 0);
         SetColor(MENU);
     }
     else {
         SetColor(MENU);
-        gr_text(4, (textrow+1)*char_height-1, text, 0);
+        gr_text(x, (textrow+1)*char_height-1, text, 0);
     }
     gr_color(SEPARATOR_COLOR);
     gr_fill(0, (textrow+3)*char_height-1, gr_fb_width(), (textrow+3)*char_height+1);
