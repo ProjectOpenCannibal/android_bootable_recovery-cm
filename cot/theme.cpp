@@ -58,6 +58,7 @@ String8 COTTheme::BatteryIndicator("false");
 String8 COTTheme::BatteryLevel("bat_100");
 int COTTheme::battery_x = 0;
 int COTTheme::battery_y = 0;
+int COTTheme::center_text = 0;
 
 void COTTheme::LoadTheme(char * themename) {
     LOGI("Loading theme %s...\n", themename);
@@ -134,6 +135,8 @@ void COTTheme::LoadTheme(char * themename) {
     BatteryIndicator = iniparser_getstring(ini, "theme:batteryindicator", "false");
     battery_x = iniparser_getint(ini, "theme:battery_x", 0);
     battery_y = iniparser_getint(ini, "theme:battery_y", 0);
+
+    center_text = iniparser_getint(ini, "theme:center_text", 0);
 }
 
 int COTTheme::compare_string(const void* a, const void* b) {
