@@ -125,9 +125,9 @@ void COTSettings::ShowMainMenu(Device* device) {
                 break;
             case Device::kGoBack:
             return;
-          }
-      }
-  }
+        }
+    }
+}
 
 void COTSettings::ShowZipVerifMenu(Device* device) {
     static const char* ZipVerifMenuHeaders[] = { "Zip Verification",

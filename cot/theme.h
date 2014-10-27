@@ -30,7 +30,10 @@ public:
     static int battery_y;
     static String8 BatteryIndicator;
     static String8 BatteryLevel;
+    static int center_text;
+    static char* GetThemeName(const char * themepath);
     static void LoadTheme(char * themename);
     static int compare_string(const void* a, const void* b);
     static void ChooseThemeMenu(Device* device);
+    static void ShowThemeChooser(Device* device);
 };
