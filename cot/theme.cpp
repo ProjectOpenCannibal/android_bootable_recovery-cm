@@ -60,6 +60,19 @@ int COTTheme::battery_x = 0;
 int COTTheme::battery_y = 0;
 int COTTheme::center_text = 0;
 
+char* COTTheme::GetThemeName(const char* themepath) {
+    dictionary * ini;
+    String8 theme_file(get_primary_storage_path());
+    theme_file += "/0/cot/themes/";
+    theme_file += themepath;
+    theme_file += "/theme.ini";
+    ini = iniparser_load(theme_file.string());
+    if (ini == NULL) {
+        return NULL;
+    }
+    return iniparser_getstring(ini, "theme:name", NULL);
+}
+
 void COTTheme::LoadTheme(char * themename) {
     LOGI("Loading theme %s...\n", themename);
     
@@ -143,7 +156,9 @@ int COTTheme::compare_string(const void* a, const void* b) {
     return strcmp(*(const char**)a, *(const char**)b);
 }
 
-void COTTheme::ChooseThemeMenu(Device* device) {
+
+
+void COTTheme::ShowThemeChooser(Device* device) {
     
     // Make sure internal storage is mounted
     COTStorage::MountInternalStorage();
@@ -161,14 +176,21 @@ void COTTheme::ChooseThemeMenu(Device* device) {
         LOGE("error opening %s: %s\n", base_path.string(), strerror(errno));
         return;
     }
-    
+
+    int d2_size = 0;
+    int d2_alloc = 10;
+    char** dirs2 = (char**)malloc(d2_alloc * sizeof(char*));
+    int z2_size = 0;
+    int z2_alloc = 10;
+    char** zips2 = (char**)malloc(z2_alloc * sizeof(char*));
+
     int d_size = 0;
     int d_alloc = 10;
     char** dirs = (char**)malloc(d_alloc * sizeof(char*));
-    int z_size = 1;
+    int z_size = 0;
     int z_alloc = 10;
     char** zips = (char**)malloc(z_alloc * sizeof(char*));
-    zips[0] = strdup("default");
+
     
     while ((de = readdir(d)) != NULL) {
         int name_len = strlen(de->d_name);
@@ -178,37 +200,66 @@ void COTTheme::ChooseThemeMenu(Device* device) {
             if (name_len == 1 && de->d_name[0] == '.') continue;
             if (name_len == 2 && de->d_name[0] == '.' &&
                 de->d_name[1] == '.') continue;
+
+            int theme_len = strlen(GetThemeName(de->d_name));
+            LOGI("Theme Name Length: %d\n", theme_len);
             
             if (d_size >= d_alloc) {
                 d_alloc *= 2;
                 dirs = (char**)realloc(dirs, d_alloc * sizeof(char*));
             }
+
+            if (d2_size >= d2_alloc) {
+                d2_alloc *= 2;
+                dirs2 = (char**)realloc(dirs2, d2_alloc * sizeof(char*));
+            }
+
             dirs[d_size] = (char*)malloc(name_len + 2);
             strcpy(dirs[d_size], de->d_name);
             dirs[d_size][name_len] = '\0';
             ++d_size;
+
+            dirs2[d2_size] = (char*)malloc(theme_len + 2);
+            strcpy(dirs2[d2_size], GetThemeName(de->d_name));
+            dirs2[d2_size][theme_len] = '\0';
+            ++d2_size;
         }
     }
     closedir(d);
     
-    qsort(dirs, d_size, sizeof(char*), compare_string);
-    qsort(zips, z_size, sizeof(char*), compare_string);
+    //qsort(dirs, d_size, sizeof(char*), compare_string);
+    //qsort(zips, z_size, sizeof(char*), compare_string);
+    //qsort(themes, t_size, sizeof(char*), compare_string);
     
     // append dirs to the zips list
     if (d_size + z_size + 1 > z_alloc) {
         z_alloc = d_size + z_size + 1;
         zips = (char**)realloc(zips, z_alloc * sizeof(char*));
     }
+
+    // append themes to the ythemes list
+    if (d2_size + z2_size + 1 > z2_alloc) {
+        z2_alloc = d2_size + z2_size + 1;
+        zips2 = (char**)realloc(zips2, z2_alloc * sizeof(char*));
+    }
+
     memcpy(zips + z_size, dirs, d_size * sizeof(char*));
+    memcpy(zips2 + z2_size, dirs2, d2_size * sizeof(char*));
+
     free(dirs);
+    free(dirs2);
+
     z_size += d_size;
+    z2_size = d2_size;
+
     zips[z_size] = NULL;
+    zips2[z2_size] = NULL;
     
     int result;
     int chosen_item = 0;
     
     for (;;) {
-        chosen_item = get_menu_selection(headers, zips, 1, chosen_item, device);
+        chosen_item = get_menu_selection(headers, zips2, 1, chosen_item, device);
         if (chosen_item == Device::kGoBack) {
             return;
         }
@@ -228,8 +279,48 @@ void COTTheme::ChooseThemeMenu(Device* device) {
         COTSettings::CreateOrSaveSettings(0);
         
         ui->ResetIcons();
+
         for (i = 0; i < z_size; ++i) free(zips[i]);
+        for (i = 0; i < z2_size; ++i) free(zips2[i]);
+
         free(zips);
+        free(zips2);
+
         return;
+    }
+}
+
+void COTTheme::ChooseThemeMenu(Device *device) {
+    static const char* ThemeMenuHeaders[] = { "Choose Theme",
+            "",
+            NULL
+    };
+
+    static const char* ThemeMenuItems[] = { "Default Theme",
+            "Theme Chooser",
+            NULL
+    };
+
+#define DEFAULT_THEME 0
+#define THEME_CHOOSER 1
+
+    for (;;) {
+        int ThemeSelection = get_menu_selection(ThemeMenuHeaders, ThemeMenuItems, 0, 0, device);
+        switch (ThemeSelection) {
+            case DEFAULT_THEME:
+            {
+                COTTheme::chosen_theme = "default";
+                COTTheme::use_theme = true;
+                COTTheme::LoadTheme("default");
+                COTSettings::CreateOrSaveSettings(0);
+                ui->ResetIcons();
+                break;
+            }
+            case THEME_CHOOSER:
+                COTTheme::ShowThemeChooser(device);
+                break;
+            case Device::kGoBack:
+                return;
+        }
     }
 }
