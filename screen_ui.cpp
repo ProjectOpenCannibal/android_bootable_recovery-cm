@@ -272,13 +272,8 @@ int ScreenRecoveryUI::draw_header_icon()
 
 void ScreenRecoveryUI::draw_menu_item(int textrow, const char *text, int selected)
 {
-<<<<<<< HEAD
-    int x;
-    x = (gr_fb_width()/2 - (char_width*strlen(text))/2);
-=======
     int x = 4;
     if (0 != COTTheme::center_text) { x = (gr_fb_width()/2 - (char_width*strlen(text))/2); }
->>>>>>> 6328ce9221ea9b09087c3bb76855e4a28382373b
     if (selected) {
         SetColor(MENU_SEL_BG);
         gr_fill(0, (textrow)*char_height,
