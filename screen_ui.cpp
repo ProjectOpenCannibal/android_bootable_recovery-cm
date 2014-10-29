@@ -198,52 +198,52 @@ void ScreenRecoveryUI::SetColor(UIElement e) {
     switch (e) {
         case HEADER:
             gr_color(COTTheme::C_HEADER[0],
-                     COTTheme::C_HEADER[1],
-                     COTTheme::C_HEADER[2],
-                     COTTheme::C_HEADER[3]);
+                    COTTheme::C_HEADER[1],
+                    COTTheme::C_HEADER[2],
+                    COTTheme::C_HEADER[3]);
             break;
         case TOP:
             gr_color(COTTheme::C_TOP[0],
-                     COTTheme::C_TOP[1],
-                     COTTheme::C_TOP[2],
-                     COTTheme::C_TOP[3]);
+                    COTTheme::C_TOP[1],
+                    COTTheme::C_TOP[2],
+                    COTTheme::C_TOP[3]);
             break;
         case MENU:
         case MENU_SEL_FG:
             gr_color(COTTheme::C_MENU_SEL_FG[0],
-                     COTTheme::C_MENU_SEL_FG[1],
-                     COTTheme::C_MENU_SEL_FG[2],
-                     COTTheme::C_MENU_SEL_FG[3]);
+                    COTTheme::C_MENU_SEL_FG[1],
+                    COTTheme::C_MENU_SEL_FG[2],
+                    COTTheme::C_MENU_SEL_FG[3]);
             break;
         case MENU_SEL_BG:
             gr_color(COTTheme::C_MENU_SEL_BG[0],
-                     COTTheme::C_MENU_SEL_BG[1],
-                     COTTheme::C_MENU_SEL_BG[2],
-                     COTTheme::C_MENU_SEL_BG[3]);
+                    COTTheme::C_MENU_SEL_BG[1],
+                    COTTheme::C_MENU_SEL_BG[2],
+                    COTTheme::C_MENU_SEL_BG[3]);
             break;
         case LOG:
             gr_color(COTTheme::C_LOG[0],
-                     COTTheme::C_LOG[1],
-                     COTTheme::C_LOG[2],
-                     COTTheme::C_LOG[3]);
+                    COTTheme::C_LOG[1],
+                    COTTheme::C_LOG[2],
+                    COTTheme::C_LOG[3]);
             break;
         case TEXT_FILL:
             gr_color(COTTheme::C_TEXT_FILL[0],
-                     COTTheme::C_TEXT_FILL[1],
-                     COTTheme::C_TEXT_FILL[2],
-                     COTTheme::C_TEXT_FILL[3]);
+                    COTTheme::C_TEXT_FILL[1],
+                    COTTheme::C_TEXT_FILL[2],
+                    COTTheme::C_TEXT_FILL[3]);
             break;
         case ERROR_TEXT:
             gr_color(COTTheme::C_ERROR_TEXT[0],
-                     COTTheme::C_ERROR_TEXT[1],
-                     COTTheme::C_ERROR_TEXT[2],
-                     COTTheme::C_ERROR_TEXT[3]);
+                    COTTheme::C_ERROR_TEXT[1],
+                    COTTheme::C_ERROR_TEXT[2],
+                    COTTheme::C_ERROR_TEXT[3]);
             break;
         default:
             gr_color(COTTheme::C_DEFAULT[0],
-                     COTTheme::C_DEFAULT[1],
-                     COTTheme::C_DEFAULT[2],
-                     COTTheme::C_DEFAULT[3]);
+                    COTTheme::C_DEFAULT[1],
+                    COTTheme::C_DEFAULT[2],
+                    COTTheme::C_DEFAULT[3]);
             break;
     }
 }
@@ -420,6 +420,7 @@ void ScreenRecoveryUI::draw_screen_locked()
 void ScreenRecoveryUI::update_screen_locked()
 {
     draw_screen_locked();
+    LOGV("%s: flip %p\n", __func__, __builtin_return_address(0));
     gr_flip();
 }
 
@@ -433,6 +434,7 @@ void ScreenRecoveryUI::update_progress_locked()
     } else {
         draw_progress_locked();  // Draw only the progress bar and overlays
     }
+    LOGV("%s: flip %p\n", __func__, __builtin_return_address(0));
     gr_flip();
 }
 
@@ -862,7 +864,6 @@ void ScreenRecoveryUI::EndMenu() {
     pthread_mutex_lock(&updateMutex);
     if (show_menu > 0 && text_rows > 0 && text_cols > 0) {
         show_menu = 0;
-        update_screen_locked();
     }
     pthread_mutex_unlock(&updateMutex);
 }
