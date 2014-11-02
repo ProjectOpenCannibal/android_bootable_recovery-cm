@@ -177,12 +177,12 @@ void COTTheme::ShowThemeChooser(Device* device) {
         return;
     }
 
-    int d2_size = 0;
-    int d2_alloc = 10;
-    char** dirs2 = (char**)malloc(d2_alloc * sizeof(char*));
-    int z2_size = 0;
-    int z2_alloc = 10;
-    char** zips2 = (char**)malloc(z2_alloc * sizeof(char*));
+    int b_size = 0;
+    int b_alloc = 10;
+    char** base = (char**)malloc(b_alloc * sizeof(char*));
+    int th_size = 0;
+    int th_alloc = 10;
+    char** themes = (char**)malloc(th_alloc * sizeof(char*));
 
     int d_size = 0;
     int d_alloc = 10;
@@ -202,16 +202,15 @@ void COTTheme::ShowThemeChooser(Device* device) {
                 de->d_name[1] == '.') continue;
 
             int theme_len = strlen(GetThemeName(de->d_name));
-            LOGI("Theme Name Length: %d\n", theme_len);
             
             if (d_size >= d_alloc) {
                 d_alloc *= 2;
                 dirs = (char**)realloc(dirs, d_alloc * sizeof(char*));
             }
 
-            if (d2_size >= d2_alloc) {
-                d2_alloc *= 2;
-                dirs2 = (char**)realloc(dirs2, d2_alloc * sizeof(char*));
+            if (b_size >= b_alloc) {
+                b_alloc *= 2;
+                base = (char**)realloc(base, b_alloc * sizeof(char*));
             }
 
             dirs[d_size] = (char*)malloc(name_len + 2);
@@ -219,17 +218,13 @@ void COTTheme::ShowThemeChooser(Device* device) {
             dirs[d_size][name_len] = '\0';
             ++d_size;
 
-            dirs2[d2_size] = (char*)malloc(theme_len + 2);
-            strcpy(dirs2[d2_size], GetThemeName(de->d_name));
-            dirs2[d2_size][theme_len] = '\0';
-            ++d2_size;
+            base[b_size] = (char*)malloc(theme_len + 2);
+            strcpy(base[b_size], GetThemeName(de->d_name));
+            base[b_size][theme_len] = '\0';
+            ++b_size;
         }
     }
     closedir(d);
-    
-    //qsort(dirs, d_size, sizeof(char*), compare_string);
-    //qsort(zips, z_size, sizeof(char*), compare_string);
-    //qsort(themes, t_size, sizeof(char*), compare_string);
     
     // append dirs to the zips list
     if (d_size + z_size + 1 > z_alloc) {
@@ -237,29 +232,29 @@ void COTTheme::ShowThemeChooser(Device* device) {
         zips = (char**)realloc(zips, z_alloc * sizeof(char*));
     }
 
-    // append themes to the ythemes list
-    if (d2_size + z2_size + 1 > z2_alloc) {
-        z2_alloc = d2_size + z2_size + 1;
-        zips2 = (char**)realloc(zips2, z2_alloc * sizeof(char*));
+    // append themes
+    if (b_size + th_size + 1 > th_alloc) {
+        th_alloc = b_size + th_size + 1;
+        themes = (char**)realloc(themes, th_alloc * sizeof(char*));
     }
 
     memcpy(zips + z_size, dirs, d_size * sizeof(char*));
-    memcpy(zips2 + z2_size, dirs2, d2_size * sizeof(char*));
+    memcpy(themes + th_size, themes, b_size * sizeof(char*));
 
     free(dirs);
-    free(dirs2);
+    free(themes);
 
     z_size += d_size;
-    z2_size = d2_size;
+    th_size = b_size;
 
     zips[z_size] = NULL;
-    zips2[z2_size] = NULL;
+    themes[th_size] = NULL;
     
     int result;
     int chosen_item = 0;
     
     for (;;) {
-        chosen_item = get_menu_selection(headers, zips2, 1, chosen_item, device);
+        chosen_item = get_menu_selection(headers, themes, 1, chosen_item, device);
         if (chosen_item == Device::kGoBack) {
             return;
         }
@@ -270,7 +265,7 @@ void COTTheme::ShowThemeChooser(Device* device) {
         char new_path[PATH_MAX];
         strlcpy(new_path, item, PATH_MAX);
         
-        LOGE("Chose %s ...\n", item);
+        LOGI("Chose %s ...\n", item);
         int i;
         COTTheme::chosen_theme = item;
         COTTheme::use_theme = true;
@@ -281,10 +276,10 @@ void COTTheme::ShowThemeChooser(Device* device) {
         ui->ResetIcons();
 
         for (i = 0; i < z_size; ++i) free(zips[i]);
-        for (i = 0; i < z2_size; ++i) free(zips2[i]);
+        for (i = 0; i < th_size; ++i) free(themes[i]);
 
         free(zips);
-        free(zips2);
+        free(themes);
 
         return;
     }
