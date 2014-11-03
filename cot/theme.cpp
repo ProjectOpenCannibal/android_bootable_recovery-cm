@@ -239,10 +239,10 @@ void COTTheme::ShowThemeChooser(Device* device) {
     }
 
     memcpy(zips + z_size, dirs, d_size * sizeof(char*));
-    memcpy(themes + th_size, themes, b_size * sizeof(char*));
+    memcpy(themes + th_size, base, b_size * sizeof(char*));
 
     free(dirs);
-    free(themes);
+    free(base);
 
     z_size += d_size;
     th_size = b_size;
