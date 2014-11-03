@@ -35,8 +35,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <pthread.h>
-#include <semaphore.h>
 
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -82,13 +80,12 @@ typedef struct {
     int mem_fd;
     struct ion_handle_data handle_data;
     int offset;
-    sem_t acquire;
-    sem_t retire;
 } ion_mem_info;
 
-// triple buffer
-#define NUM_BUFFERS 3
+// double buffer
+#define NUM_BUFFERS 2
 static ion_mem_info mem_info[NUM_BUFFERS];
+static int cur_buf = 0;
 
 //Left and right overlay id
 static int overlayL_id = MSMFB_NEW_REQUEST;
@@ -118,14 +115,14 @@ static void setDisplaySplit() {
         //Format "left right" space as delimiter
         if(fread(split, sizeof(char), 64, fp)) {
             leftSplit = atoi(split);
-            LOGI("Left split=%d\n",leftSplit);
+            printf("Left Split=%d\n",leftSplit);
             char *rght = strpbrk(split, " ");
             if (rght)
                 rightSplit = atoi(rght + 1);
-            LOGI("Right split=%d\n", rightSplit);
+            printf("Right Split=%d\n", rightSplit);
         }
     } else {
-        LOGD("Failed to open mdss_fb_split node\n");
+        printf("Failed to open mdss_fb_split node\n");
     }
     if (fp)
         fclose(fp);
@@ -249,7 +246,7 @@ static int alloc_ion_mem(unsigned int size)
             return -errno;
         }
 
-        LOGV("%s: ion_fd=%d\n", __func__, mem_info[i].ion_fd);
+        printf("%s: ion_fd=%d\n", __func__, mem_info[i].ion_fd);
 
         result = ioctl(mem_info[i].ion_fd, ION_IOC_ALLOC,  &ionAllocData);
         if(result){
@@ -277,10 +274,7 @@ static int alloc_ion_mem(unsigned int size)
             return -ENOMEM;
         }
 
-        sem_init(&(mem_info[i].acquire), 0, 0);
-        sem_init(&(mem_info[i].retire),  0, 1);
-
-        LOGV("%s: ion_fd=%d mem_fd=%d buf=%p\n", __func__, mem_info[i].ion_fd,
+        printf("%s: ion_fd=%d mem_fd=%d buf=%p\n", __func__, mem_info[i].ion_fd,
                 mem_info[i].mem_fd, mem_info[i].mem_buf);
         mem_info[i].offset = 0;
     }
@@ -436,12 +430,11 @@ static int free_overlay(int fd)
     return 0;
 }
 
-static int overlay_display_frame(int num)
+static int overlay_display_frame(int fd, size_t size)
 {
     int ret = 0;
     struct msmfb_overlay_data ovdataL, ovdataR;
     struct mdp_display_commit ext_commit;
-    size_t size = gr_draw.row_bytes * gr_draw.height;
 
     if (!isDisplaySplit()) {
         if (overlayL_id == MSMFB_NEW_REQUEST) {
@@ -453,10 +446,10 @@ static int overlay_display_frame(int num)
 
         ovdataL.id = overlayL_id;
         ovdataL.data.flags = 0;
-        ovdataL.data.offset = mem_info[num].offset;
-        ovdataL.data.memory_id = mem_info[num].mem_fd;
+        ovdataL.data.offset = mem_info[cur_buf].offset;
+        ovdataL.data.memory_id = mem_info[cur_buf].mem_fd;
 
-        ret = ioctl(fb_fd, MSMFB_OVERLAY_PLAY, &ovdataL);
+        ret = ioctl(fd, MSMFB_OVERLAY_PLAY, &ovdataL);
         if (ret < 0) {
             perror("overlay_display_frame failed, overlay play Failed\n");
             return ret;
@@ -472,10 +465,10 @@ static int overlay_display_frame(int num)
 
         ovdataL.id = overlayL_id;
         ovdataL.data.flags = 0;
-        ovdataL.data.offset = mem_info[num].offset;
-        ovdataL.data.memory_id = mem_info[num].mem_fd;
+        ovdataL.data.offset = mem_info[cur_buf].offset;
+        ovdataL.data.memory_id = mem_info[cur_buf].mem_fd;
 
-        ret = ioctl(fb_fd, MSMFB_OVERLAY_PLAY, &ovdataL);
+        ret = ioctl(fd, MSMFB_OVERLAY_PLAY, &ovdataL);
         if (ret < 0) {
             perror("overlay_display_frame failed, overlayL play Failed\n");
             return ret;
@@ -490,9 +483,9 @@ static int overlay_display_frame(int num)
 
         ovdataR.id = overlayR_id;
         ovdataR.data.flags = 0;
-        ovdataR.data.offset = mem_info[num].offset;
-        ovdataR.data.memory_id = mem_info[num].mem_fd;
-        ret = ioctl(fb_fd, MSMFB_OVERLAY_PLAY, &ovdataR);
+        ovdataR.data.offset = mem_info[cur_buf].offset;
+        ovdataR.data.memory_id = mem_info[cur_buf].mem_fd;
+        ret = ioctl(fd, MSMFB_OVERLAY_PLAY, &ovdataR);
         if (ret < 0) {
             perror("overlay_display_frame failed, overlayR play Failed\n");
             return ret;
@@ -501,54 +494,24 @@ static int overlay_display_frame(int num)
 
     memset(&ext_commit, 0, sizeof(struct mdp_display_commit));
     ext_commit.flags = MDP_DISPLAY_COMMIT_OVERLAY;
-    wait_for_vsync();
-    ret = ioctl(fb_fd, MSMFB_DISPLAY_COMMIT, &ext_commit);
+    ret = ioctl(fd, MSMFB_DISPLAY_COMMIT, &ext_commit);
     if (ret < 0) {
         perror("overlay_display_frame failed, overlay commit Failed\n!");
-        return ret;
+        goto done;
     }
 
+    // swap to next buffer
+    cur_buf ^= 1;
+    gr_draw.data = mem_info[cur_buf].mem_buf;
+
+done:
     return ret;
-}
-
-static void *overlay_commit_thread(void *data)
-{
-    int frame = 0;
-    int prev = NUM_BUFFERS - 1;
-
-    while (true) {
-
-        LOGV("%s: wait acquire frame=%d\n", __func__, frame);
-        sem_wait(&(mem_info[frame].acquire));
-
-        if (overlay_display_frame(frame) < 0) {
-            // Free and allocate overlay in failure case
-            // so that next cycle can be retried
-            free_overlay(fb_fd);
-            allocate_overlay(fb_fd);
-        }
-
-        prev = frame - 1;
-        if (prev < 0)
-            prev = NUM_BUFFERS - 1;
-
-        // retire the last buffer
-        LOGV("%s: post retire frame=%d\n", __func__, frame);
-        sem_post(&(mem_info[prev].retire));
-
-        frame++;
-        if (frame >= NUM_BUFFERS)
-            frame = 0;
-
-    }
-    return NULL;
 }
 
 static gr_surface overlay_init(minui_backend* backend)
 {
     int fd;
     void *bits = NULL;
-    pthread_t commit_thread;
 
     struct fb_fix_screeninfo fi;
 
@@ -573,7 +536,7 @@ static gr_surface overlay_init(minui_backend* backend)
     if (isTargetMdp5())
         setDisplaySplit();
 
-    LOGI("fb0 reports (possibly inaccurate):\n"
+    printf("fb0 reports (possibly inaccurate):\n"
            "  vi.bits_per_pixel = %d\n"
            "  vi.red.offset   = %3d   .length = %3d\n"
            "  vi.green.offset = %3d   .length = %3d\n"
@@ -592,7 +555,7 @@ static gr_surface overlay_init(minui_backend* backend)
 
     fb_fd = fd;
 
-    LOGI("overlay: %d (%d x %d)\n", fb_fd, gr_draw.width, gr_draw.height);
+    printf("overlay: %d (%d x %d)\n", fb_fd, gr_draw.width, gr_draw.height);
 
     overlay_blank(backend, true);
     overlay_blank(backend, false);
@@ -604,31 +567,20 @@ static gr_surface overlay_init(minui_backend* backend)
 
     vsync_init(fd);
 
-    pthread_create(&commit_thread, NULL, overlay_commit_thread, NULL);
-
-    gr_draw.data = mem_info[0].mem_buf;
-
+    gr_draw.data = mem_info[cur_buf].mem_buf;
     return &gr_draw;
 }
 
-static int next_buf = 0;
-
 static gr_surface overlay_flip(minui_backend* backend __unused)
 {
-    LOGV("%s: post acquire next_buf=%d\n", __func__, next_buf);
+    wait_for_vsync();
 
-    // post the active buffer
-    sem_post(&(mem_info[next_buf].acquire));
-
-    LOGV("%s: wait retire next_buf=%d\n", __func__, next_buf);
-    sem_wait(&(mem_info[next_buf].retire));
-
-    // wait for the next buffer
-    next_buf++;
-    if (next_buf >= NUM_BUFFERS)
-        next_buf = 0;
-
-    gr_draw.data = mem_info[next_buf].mem_buf;
+    if (overlay_display_frame(fb_fd, (gr_draw.row_bytes * gr_draw.height)) < 0) {
+        // Free and allocate overlay in failure case
+        // so that next cycle can be retried
+        free_overlay(fb_fd);
+        allocate_overlay(fb_fd);
+    }
     return &gr_draw;
 }
 
