@@ -17,13 +17,16 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libcot
 LOCAL_MODULE_TAGS := eng
 
-LOCAL_SRC_FILES := \
-    battery.cpp \
-    settings.cpp \
-    package.cpp \
-    theme.cpp \
-    storage.cpp \
-    backup.cpp \
+define all-cpp-files-under
+$(patsubst ./%,%, \
+    $(shell cd $(LOCAL_PATH) ; \
+        find $(1) -name "*.cpp" -and -not -name ".*") \
+)
+endef
+
+LOCAL_SRC_FILES += $(call all-cpp-files-under, .)
+
+LOCAL_SRC_FILES += \
     iniparser/iniparser.c \
     iniparser/dictionary.c
 
