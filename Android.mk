@@ -18,16 +18,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_COT_SRC_FILES := \
-    cot/battery.cpp \
-    cot/settings.cpp \
-    cot/package.cpp \
-    cot/theme.cpp \
-    cot/storage.cpp \
-    cot/backup.cpp \
-    cot/iniparser/iniparser.c \
-    cot/iniparser/dictionary.c
-
 LOCAL_SRC_FILES := \
     bu.cpp \
     backup.cpp \
@@ -41,8 +31,7 @@ LOCAL_SRC_FILES := \
     messagesocket.cpp \
     asn1_decoder.cpp \
     verifier.cpp \
-    adb_install.cpp \
-    $(LOCAL_COT_SRC_FILES)
+    adb_install.cpp
 
 # External tools
 LOCAL_SRC_FILES += \
@@ -99,7 +88,8 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libm \
     libc \
-    libhealthd.default
+    libhealthd.default \
+    libcot
 
 # OEMLOCK support requires a device specific liboemlock be supplied.
 # See comments in recovery.cpp for the API.
@@ -282,5 +272,6 @@ include $(LOCAL_PATH)/bmlutils/Android.mk \
     $(LOCAL_PATH)/updater/Android.mk \
     $(LOCAL_PATH)/applypatch/Android.mk \
     $(LOCAL_PATH)/voldclient/Android.mk \
-    $(LOCAL_PATH)/su/Android.mk
+    $(LOCAL_PATH)/su/Android.mk \
+    $(LOCAL_PATH)/cot/Android.mk
 endif
