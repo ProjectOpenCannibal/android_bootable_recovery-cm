@@ -112,13 +112,15 @@ void COTSettings::ShowMainMenu(Device *device) {
 
     static const char *SettingsMenuItems[] = {"Theme",
             "Zip Signature Verification",
-            "Tests",
+            "Enable/Disable Tests",
+            "Test Functions",
             NULL
     };
 
 #define THEME_OPTIONS 0
 #define ZIP_VERIF_OPTIONS 1
 #define ENABLE_TESTS_OPTIONS 2
+#define TEST_FUNCT_MENU 3
 
     for (; ;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
@@ -131,6 +133,8 @@ void COTSettings::ShowMainMenu(Device *device) {
                 break;
             case ENABLE_TESTS_OPTIONS:
                 COTSettings::ShowEnableTestsMenu(device);
+                break;
+            case TEST_FUNCT_MENU:
                 break;
             case Device::kGoBack:
                 return;
