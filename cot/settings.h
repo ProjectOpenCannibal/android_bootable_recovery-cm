@@ -19,9 +19,11 @@
 class COTSettings {
 public:
     static String8 zip_sigverif;
+    static String8 enable_tests;
     static dictionary * settingsini;
     static void CreateOrSaveSettings(int is_new);
     static void LoadSettings();
     static void ShowMainMenu(Device* device);
+    static void ShowEnableTestsMenu(Device* device);
     static void ShowZipVerifMenu(Device* device);
 };

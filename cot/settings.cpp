@@ -47,6 +47,7 @@ extern ScreenRecoveryUI* screen;
 dictionary * COTSettings::settingsini;
 
 String8 COTSettings::zip_sigverif("1");
+String8 COTSettings::enable_tests("0");
 
 void COTSettings::CreateOrSaveSettings(int is_new) {
     // Make sure internal storage is mounted
@@ -64,22 +65,24 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
             "[settings]\n"
             "theme = default\n"
             "zip_sigverif = 1\n"
+            "enable_tests = 0\n"
             "\n");
         fclose(ini);
-      } else {
-          ui->DialogShowInfo("Saving settings...");
-          FILE * ini;
-          String8 base_path(get_primary_storage_path());
-          base_path += "/0/cot/settings.ini";
-          ini = fopen_path(base_path.string(), "w");
-          iniparser_set(COTSettings::settingsini, "settings", NULL);
-          iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::chosen_theme.string());
-          iniparser_set(COTSettings::settingsini, "settings:zip_sigverif", COTSettings::zip_sigverif.string());
-          iniparser_dump_ini(COTSettings::settingsini, ini);
-          fclose(ini);
-          sleep(2);
-          ui->DialogDismiss();
-        }
+    } else {
+        ui->DialogShowInfo("Saving settings...");
+        FILE *ini;
+        String8 base_path(get_primary_storage_path());
+        base_path += "/0/cot/settings.ini";
+        ini = fopen_path(base_path.string(), "w");
+        iniparser_set(COTSettings::settingsini, "settings", NULL);
+        iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::chosen_theme.string());
+        iniparser_set(COTSettings::settingsini, "settings:zip_sigverif", COTSettings::zip_sigverif.string());
+        iniparser_set(COTSettings::settingsini, "settings:enable_tests", COTSettings::enable_tests.string());
+        iniparser_dump_ini(COTSettings::settingsini, ini);
+        fclose(ini);
+        sleep(2);
+        ui->DialogDismiss();
+    }
     return;
   }
 
@@ -95,67 +98,104 @@ void COTSettings::LoadSettings() {
         COTSettings::settingsini = iniparser_load(base_path.string());
       }
     COTSettings::zip_sigverif = iniparser_getstring(COTSettings::settingsini, "settings:zip_sigverif", "1");
+    COTSettings::enable_tests = iniparser_getstring(COTSettings::settingsini, "settings:enable_tests", "0");
     COTTheme::LoadTheme(iniparser_getstring(COTSettings::settingsini, "settings:theme", "default"));
 
     ui->ResetIcons();
   }
 
-void COTSettings::ShowMainMenu(Device* device) {
-    static const char* SettingsMenuHeaders[] = { "Settings",
-        "",
-        NULL
-      };
+void COTSettings::ShowMainMenu(Device *device) {
+    static const char *SettingsMenuHeaders[] = {"Settings",
+            "",
+            NULL
+    };
 
-    static const char* SettingsMenuItems[] = { "Theme",
-        "Zip Signature Verification",
-        NULL
-      };
+    static const char *SettingsMenuItems[] = {"Theme",
+            "Zip Signature Verification",
+            "Tests",
+            NULL
+    };
 
 #define THEME_OPTIONS 0
 #define ZIP_VERIF_OPTIONS 1
+#define ENABLE_TESTS_OPTIONS 2
 
-    for (;;) {
+    for (; ;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
         switch (SettingsSelection) {
             case THEME_OPTIONS:
-            COTTheme::ChooseThemeMenu(device);
+                COTTheme::ChooseThemeMenu(device);
                 break;
             case ZIP_VERIF_OPTIONS:
-            COTSettings::ShowZipVerifMenu(device);
+                COTSettings::ShowZipVerifMenu(device);
+                break;
+            case ENABLE_TESTS_OPTIONS:
+                COTSettings::ShowEnableTestsMenu(device);
                 break;
             case Device::kGoBack:
-            return;
+                return;
         }
     }
 }
 
-void COTSettings::ShowZipVerifMenu(Device* device) {
-    static const char* ZipVerifMenuHeaders[] = { "Zip Verification",
-        "",
-        NULL
-      };
+void COTSettings::ShowEnableTestsMenu(Device *device) {
+    static const char *EnableTestsMenuHeaders[] = {"Enable Tests",
+            "",
+            NULL
+    };
 
-    static const char* ZipVerifMenuItems[] = { "Enable Zip Verification",
-        "Disable Zip Verification",
-        NULL
-      };
+    static const char *EnableTestsMenuItems[] = {"Enable Tests",
+            "Disable Tests",
+            NULL
+    };
+
+#define ENABLE_TESTS_ON 0
+#define ENABLE_TESTS_OFF 1
+
+    for (; ;) {
+        int EnableTestsSelection = get_menu_selection(EnableTestsMenuHeaders, EnableTestsMenuItems, 0, 0, device);
+        switch (EnableTestsSelection) {
+            case ENABLE_TESTS_ON:
+                COTSettings::enable_tests = "1";
+                break;
+            case ENABLE_TESTS_OFF:
+                COTSettings::enable_tests = "0";
+                break;
+            case Device::kGoBack:
+                return;
+        }
+        COTSettings::CreateOrSaveSettings(0);
+        return;
+    }
+}
+
+void COTSettings::ShowZipVerifMenu(Device *device) {
+    static const char *ZipVerifMenuHeaders[] = {"Zip Verification",
+            "",
+            NULL
+    };
+
+    static const char *ZipVerifMenuItems[] = {"Enable Zip Verification",
+            "Disable Zip Verification",
+            NULL
+    };
 
 #define ZIP_VERIF_ON 0
 #define ZIP_VERIF_OFF 1
 
-    for (;;) {
+    for (; ;) {
         int ZipVerifSelection = get_menu_selection(ZipVerifMenuHeaders, ZipVerifMenuItems, 0, 0, device);
         switch (ZipVerifSelection) {
             case ZIP_VERIF_ON:
-            COTSettings::zip_sigverif = "1";
+                COTSettings::zip_sigverif = "1";
                 break;
             case ZIP_VERIF_OFF:
-            COTSettings::zip_sigverif = "0";
+                COTSettings::zip_sigverif = "0";
                 break;
             case Device::kGoBack:
-            return;
+                return;
         }
         COTSettings::CreateOrSaveSettings(0);
         return;
-      }
-  }
+    }
+}
