@@ -1060,11 +1060,11 @@ show_reboot_menu(Device* device) {
                 break;
             case 1:
                 // this will be where we reboot recovery
-                reboot_main_system(ANDROID_RB_RESTART2, 0, "recovery", device);
+                reboot_main_system(ANDROID_RB_RESTART2, 0, (char*)"recovery", device);
                 break;
             case 2:
                 // this will be where we reboot bootloader
-                reboot_main_system(ANDROID_RB_RESTART2, 0, "bootloader", device);
+                reboot_main_system(ANDROID_RB_RESTART2, 0, (char*)"bootloader", device);
                 break;
             case Device::kGoBack:
                 return;

@@ -383,7 +383,7 @@ int res_create_theme_multi_display_surface(const char* name, const char* themena
     }
 
     if (height % *frames != 0) {
-        printf("bad height (%d) for frame count (%d)\n", height, *frames);
+        printf("bad height (%ld) for frame count (%d)\n", height, *frames);
         result = -9;
         goto exit;
     }
@@ -457,7 +457,7 @@ int res_create_multi_display_surface(const char* name, int* frames, gr_surface**
     }
 
     if (height % *frames != 0) {
-        printf("bad height (%d) for frame count (%d)\n", height, *frames);
+        printf("bad height (%ld) for frame count (%d)\n", height, *frames);
         result = -9;
         goto exit;
     }
@@ -643,7 +643,7 @@ int res_create_theme_localized_alpha_surface(const char* name, const char* theme
         char* loc = (char*)row+5;
 
         if (y+1+h >= height || matches_locale(loc, locale)) {
-            printf("  %20s: %s (%d x %d @ %d)\n", name, loc, w, h, y);
+            printf("  %20s: %s (%d x %d @ %ld)\n", name, loc, w, h, y);
 
             surface = malloc_surface(w*h);
             if (surface == NULL) {
@@ -717,7 +717,7 @@ int res_create_localized_alpha_surface(const char* name,
         char* loc = (char*)row+5;
 
         if (y+1+h >= height || matches_locale(loc, locale)) {
-            printf("  %20s: %s (%d x %d @ %d)\n", name, loc, w, h, y);
+            printf("  %20s: %s (%d x %d @ %ld)\n", name, loc, w, h, y);
 
             surface = malloc_surface(w*h);
             if (surface == NULL) {

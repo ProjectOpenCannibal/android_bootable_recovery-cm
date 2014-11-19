@@ -115,7 +115,7 @@ int is_data_media()
 
 void setup_data_media() {
     int i;
-    char* mount_point = "/sdcard";
+    char* mount_point = (char*)"/sdcard";
     for (i = 0; i < get_num_volumes(); i++) {
         fstab_rec* vol = get_device_volumes() + i;
         if (strcmp(vol->fs_type, "datamedia") == 0) {
@@ -270,9 +270,9 @@ static char* primary_storage_path = NULL;
 char* get_primary_storage_path() {
     if (primary_storage_path == NULL) {
         if (volume_for_path("/storage/sdcard0"))
-            primary_storage_path = "/storage/sdcard0";
+            primary_storage_path = (char *) "/storage/sdcard0";
         else
-            primary_storage_path = "/sdcard";
+            primary_storage_path = (char *) "/sdcard";
     }
     return primary_storage_path;
 }
