@@ -55,8 +55,7 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
 
     if (is_new == 1) {
         FILE * ini;
-        String8 base_path(get_primary_storage_path());
-        base_path += "/0/cot/settings.ini";
+        String8 base_path(COT_SETTINGS_LOC);
         ini = fopen_path(base_path.string(), "w");
         fprintf(ini,
             "; COT Settings INI\n"
@@ -71,8 +70,7 @@ void COTSettings::CreateOrSaveSettings(int is_new) {
     } else {
         ui->DialogShowInfo("Saving settings...");
         FILE *ini;
-        String8 base_path(get_primary_storage_path());
-        base_path += "/0/cot/settings.ini";
+        String8 base_path(COT_SETTINGS_LOC);
         ini = fopen_path(base_path.string(), "w");
         iniparser_set(COTSettings::settingsini, "settings", NULL);
         iniparser_set(COTSettings::settingsini, "settings:theme", COTTheme::chosen_theme.string());
@@ -90,8 +88,7 @@ void COTSettings::LoadSettings() {
     // Make sure internal storage is mounted
     COTStorage::MountInternalStorage();
 
-    String8 base_path(get_primary_storage_path());
-    base_path += "/0/cot/settings.ini";
+    String8 base_path(COT_SETTINGS_LOC);
     COTSettings::settingsini = iniparser_load(base_path.string());
     if (COTSettings::settingsini == NULL) {
         COTSettings::CreateOrSaveSettings(1);
@@ -112,15 +109,13 @@ void COTSettings::ShowMainMenu(Device *device) {
 
     static const char *SettingsMenuItems[] = {"Theme",
             "Zip Signature Verification",
-            "Enable/Disable Tests",
-            "Test Functions",
+            "Tests",
             NULL
     };
 
 #define THEME_OPTIONS 0
 #define ZIP_VERIF_OPTIONS 1
 #define ENABLE_TESTS_OPTIONS 2
-#define TEST_FUNCT_MENU 3
 
     for (; ;) {
         int SettingsSelection = get_menu_selection(SettingsMenuHeaders, SettingsMenuItems, 0, 0, device);
@@ -133,8 +128,6 @@ void COTSettings::ShowMainMenu(Device *device) {
                 break;
             case ENABLE_TESTS_OPTIONS:
                 COTSettings::ShowEnableTestsMenu(device);
-                break;
-            case TEST_FUNCT_MENU:
                 break;
             case Device::kGoBack:
                 return;

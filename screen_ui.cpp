@@ -491,7 +491,7 @@ void ScreenRecoveryUI::progress_loop() {
 void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-        result = res_create_sdcard_display_surface(filename, get_primary_storage_path(), theme_name, surface);
+        result = res_create_theme_display_surface(filename, theme_name, surface);
     } else {
         result = res_create_display_surface(filename, surface);
     }
@@ -504,7 +504,7 @@ void ScreenRecoveryUI::LoadBitmap(const char* filename, gr_surface* surface, con
 void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_surface** surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-        result = res_create_sdcard_multi_display_surface(filename, get_primary_storage_path(), theme_name, frames, surface);
+        result = res_create_theme_multi_display_surface(filename, theme_name, frames, surface);
     } else {
         result = res_create_multi_display_surface(filename, frames, surface);
     }
@@ -517,7 +517,7 @@ void ScreenRecoveryUI::LoadBitmapArray(const char* filename, int* frames, gr_sur
 void ScreenRecoveryUI::LoadLocalizedBitmap(const char* filename, gr_surface* surface, const char* theme_name = "default") {
     int result;
     if (strcmp(theme_name, "default")) {
-        result = res_create_sdcard_localized_alpha_surface(filename, get_primary_storage_path(), theme_name, locale, surface);
+        result = res_create_theme_localized_alpha_surface(filename, theme_name, locale, surface);
     } else {
         result = res_create_localized_alpha_surface(filename, locale, surface);
     }

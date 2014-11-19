@@ -39,6 +39,9 @@ extern "C" {
 #define STRINGIFY(x) #x
 #define EXPAND(x) STRINGIFY(x)
 
+#define COT_SETTINGS_LOC "/cache/cot/settings.ini"
+#define COT_THEMES_LOC "/cache/cot/themes/"
+
 // fopen a file, mounting volumes and making parent dirs as necessary.
 FILE* fopen_path(const char *path, const char *mode);
 

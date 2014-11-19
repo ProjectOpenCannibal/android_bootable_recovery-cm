@@ -62,8 +62,7 @@ int COTTheme::center_text = 0;
 
 char* COTTheme::GetThemeName(const char* themepath) {
     dictionary * ini;
-    String8 theme_file(get_primary_storage_path());
-    theme_file += "/0/cot/themes/";
+    String8 theme_file(COT_THEMES_LOC);
     theme_file += themepath;
     theme_file += "/theme.ini";
     ini = iniparser_load(theme_file.string());
@@ -82,8 +81,7 @@ void COTTheme::LoadTheme(char * themename) {
     dictionary * ini;
     if (strcmp(themename, "default")) {
         
-        String8 theme_file(get_primary_storage_path());
-        theme_file += "/0/cot/themes/";
+        String8 theme_file(COT_THEMES_LOC);
         theme_file += themename;
         theme_file += "/theme.ini";
         ini = iniparser_load(theme_file.string());
@@ -160,7 +158,7 @@ int COTTheme::compare_string(const void* a, const void* b) {
 
 void COTTheme::ShowThemeChooser(Device* device) {
     
-    // Make sure internal storage is mounted
+    // Make sure we mount /cache
     COTStorage::MountInternalStorage();
     
     static const char* headers[] = { "Choose Theme",
@@ -169,8 +167,7 @@ void COTTheme::ShowThemeChooser(Device* device) {
     };
     DIR* d;
     struct dirent* de;
-    String8 base_path(get_primary_storage_path());
-    base_path += "/0/cot/themes";
+    String8 base_path(COT_THEMES_LOC);
     d = opendir(base_path.string());
     if (d == NULL) {
         LOGE("error opening %s: %s\n", base_path.string(), strerror(errno));

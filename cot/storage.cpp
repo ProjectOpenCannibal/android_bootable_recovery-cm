@@ -44,15 +44,12 @@
 extern RecoveryUI* ui;
 
 void COTStorage::MountInternalStorage() {
-    ensure_path_mounted("/data/media");
-    ensure_path_mounted("/sdcard");
-    ensure_path_mounted("/storage/sdcard0");
+    ensure_path_mounted("/cache");
+    EnsureDirectoryExists("/cache/cot/themes");
 }
 
 void COTStorage::UnmountInternalStorage() {
-    ensure_path_unmounted("/sdcard");
-    ensure_path_unmounted("/storage/sdcard0");
-    ensure_path_unmounted("/data/media");
+    ensure_path_unmounted("/cache");
 }
 
 void COTStorage::EnsureDirectoryExists(const char* dir) {

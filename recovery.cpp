@@ -422,8 +422,8 @@ int erase_volume(const char *volume, bool force = false) {
 
     if (!force && is_cache) {
         // If we're reformatting /cache, we load any
-        // "/cache/recovery/last*" files into memory, so we can restore
-        // them after the reformat.
+        // "/cache/recovery/last*" files into memory,
+        // so we can restore them after the reformat.
 
         ensure_path_mounted(volume);
 
