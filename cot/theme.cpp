@@ -167,7 +167,7 @@ void COTTheme::ShowThemeChooser(Device* device) {
     };
     DIR* d;
     struct dirent* de;
-    String8 base_path(COT_THEMES_LOC);
+    String8 base_path("/cache/cot/themes");
     d = opendir(base_path.string());
     if (d == NULL) {
         LOGE("error opening %s: %s\n", base_path.string(), strerror(errno));
