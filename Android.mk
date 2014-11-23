@@ -104,10 +104,8 @@ ifeq ($(TARGET_USERIMAGES_USE_EXT4), true)
     LOCAL_STATIC_LIBRARIES += libext4_utils_static libz
 endif
 
-ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
-    LOCAL_CFLAGS += -DUSE_F2FS
-    LOCAL_STATIC_LIBRARIES += libmake_f2fs libfsck_f2fs libfibmap_f2fs
-endif
+LOCAL_CFLAGS += -DUSE_F2FS
+LOCAL_STATIC_LIBRARIES += libmake_f2fs libfsck_f2fs libfibmap_f2fs
 
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
 LOCAL_C_INCLUDES += system/extras/ext4_utils external/fsck_msdos
