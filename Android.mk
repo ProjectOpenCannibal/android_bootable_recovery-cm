@@ -107,7 +107,6 @@ endif
 ifeq ($(TARGET_USERIMAGES_USE_F2FS), true)
     LOCAL_CFLAGS += -DUSE_F2FS
     LOCAL_STATIC_LIBRARIES += libmake_f2fs libfsck_f2fs libfibmap_f2fs
-endif
 
 LOCAL_CFLAGS += -DUSE_EXT4 -DMINIVOLD
 LOCAL_C_INCLUDES += system/extras/ext4_utils external/fsck_msdos
