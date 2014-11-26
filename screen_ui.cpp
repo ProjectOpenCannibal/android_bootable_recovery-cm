@@ -151,6 +151,9 @@ void ScreenRecoveryUI::draw_background_locked(Icon icon)
 void ScreenRecoveryUI::draw_progress_locked()
 {
     if (currentIcon == ERROR) return;
+	
+	gr_color(0, 0, 0, 255);
+	gr_clear();
 
     if (currentIcon == INSTALLING_UPDATE || currentIcon == ERASING) {
         gr_surface icon = installation[installingFrame];
@@ -427,16 +430,6 @@ void ScreenRecoveryUI::update_screen_locked()
 // Updates only the progress bar, if possible, otherwise redraws the screen.
 // Should only be called with updateMutex locked.
 void ScreenRecoveryUI::update_progress_locked()
-{
-    if (!pagesIdentical) {
-        draw_screen_locked();    // Must redraw the whole screen
-        pagesIdentical = true;
-    } else {
-        draw_progress_locked();  // Draw only the progress bar and overlays
-    }
-    LOGV("%s: flip %p\n", __func__, __builtin_return_address(0));
-    gr_flip();
-}
 
 // Keeps the progress bar updated, even when the process is otherwise busy.
 void* ScreenRecoveryUI::progress_thread(void *cookie) {
