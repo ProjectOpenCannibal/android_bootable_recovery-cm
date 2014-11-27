@@ -415,9 +415,6 @@ typedef struct _saved_log_file {
 int erase_volume(const char *volume, bool force = false) {
     bool is_cache = (strcmp(volume, CACHE_ROOT) == 0);
 
-    ui->SetBackground(RecoveryUI::ERASING);
-    ui->SetProgressType(RecoveryUI::INDETERMINATE);
-
     saved_log_file* head = NULL;
 
     if (!force && is_cache) {
@@ -465,6 +462,9 @@ int erase_volume(const char *volume, bool force = false) {
     }
 
     ui->Print("Formatting %s...\n", volume);
+	
+	ui->SetBackground(RecoveryUI::ERASING);
+    ui->SetProgressType(RecoveryUI::INDETERMINATE);
 
     if (volume[0] == '/') {
         ensure_path_unmounted(volume);
@@ -1007,10 +1007,8 @@ show_apply_update_menu(Device* device) {
         ui->Print("\n-- Wiping cache (at package request)...\n");
         if (erase_volume("/cache")) {
             ui->Print("Cache wipe failed.\n");
-            ui->DialogShowInfo("Wiping cache ...");
         } else {
             ui->Print("Cache wipe complete.\n");
-                ui->DialogDismiss();
         }
     }
     if (status >= 0 && status != INSTALL_NONE) {
@@ -1116,10 +1114,8 @@ prompt_and_wait(Device* device, int status) {
 
                 case Device::WIPE_CACHE:
                     ui->Print("\n-- Wiping cache...\n");
-                    ui->DialogShowInfo("Wiping cache ...");
                     erase_volume("/cache");
                     ui->Print("Cache wipe complete.\n");
-                    ui->DialogDismiss();
                     if (!ui->IsTextVisible()) return;
                     break;
 
